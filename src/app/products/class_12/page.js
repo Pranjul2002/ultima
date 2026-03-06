@@ -24,7 +24,7 @@ export default function Class12Page() {
           <h3>Physics</h3>
           <p>Electrostatics • Current Electricity • Optics • Modern Physics</p>
           <Link
-            href="/take-test?class=12&subject=physics"
+            href="/test?class=12&subject=physics"
             className={styles.button}
           >
             Start Test
@@ -36,7 +36,7 @@ export default function Class12Page() {
           <h3>Chemistry</h3>
           <p>Physical • Organic • Inorganic • Biomolecules</p>
           <Link
-            href="/take-test?class=12&subject=chemistry"
+            href="/test?class=12&subject=chemistry"
             className={styles.button}
           >
             Start Test
@@ -48,7 +48,7 @@ export default function Class12Page() {
           <h3>Mathematics</h3>
           <p>Calculus • Matrices • Probability • Vectors & 3D</p>
           <Link
-            href="/take-test?class=12&subject=maths"
+            href="/test?class=12&subject=maths"
             className={styles.button}
           >
             Start Test
@@ -60,7 +60,7 @@ export default function Class12Page() {
           <h3>Biology</h3>
           <p>Genetics • Evolution • Biotechnology • Ecology</p>
           <Link
-            href="/take-test?class=12&subject=biology"
+            href="/test?class=12&subject=biology"
             className={styles.button}
           >
             Start Test

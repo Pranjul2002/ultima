@@ -1,5 +1,7 @@
 "use client";
-import { useState } from "react";
+
+import { useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import TestConfig from "../components/test/TestConfig";
 import Timer from "../components/test/Timer";
 import QuestionCard from "../components/test/QuestionCard";
@@ -7,14 +9,38 @@ import questionsData from "../../data/questions";
 import styles from "./page.module.css";
 
 export default function TestPage() {
+
+  const searchParams = useSearchParams();
+
+  const classParam = searchParams.get("class");
+  const subjectParam = searchParams.get("subject");
+  const topicParam = searchParams.get("topic");
+
   const [config, setConfig] = useState(null);
   const [answers, setAnswers] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
 
   /* ===============================
+     AUTO CONFIG FROM URL
+  ================================ */
+
+  useEffect(() => {
+    if (classParam || subjectParam || topicParam) {
+      setConfig({
+        class: classParam || "",
+        subject: subjectParam || "",
+        topic: topicParam || "",
+        duration: 15,
+        questionsPerPage: 1,
+      });
+    }
+  }, [classParam, subjectParam, topicParam]);
+
+  /* ===============================
      CONFIG SCREEN
   ================================ */
+
   if (!config) {
     return (
       <div className={styles.pageBackground}>
@@ -25,19 +51,29 @@ export default function TestPage() {
     );
   }
 
-  const filteredQuestions = questionsData.filter(
-    (q) =>
-      (!config.subject || q.subject === config.subject) &&
-      (!config.topic || q.topic === config.topic)
-  );
+  /* ===============================
+     FILTER QUESTIONS
+  ================================ */
+
+  const filteredQuestions = questionsData.filter((q) => {
+    return (
+      (!config.class || q.class?.toString() === config.class) &&
+      (!config.subject ||
+        q.subject?.toLowerCase() === config.subject.toLowerCase()) &&
+      (!config.topic ||
+        q.topic?.toLowerCase() === config.topic.toLowerCase())
+    );
+  });
 
   const start = currentPage * config.questionsPerPage;
   const end = start + config.questionsPerPage;
+
   const currentQuestions = filteredQuestions.slice(start, end);
 
   /* ===============================
      PER QUESTION TIMER HANDLER
   ================================ */
+
   const handleTimeUp = () => {
     const totalPages = Math.ceil(
       filteredQuestions.length / config.questionsPerPage
@@ -57,8 +93,10 @@ export default function TestPage() {
   /* ===============================
      RESULT SCREEN
   ================================ */
+
   if (isFinished) {
     const totalQuestions = filteredQuestions.length;
+
     const correctAnswers = filteredQuestions.filter(
       (q) => answers[q.id] === q.answer
     ).length;
@@ -92,6 +130,7 @@ export default function TestPage() {
       <div className={styles.pageBackground}>
         <div className={styles.resultWrapper}>
           <div className={`${styles.resultCard} ${styles.fadeIn}`}>
+
             <div className={styles.successIcon}>🎉</div>
 
             <h2>{message}</h2>
@@ -115,6 +154,7 @@ export default function TestPage() {
             >
               Retake Test
             </button>
+
           </div>
         </div>
       </div>
@@ -124,14 +164,23 @@ export default function TestPage() {
   /* ===============================
      TEST SCREEN
   ================================ */
+
   return (
     <div className={styles.pageBackground}>
+
       <div className={`${styles.testContainer} ${styles.fadeIn}`}>
+
         <Timer
-          key={currentPage} // resets only on question change
+          key={currentPage}
           duration={config.duration}
           onTimeUp={handleTimeUp}
         />
+
+        {currentQuestions.length === 0 && (
+          <p style={{ textAlign: "center" }}>
+            No questions available for this filter.
+          </p>
+        )}
 
         {currentQuestions.map((q) => (
           <QuestionCard
@@ -142,6 +191,7 @@ export default function TestPage() {
         ))}
 
         <div className={styles.navigation}>
+
           <button
             className={styles.buttonSecondary}
             onClick={() => setCurrentPage((p) => p - 1)}
@@ -157,6 +207,7 @@ export default function TestPage() {
           >
             Next
           </button>
+
         </div>
 
         <button
@@ -165,6 +216,7 @@ export default function TestPage() {
         >
           Submit Test
         </button>
+
       </div>
     </div>
   );

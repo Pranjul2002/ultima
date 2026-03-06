@@ -20,7 +20,7 @@ export default function NEETPage() {
           <h3>Physics</h3>
           <p>Mechanics • Current Electricity • Optics • Modern Physics</p>
           <Link
-            href="/take-test?exam=neet&subject=physics"
+            href="/test?exam=neet&subject=physics"
             className={styles.button}
           >
             Start Test
@@ -31,7 +31,7 @@ export default function NEETPage() {
           <h3>Chemistry</h3>
           <p>Physical • Organic • Inorganic • Biomolecules</p>
           <Link
-            href="/take-test?exam=neet&subject=chemistry"
+            href="/test?exam=neet&subject=chemistry"
             className={styles.button}
           >
             Start Test
@@ -42,7 +42,7 @@ export default function NEETPage() {
           <h3>Biology</h3>
           <p>Botany • Zoology • Genetics • Human Physiology</p>
           <Link
-            href="/take-test?exam=neet&subject=biology"
+            href="/-test?exam=neet&subject=biology"
             className={styles.button}
           >
             Start Test

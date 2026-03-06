@@ -2,7 +2,8 @@ const questions = [
   // ================= MATH - ALGEBRA =================
   {
     id: 1,
-    subject: "Math",
+    class: "10",
+    subject: "maths",
     topic: "Algebra",
     question: "What is the value of x in 2x + 4 = 10?",
     options: ["2", "3", "4", "5"],
@@ -10,7 +11,8 @@ const questions = [
   },
   {
     id: 2,
-    subject: "Math",
+    class: "10",
+    subject: "maths",
     topic: "Algebra",
     question: "What is (a + b)² equal to?",
     options: ["a² + b²", "a² + 2ab + b²", "a² - 2ab + b²", "2a + 2b"],
@@ -18,7 +20,8 @@ const questions = [
   },
   {
     id: 3,
-    subject: "Math",
+    class: "10",
+    subject: "maths",
     topic: "Algebra",
     question: "Solve: x² = 49",
     options: ["7", "-7", "±7", "14"],
@@ -26,7 +29,8 @@ const questions = [
   },
   {
     id: 4,
-    subject: "Math",
+    class: "10",
+    subject: "maths",
     topic: "Algebra",
     question: "If x + 3 = 8, x equals?",
     options: ["3", "4", "5", "6"],
@@ -36,7 +40,8 @@ const questions = [
   // ================= MATH - GEOMETRY =================
   {
     id: 5,
-    subject: "Math",
+    class: "10",
+    subject: "maths",
     topic: "Geometry",
     question: "Sum of interior angles of a triangle?",
     options: ["90", "180", "270", "360"],
@@ -44,7 +49,8 @@ const questions = [
   },
   {
     id: 6,
-    subject: "Math",
+    class: "10",
+    subject: "maths",
     topic: "Geometry",
     question: "Area of a circle formula?",
     options: ["2πr", "πr²", "πd", "r²"],
@@ -52,7 +58,8 @@ const questions = [
   },
   {
     id: 7,
-    subject: "Math",
+    class: "10",
+    subject: "maths",
     topic: "Geometry",
     question: "How many sides does a hexagon have?",
     options: ["5", "6", "7", "8"],
@@ -60,7 +67,8 @@ const questions = [
   },
   {
     id: 8,
-    subject: "Math",
+    class: "10",
+    subject: "maths",
     topic: "Geometry",
     question: "Right angle equals?",
     options: ["45°", "60°", "90°", "120°"],
@@ -70,7 +78,8 @@ const questions = [
   // ================= SCIENCE - PHYSICS =================
   {
     id: 9,
-    subject: "Science",
+    class: "10",
+    subject: "physics",
     topic: "Physics",
     question: "SI unit of Force?",
     options: ["Joule", "Newton", "Pascal", "Watt"],
@@ -78,7 +87,8 @@ const questions = [
   },
   {
     id: 10,
-    subject: "Science",
+    class: "12",
+    subject: "physics",
     topic: "Physics",
     question: "Speed = ?",
     options: ["Distance × Time", "Distance / Time", "Time / Distance", "Mass × Acceleration"],
@@ -86,7 +96,8 @@ const questions = [
   },
   {
     id: 11,
-    subject: "Science",
+    class: "12",
+    subject: "physics",
     topic: "Physics",
     question: "Acceleration due to gravity (approx)?",
     options: ["8.9 m/s²", "9.8 m/s²", "10.8 m/s²", "11.8 m/s²"],
@@ -94,7 +105,8 @@ const questions = [
   },
   {
     id: 12,
-    subject: "Science",
+    class: "12",
+    subject: "physics",
     topic: "Physics",
     question: "Unit of Power?",
     options: ["Watt", "Volt", "Ampere", "Ohm"],
@@ -104,7 +116,8 @@ const questions = [
   // ================= SCIENCE - CHEMISTRY =================
   {
     id: 13,
-    subject: "Science",
+    class: "12",
+    subject: "chemistry",
     topic: "Chemistry",
     question: "Atomic number of Oxygen?",
     options: ["6", "7", "8", "9"],
@@ -112,7 +125,8 @@ const questions = [
   },
   {
     id: 14,
-    subject: "Science",
+    class: "12",
+    subject: "chemistry",
     topic: "Chemistry",
     question: "H2O is?",
     options: ["Hydrogen", "Oxygen", "Water", "Helium"],
@@ -120,7 +134,8 @@ const questions = [
   },
   {
     id: 15,
-    subject: "Science",
+    class: "10",
+    subject: "chemistry",
     topic: "Chemistry",
     question: "pH of neutral solution?",
     options: ["5", "6", "7", "8"],
@@ -128,7 +143,8 @@ const questions = [
   },
   {
     id: 16,
-    subject: "Science",
+    class: "10",
+    subject: "chemistry",
     topic: "Chemistry",
     question: "NaCl is commonly known as?",
     options: ["Sugar", "Salt", "Acid", "Base"],
@@ -138,6 +154,7 @@ const questions = [
   // ================= COMPUTER SCIENCE - PROGRAMMING =================
   {
     id: 17,
+    class: "12",
     subject: "Computer Science",
     topic: "Programming",
     question: "Which language runs in a web browser?",
@@ -146,6 +163,7 @@ const questions = [
   },
   {
     id: 18,
+    class: "12",
     subject: "Computer Science",
     topic: "Programming",
     question: "Which symbol is used for comments in JavaScript?",
@@ -154,6 +172,7 @@ const questions = [
   },
   {
     id: 19,
+    class: "12",
     subject: "Computer Science",
     topic: "Programming",
     question: "Which data structure uses FIFO?",
@@ -162,6 +181,7 @@ const questions = [
   },
   {
     id: 20,
+    class: "12",
     subject: "Computer Science",
     topic: "Programming",
     question: "HTML stands for?",
@@ -177,6 +197,7 @@ const questions = [
   // ================= COMPUTER SCIENCE - DBMS =================
   {
     id: 21,
+    class: "12",
     subject: "Computer Science",
     topic: "DBMS",
     question: "SQL stands for?",
@@ -190,6 +211,7 @@ const questions = [
   },
   {
     id: 22,
+    class: "12",
     subject: "Computer Science",
     topic: "DBMS",
     question: "Primary key must be?",
@@ -198,6 +220,7 @@ const questions = [
   },
   {
     id: 23,
+    class: "12",
     subject: "Computer Science",
     topic: "DBMS",
     question: "Which normal form removes transitive dependency?",
@@ -206,6 +229,7 @@ const questions = [
   },
   {
     id: 24,
+    class: "12",
     subject: "Computer Science",
     topic: "DBMS",
     question: "Which command is used to retrieve data?",
@@ -214,6 +238,7 @@ const questions = [
   },
   {
     id: 25,
+    class: "12",
     subject: "Computer Science",
     topic: "DBMS",
     question: "Foreign key is used to?",

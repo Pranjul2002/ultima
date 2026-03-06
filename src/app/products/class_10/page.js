@@ -24,7 +24,7 @@ export default function Class10Page() {
           <h3>Physics</h3>
           <p>Light • Electricity • Magnetism • Human Eye</p>
           <Link
-            href="/take-test?class=10&subject=physics"
+            href="/test?class=10&subject=physics"
             className={styles.button}
           >
             Start Test
@@ -36,7 +36,7 @@ export default function Class10Page() {
           <h3>Chemistry</h3>
           <p>Chemical Reactions • Acids & Bases • Carbon</p>
           <Link
-            href="/take-test?class=10&subject=chemistry"
+            href="/test?class=10&subject=chemistry"
             className={styles.button}
           >
             Start Test
@@ -48,7 +48,7 @@ export default function Class10Page() {
           <h3>Mathematics</h3>
           <p>Trigonometry • Algebra • Geometry • Statistics</p>
           <Link
-            href="/take-test?class=10&subject=maths"
+            href="/test?class=10&subject=maths"
             className={styles.button}
           >
             Start Test
@@ -60,7 +60,7 @@ export default function Class10Page() {
           <h3>Social Science</h3>
           <p>History • Geography • Civics • Economics</p>
           <Link
-            href="/take-test?class=10&subject=social"
+            href="/test?class=10&subject=social"
             className={styles.button}
           >
             Start Test

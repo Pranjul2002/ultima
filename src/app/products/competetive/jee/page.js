@@ -20,7 +20,7 @@ export default function JEEPage() {
           <h3>Physics</h3>
           <p>Mechanics • Thermodynamics • Waves • Modern Physics</p>
           <Link
-            href="/take-test?exam=jee&subject=physics"
+            href="/test?exam=jee&subject=physics"
             className={styles.button}
           >
             Start Test
@@ -31,7 +31,7 @@ export default function JEEPage() {
           <h3>Chemistry</h3>
           <p>Physical • Organic Reaction • Chemical Bonding</p>
           <Link
-            href="/take-test?exam=jee&subject=chemistry"
+            href="/test?exam=jee&subject=chemistry"
             className={styles.button}
           >
             Start Test
@@ -42,7 +42,7 @@ export default function JEEPage() {
           <h3>Mathematics</h3>
           <p>Algebra • Calculus • Coordinate Geometry • Vectors</p>
           <Link
-            href="/take-test?exam=jee&subject=maths"
+            href="/test?exam=jee&subject=maths"
             className={styles.button}
           >
             Start Test
