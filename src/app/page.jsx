@@ -1,5 +1,4 @@
-"use client"
-
+// No "use client" — Server Component
 import React from "react"
 import Image from "next/image"
 import { Gideon_Roman } from "next/font/google"
@@ -10,7 +9,7 @@ const gideon = Gideon_Roman({
   subsets: ["latin"],
 })
 
-const images = [
+const images = Object.freeze([
   "/homePage/carousel1.png",
   "/homePage/carousel2.png",
   "/homePage/carousel3.png",
@@ -18,7 +17,13 @@ const images = [
   "/homePage/carousel5.png",
   "/homePage/carousel6.png",
   "/homePage/carousel7.png",
-]
+])
+
+const QUOTE = {
+  line: "Starting is essential for progress.",
+  text: '"An investment in knowledge always pays the best interest."',
+  author: "– Benjamin Franklin",
+}
 
 const Home = () => {
   return (
@@ -32,7 +37,6 @@ const Home = () => {
               An easier, more powerful <br />
               platform to Grow Skills
             </h1>
-
             <div className={style.bannerSubText}>
               Build your skills, and open up on the Learning <br />
               platform where Education Blooms.
@@ -46,7 +50,11 @@ const Home = () => {
         <div className={style.carouselContainer}>
           <div className={style.carouselTrack}>
             {[...images, ...images].map((src, index) => (
-              <div className={style.carouselItem} key={index}>
+              <div
+                className={style.carouselItem}
+                key={`${src}-${index}`}
+                aria-hidden={index >= images.length}
+              >
                 <Image
                   src={src}
                   alt={`slide-${index}`}
@@ -63,12 +71,11 @@ const Home = () => {
       <section className={style.growthMindSetArea}>
         <div className={style.container}>
           <p className={`${style.growthText} ${gideon.className}`}>
-            Starting is essential for progress.
+            {QUOTE.line}
+            <span className={style.divider}></span>
+            {QUOTE.text}
             <br />
-            ________________________________
-            <br />
-            "An investment in knowledge always pays the best interest."
-            <br />– Benjamin Franklin
+            {QUOTE.author}
           </p>
         </div>
       </section>
