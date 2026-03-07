@@ -14,29 +14,29 @@ import styles from "./dashboard.module.css"
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
 const TABS = [
-  { id: "overview",  label: "Overview",  icon: FiHome },
-  { id: "profile",   label: "Profile",   icon: FiUser },
-  { id: "tests",     label: "My Tests",  icon: FiFileText },
-  { id: "results",   label: "Results",   icon: FiBarChart2 },
-  { id: "settings",  label: "Settings",  icon: FiSettings },
+  { id: "overview", label: "Overview", icon: FiHome },
+  { id: "profile", label: "Profile", icon: FiUser },
+  { id: "tests", label: "My Tests", icon: FiFileText },
+  { id: "results", label: "Results", icon: FiBarChart2 },
+  { id: "settings", label: "Settings", icon: FiSettings },
 ]
 
-const Dashboard = () =>{
+const Dashboard = () => {
   const router = useRouter()
-  const [activeTab, setActiveTab]   = useState("overview")
-  const [profile, setProfile]       = useState(null)
-  const [loading, setLoading]       = useState(true)
-  const [error, setError]           = useState("")
+  const [activeTab, setActiveTab] = useState("overview")
+  const [profile, setProfile] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("")
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   // Settings state
-  const [pwForm, setPwForm]         = useState({ current: "", next: "", confirm: "" })
-  const [pwError, setPwError]       = useState("")
-  const [pwSuccess, setPwSuccess]   = useState("")
+  const [pwForm, setPwForm] = useState({ current: "", next: "", confirm: "" })
+  const [pwError, setPwError] = useState("")
+  const [pwSuccess, setPwSuccess] = useState("")
 
   // Animated counters
-  const [counters, setCounters]     = useState({ tests: 0, score: 0 })
-  const animated                    = useRef(false)
+  const [counters, setCounters] = useState({ tests: 0, score: 0 })
+  const animated = useRef(false)
 
   /* ── Fetch profile ── */
   useEffect(() => {
@@ -85,10 +85,14 @@ const Dashboard = () =>{
     return () => clearInterval(timer)
   }, [profile])
 
+  
+
   /* ── Logout ── */
   const handleLogout = () => {
     localStorage.removeItem("token")
-    router.push("/signIn-Register")
+    // ↓ this fires the "storage" event the header is listening to
+    window.dispatchEvent(new Event("storage"))
+    router.push("/")
   }
 
   /* ── Password change ── */
@@ -116,10 +120,10 @@ const Dashboard = () =>{
 
   const getGrade = (score) => {
     if (score >= 90) return { label: "Outstanding", color: "#22c55e" }
-    if (score >= 75) return { label: "Excellent",   color: "#3b82f6" }
-    if (score >= 60) return { label: "Good",        color: "#f59e0b" }
-    if (score >= 40) return { label: "Average",     color: "#f97316" }
-    return                  { label: "Needs Work",  color: "#ef4444" }
+    if (score >= 75) return { label: "Excellent", color: "#3b82f6" }
+    if (score >= 60) return { label: "Good", color: "#f59e0b" }
+    if (score >= 40) return { label: "Average", color: "#f97316" }
+    return { label: "Needs Work", color: "#ef4444" }
   }
 
   /* ── Loading ── */
@@ -483,7 +487,7 @@ const Dashboard = () =>{
             <div className={styles.settingsCard}>
               <h3 className={styles.settingsSection}>Change Password</h3>
 
-              {pwError   && <div className={styles.formError}>{pwError}</div>}
+              {pwError && <div className={styles.formError}>{pwError}</div>}
               {pwSuccess && <div className={styles.formSuccess}>{pwSuccess}</div>}
 
               <form onSubmit={handlePasswordChange} className={styles.settingsForm}>

@@ -39,8 +39,13 @@ const Page = () => {
         body: JSON.stringify(loginCredentials),
       })
       const data = await res.json()
+      console.log(data)
       if (!res.ok) throw new Error(data.message || "Invalid credentials")
       localStorage.setItem("token", data.token)
+
+      // ✅ Fire custom event → header listens to this to change sigin/register icon to users's profile
+      window.dispatchEvent(new Event("authChange"))
+
       router.push("/dashboard")
     } catch (err) {
       setError(err.message || "Something went wrong.")
