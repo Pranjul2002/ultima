@@ -1,176 +1,163 @@
 .header {
-    background-color: white;
-    color: black;
-    padding: 10px;
-    position: fixed;
-    width: 100%;
-    z-index: 1000;
-    border: 1px solid rgb(156, 156, 156);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  padding: 10px;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .menuToggleButton {
-    padding: 10px;
-    font-size: 130%;
-    display: none;
-    background: #362C93;
-    border: none;
-    color: black;
-    cursor: pointer;
+  padding: 10px;
+  font-size: 130%;
+  display: none;
+  background: var(--color-brand);
+  border: none;
+  color: white;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
 }
 
 .container {
-    display: flex;
-    gap: 40px;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Column 1 */
+/* ── Column 1 ── */
 .headerCol1 {
-    display: flex;
-    align-items: center;
-    gap: 25px;
-    color: black;
+  display: flex;
+  align-items: center;
+  gap: 25px;
 }
 
 .logo {
-    font-weight: bold;
-    font-size: 20px;
+  font-weight: bold;
+  font-size: 20px;
+  color: var(--color-text);
 }
 
 .exploreTestButton {
-    border: 1px solid #362C93;
-    padding: 15px;
-    border-radius: 8px;
-    color: black;
-    font-size: 16px;
-    position: relative;
-    background: none;
-    cursor: pointer;
+  border: 1px solid var(--color-brand);
+  padding: 15px;
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  position: relative;
+  background: none;
+  cursor: pointer;
 }
 
 .exploreTestButtonDropdownMenu {
-    display: none;
-    background-color: rgb(224, 224, 224);
-    border: 1px solid gray;
-    border-radius: 8px;
-    position: absolute;
-    padding: 12px 16px;
-    left: 0;
-    top: 100%;
-    z-index: 90000;
+  display: none;
+  background-color: rgb(224, 224, 224);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  position: absolute;
+  padding: 12px 16px;
+  left: 0;
+  top: 100%;
+  z-index: 90000;
 }
 
 .exploreTestButton:hover .exploreTestButtonDropdownMenu {
-    display: block;
+  display: block;
 }
 
 .testTypeList ul {
-    display: flex;
-    flex-direction: column;
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
 }
 
 .testTypeList li {
-    margin: 10px 0;
-    padding: 15px 20px 15px 10px;
-    background-color: rgb(255, 255, 255);
-    border: 1px solid gray;
-    border-radius: 5px;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: 200ms;
+  margin: 10px 0;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
 }
 
-.testTypeList li:hover {
-    background-color: rgb(233, 233, 233);
+.testTypeList li a {
+  display: block;
+  padding: 15px 20px;
+  background-color: white;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  color: var(--color-text);
+  transition: background-color 200ms ease;
 }
 
-/* Column 2 */
-.headerCol2 {}
+.testTypeList li a:hover {
+  background-color: rgb(233, 233, 233);
+}
 
-.menuItemContainer {}
+/* ── Column 2 ── */
+.navContainer {}
 
 .menuItem {
-    list-style: none;
-    display: flex;
-    gap: 25px;
-    align-items: center;
-    padding: 0;
-    margin: 0;
+  display: flex;
+  gap: 25px;
+  align-items: center;
+  padding: 0;
+  margin: 0;
 }
 
 .item {
-    border-bottom: 3px solid #1900ff;
-    color: rgb(40, 40, 40);
-    padding: 10px 18px;
-    transition: 200ms;
-    text-decoration: none;
+  border-bottom: 3px solid var(--color-nav-underline, #1900ff);
+  color: rgb(40, 40, 40);
+  padding: 10px 18px;
+  transition: border-color 200ms ease, color 200ms ease;
 }
 
 .item:hover {
-    border-bottom: 3px solid #0f009a;
-    color: black;
+  border-bottom-color: var(--color-nav-underline-hover, #0f009a);
+  color: black;
 }
 
-/* Column 3 */
+/* ── Column 3 ── */
 .headerCol3 {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .loginRegisterButton {
-    padding: 18px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    font-family: 'Courier New', Courier, monospace;
-    background-color: #362C93;
-    color: white;
-    transition: 150ms;
-    text-decoration: none;
+  padding: 18px;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--font-size-base);
+  font-weight: bold;
+  font-family: 'Courier New', Courier, monospace;
+  background-color: var(--color-brand);
+  color: white;
+  transition: background-color 150ms ease;
 }
 
 .loginRegisterButton:hover {
-    background-color: #595394;
+  background-color: var(--color-brand-hover, #595394);
 }
 
 /* ================= MOBILE ================= */
-
 @media (max-width: 768px) {
+  .header { padding: 20px; }
 
-    .header {
-        padding: 20px;
-    }
+  .menuToggleButton { display: block; }
 
-    .menuToggleButton {
-        display: block;
-    }
+  .container {
+    display: none;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: center;
+    gap: 40px;
+  }
 
-    .container {
-        display: none;
-        flex-direction: column;
-        height: 100vh;
-        justify-content: center;
-        gap: 40px;
-    }
+  .menuOpen { display: flex; }
 
-    .menuOpen {
-        display: flex;
-    }
+  .headerCol1 { flex-direction: column; }
 
-    .headerCol1 {
-        flex-direction: column;
-    }
+  .menuItem { flex-direction: column; }
 
-    .menuItem {
-        flex-direction: column;
-    }
-
-    .headerCol3 {
-        justify-content: center;
-    }
+  .headerCol3 { justify-content: center; }
 }

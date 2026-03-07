@@ -25,6 +25,8 @@ const QUOTE = {
   author: "– Benjamin Franklin",
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL
+
 const Home = () => {
   return (
     <div className={style.home}>

@@ -1,266 +1,143 @@
-"use client";
+"use client"
+import React, { useState } from "react"
+import { useRouter } from "next/navigation"
+import style from "./siginRegister.module.css"
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import style from "./siginRegister.module.css";
+const API_URL = process.env.NEXT_PUBLIC_API_URL
+
+const defaultLogin    = { email: "", password: "" }
+const defaultRegister = { name: "", email: "", password: "", gender: "", dateOfBirth: "" }
 
 const Page = () => {
-  const router = useRouter();
+  const router = useRouter()
 
-  const [isLoginToggle, setIsLoginToggle] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [isLoginToggle, setIsLoginToggle]       = useState(true)
+  const [loading, setLoading]                   = useState(false)
+  const [error, setError]                       = useState("")
+  const [success, setSuccess]                   = useState("")
+  const [loginCredentials, setLoginCredentials] = useState(defaultLogin)
+  const [signupCredentials, setSignupCredentials] = useState(defaultRegister)
 
-  const [loginCredentials, setLoginCredentials] = useState({
-    email: "",
-    password: "",
-  });
+  const clearMessages = () => { setError(""); setSuccess("") }
 
-  const [signupCredentials, setSignupCredentials] = useState({
-    name: "",
-    email: "",
-    password: "",
-    age: "",
-    gender: "",
-  });
+  /* ── Shared input handler ── */
+  const handleLoginChange = (field) => (e) =>
+    setLoginCredentials(prev => ({ ...prev, [field]: e.target.value }))
 
-  /* ================= LOGIN ================= */
+  const handleRegisterChange = (field) => (e) =>
+    setSignupCredentials(prev => ({ ...prev, [field]: e.target.value }))
 
+  /* ── Login ── */
   const handleLogin = async (e) => {
-    e.preventDefault();
-
-    setLoading(true);
-    setError("");
-
-    router.push("/profile");
-
-    /*try {
-      const response = await fetch(
-        "http://192.168.41.188:8080/api/user/auth/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(loginCredentials),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Invalid credentials");
-      }
-
-      // TODO: store JWT securely (httpOnly cookie preferred)
-      console.log("Login success:", data);
-
-      router.push("/profile");
-    } catch (err) {
-      setError(err.message || "Something went wrong.");
-    } finally {
-      setLoading(false);
-    }*/
-  };
-
-  /* ================= REGISTER ================= */
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
-
-    setLoading(true);
-    setError("");
-
+    e.preventDefault()
+    setLoading(true)
+    clearMessages()
     try {
-      const response = await fetch(
-        "http://192.168.41.188:8080/api/user/auth/register",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...signupCredentials,
-            age: Number(signupCredentials.age),
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Registration failed");
-      }
-
-      setSignupCredentials({
-        name: "",
-        email: "",
-        password: "",
-        age: "",
-        gender: "",
-      });
-
-      alert("Successfully registered. You can now login.");
-      setIsLoginToggle(true);
+      const res = await fetch(`${API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(loginCredentials),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.message || "Invalid credentials")
+      localStorage.setItem("token", data.token)
+      router.push("/dashboard")
     } catch (err) {
-      setError(err.message || "Something went wrong.");
+      setError(err.message || "Something went wrong.")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
+
+  /* ── Register ── */
+  const handleRegister = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    clearMessages()
+    try {
+      const res = await fetch(`${API_URL}/api/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(signupCredentials),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.message || "Registration failed")
+      setSignupCredentials(defaultRegister)
+      setSuccess("Account created! You can now sign in.")
+      setIsLoginToggle(true)
+    } catch (err) {
+      setError(err.message || "Something went wrong.")
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className={style.signInRegister}>
-      {/* ================= HERO ================= */}
+
+      {/* Hero Panel */}
       <div className={style.signInRegisterHero}>
         <h1>WELCOME</h1>
         <h6>Start a new journey by joining in.</h6>
       </div>
 
-      {/* ================= FORM CONTAINER ================= */}
+      {/* Form Container */}
       <div className={style.signInRegisterContainer}>
         <div className={style.signInRegisterWrapper}>
 
-          {/* Toggle Buttons */}
+          {/* Toggle */}
           <div className={style.switchButtons}>
             <button
               className={isLoginToggle ? style.activeToggle : ""}
-              onClick={() => {
-                setIsLoginToggle(true);
-                setError("");
-              }}
+              onClick={() => { setIsLoginToggle(true); clearMessages() }}
             >
               Sign In
             </button>
-
             <button
               className={!isLoginToggle ? style.activeToggle : ""}
-              onClick={() => {
-                setIsLoginToggle(false);
-                setError("");
-              }}
+              onClick={() => { setIsLoginToggle(false); clearMessages() }}
             >
               Sign Up
             </button>
           </div>
 
-          {/* Error Message */}
-          {error && (
-            <div className={style.errorMessage}>
-              {error}
-            </div>
-          )}
+          {/* Messages */}
+          {error   && <div className={style.errorMessage}>{error}</div>}
+          {success && <div className={style.successMessage}>{success}</div>}
 
-          {/* ================= LOGIN FORM ================= */}
+          {/* Login Form */}
           {isLoginToggle ? (
-            <form
-              onSubmit={handleLogin}
-              className={`${style.form} ${style.loginForm}`}
-            >
+            <form onSubmit={handleLogin} className={`${style.form} ${style.loginForm}`}>
               <h2>Sign In</h2>
-
-              <input
-                type="email"
-                placeholder="Email"
-                value={loginCredentials.email}
-                onChange={(e) =>
-                  setLoginCredentials({
-                    ...loginCredentials,
-                    email: e.target.value,
-                  })
-                }
-                required
-              />
-
-              <input
-                type="password"
-                placeholder="Password"
-                value={loginCredentials.password}
-                onChange={(e) =>
-                  setLoginCredentials({
-                    ...loginCredentials,
-                    password: e.target.value,
-                  })
-                }
-                required
-              />
-
+              <input type="email"    placeholder="Email"    value={loginCredentials.email}    onChange={handleLoginChange("email")}    required />
+              <input type="password" placeholder="Password" value={loginCredentials.password} onChange={handleLoginChange("password")} required />
               <button type="submit" disabled={loading}>
                 {loading ? "Logging in..." : "Log In"}
               </button>
             </form>
+
           ) : (
-            /* ================= REGISTER FORM ================= */
-            <form
-              onSubmit={handleRegister}
-              className={`${style.form} ${style.registerForm}`}
-            >
+
+            /* Register Form */
+            <form onSubmit={handleRegister} className={`${style.form} ${style.registerForm}`}>
               <h2>Sign Up</h2>
+              <input type="text"     placeholder="Full Name" value={signupCredentials.name}     onChange={handleRegisterChange("name")}     required />
+              <input type="email"    placeholder="Email"     value={signupCredentials.email}    onChange={handleRegisterChange("email")}    required />
+              <input type="password" placeholder="Password"  value={signupCredentials.password} onChange={handleRegisterChange("password")} required />
 
-              <input
-                type="text"
-                placeholder="Full Name"
-                value={signupCredentials.name}
-                onChange={(e) =>
-                  setSignupCredentials({
-                    ...signupCredentials,
-                    name: e.target.value,
-                  })
-                }
-                required
-              />
-
-              <input
-                type="email"
-                placeholder="Email"
-                value={signupCredentials.email}
-                onChange={(e) =>
-                  setSignupCredentials({
-                    ...signupCredentials,
-                    email: e.target.value,
-                  })
-                }
-                required
-              />
-
-              <input
-                type="password"
-                placeholder="Password"
-                value={signupCredentials.password}
-                onChange={(e) =>
-                  setSignupCredentials({
-                    ...signupCredentials,
-                    password: e.target.value,
-                  })
-                }
-                required
-              />
-
-              <select
-                value={signupCredentials.gender}
-                onChange={(e) =>
-                  setSignupCredentials({
-                    ...signupCredentials,
-                    gender: e.target.value,
-                  })
-                }
-                required
-              >
-                <option value="" disabled>
-                  Select Gender
-                </option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
+              <select value={signupCredentials.gender} onChange={handleRegisterChange("gender")} required>
+                <option value="" disabled>Select Gender</option>
+                <option value="MALE">Male</option>
+                <option value="FEMALE">Female</option>
+                <option value="OTHER">Other</option>
               </select>
 
+              <label className={style.fieldLabel}>Date of Birth</label>
               <input
-                type="number"
-                placeholder="Age"
-                min="1"
-                value={signupCredentials.age}
-                onChange={(e) =>
-                  setSignupCredentials({
-                    ...signupCredentials,
-                    age: e.target.value,
-                  })
-                }
+                type="date"
+                value={signupCredentials.dateOfBirth}
+                max={new Date().toISOString().split("T")[0]}
+                onChange={handleRegisterChange("dateOfBirth")}
                 required
               />
 
@@ -269,10 +146,11 @@ const Page = () => {
               </button>
             </form>
           )}
+
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Page;
+export default Page

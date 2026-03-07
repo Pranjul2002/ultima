@@ -51,8 +51,8 @@
   padding: 2.5rem;
   border-radius: 16px;
   background-color: #f5fdff;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
-  transition: 0.3s ease;
+  box-shadow: var(--shadow-lg);
+  transition: box-shadow 0.3s ease;
 }
 
 /* ================= TOGGLE BUTTONS ================= */
@@ -74,7 +74,7 @@
   font-size: 1rem;
   background-color: transparent;
   color: #bbb;
-  transition: 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .switchButtons button:hover {
@@ -82,7 +82,6 @@
   color: white;
 }
 
-/* Optional active styling (you can apply conditional class later) */
 .activeToggle {
   background-color: #4f46e5 !important;
   color: white !important;
@@ -98,27 +97,27 @@
 .form h2 {
   margin-bottom: 1.8rem;
   text-align: center;
-  color: #000000;
+  color: var(--color-text);
   font-weight: 600;
 }
 
-/* Inputs */
+/* ================= INPUTS ================= */
 
 .form input,
 .form select {
   border: none;
-  color: white;
+  color: var(--color-text);
   background: transparent;
   padding: 0.8rem 0.5rem;
   margin-bottom: 1.3rem;
   border-bottom: 2px solid #555;
   outline: none;
-  transition: 0.3s ease;
   font-size: 0.95rem;
+  transition: border-color 0.3s ease;
 }
 
 .form input::placeholder {
-  color: #515151;
+  color: #888;
 }
 
 .form input:focus,
@@ -126,13 +125,24 @@
   border-bottom: 2px solid #4f46e5;
 }
 
-/* Fix select dropdown background */
+/* Select needs explicit background so dropdown is readable */
 .form select {
   background-color: #ffffff;
-  color: black;
+  color: var(--color-text);
+  cursor: pointer;
 }
 
-/* ================= ERROR MESSAGE ================= */
+/* ================= DATE OF BIRTH LABEL ================= */
+
+.fieldLabel {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.3rem;
+  margin-top: -0.5rem;
+  /* pulls it closer to the input below it */
+}
+
+/* ================= MESSAGES ================= */
 
 .errorMessage {
   color: #ff6b6b;
@@ -142,11 +152,24 @@
   border-radius: 6px;
   font-size: 0.9rem;
   text-align: center;
+  border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
+.successMessage {
+  color: #22c55e;
+  background-color: rgba(34, 197, 94, 0.1);
+  padding: 0.6rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  text-align: center;
+  border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
 /* ================= SUBMIT BUTTON ================= */
 
-.form button {
+.form button[type="submit"] {
+  margin-top: 0.5rem;
   padding: 0.9rem;
   border-radius: 10px;
   border: none;
@@ -154,15 +177,15 @@
   color: white;
   font-weight: 600;
   cursor: pointer;
-  transition: 0.3s ease;
   font-size: 1rem;
+  transition: background-color 0.3s ease;
 }
 
-.form button:hover:not(:disabled) {
+.form button[type="submit"]:hover:not(:disabled) {
   background: #4338ca;
 }
 
-.form button:disabled {
+.form button[type="submit"]:disabled {
   background: #3a3a3a;
   cursor: not-allowed;
   opacity: 0.6;
@@ -177,7 +200,6 @@
 }
 
 @media (max-width: 768px) {
-
   .signInRegister {
     flex-direction: column;
   }
@@ -198,7 +220,6 @@
 }
 
 @media (max-width: 480px) {
-
   .signInRegisterHero {
     height: 180px;
     padding: 1rem;

@@ -1,5 +1,4 @@
 /* ================= ROOT ================= */
-
 .home {
   padding-top: 90px;
   display: flex;
@@ -7,9 +6,7 @@
   overflow-x: hidden;
 }
 
-
 /* ================= BANNER AREA ================= */
-
 .bannerArea {
   width: 100%;
 }
@@ -21,8 +18,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-
-  /* Grid Background */
+  background-color: #f9f9f9;
   background-image:
     repeating-linear-gradient(
       to right,
@@ -38,42 +34,42 @@
       transparent 1px,
       transparent 40px
     );
-
-  /* Fade bottom */
   -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
   mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
 }
 
 .bannerText {
-  padding: 20px;
-  font-size: 50px;
+  padding: var(--space-md);
+  font-size: var(--font-size-3xl);
   max-width: 1000px;
 }
 
 .bannerSubText {
-  font-size: 25px;
-  margin-top: 25px;
-  color: rgb(0, 0, 0);
+  font-size: var(--font-size-lg);
+  margin-top: var(--space-lg);
+  color: var(--color-text);
 }
 
-
 /* ================= CAROUSEL ================= */
-
 .homeCarouselArea {
-  margin-top: 40px;
+  margin-top: var(--space-xl);
   overflow: hidden;
   width: 100%;
 }
 
 .carouselContainer {
   width: 100%;
-  overflow: hidden;
 }
 
 .carouselTrack {
   display: flex;
   width: max-content;
   animation: scroll 25s linear infinite;
+  will-change: transform;
+}
+
+.carouselContainer:hover .carouselTrack {
+  animation-play-state: paused;
 }
 
 .carouselItem {
@@ -84,25 +80,17 @@
 .carouselItem img {
   width: 200px;
   height: auto;
-  display: block;
 }
 
-/* Infinite Scroll Animation */
 @keyframes scroll {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
-
 
 /* ================= GROWTH SECTION ================= */
-
 .growthMindSetArea {
   position: relative;
-  background-color: #FF5C4C;
+  background-color: var(--color-primary);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -117,17 +105,12 @@
   left: 0;
   width: 100%;
   height: 100px;
-  background-color: white;
+  background-color: var(--color-background);
   border-radius: 50% / 100%;
 }
 
-.growthMindSetArea::before {
-  top: -50px;
-}
-
-.growthMindSetArea::after {
-  bottom: -50px;
-}
+.growthMindSetArea::before { top: -50px; }
+.growthMindSetArea::after  { bottom: -50px; }
 
 .container {
   max-width: 1100px;
@@ -135,86 +118,42 @@
 }
 
 .growthText {
-  font-size: 250%;
+  font-size: var(--font-size-3xl);
   line-height: 1.6;
   color: white;
 }
 
+.divider {
+  display: block;
+  width: 280px;
+  height: 2px;
+  background-color: white;
+  margin: 16px auto;
+  opacity: 0.6;
+}
 
 /* ================= RESPONSIVE ================= */
-
 @media (max-width: 1024px) {
-  .bannerText {
-    font-size: 40px;
-  }
-
-  .bannerSubText {
-    font-size: 20px;
-  }
-
-  .growthText {
-    font-size: 200%;
-  }
+  .bannerText    { font-size: var(--font-size-2xl); }
+  .bannerSubText { font-size: var(--font-size-base); }
+  .growthText    { font-size: var(--font-size-2xl); }
 }
-
 
 @media (max-width: 768px) {
-
-  .bannerContainer {
-    padding: 80px 15px;
-  }
-
-  .bannerText {
-    font-size: 28px;
-    padding: 0;
-  }
-
-  .bannerSubText {
-    margin-top: 30px;
-    font-size: 16px;
-  }
-
-  .homeCarouselArea {
-    margin-top: 50px;
-  }
-
-  .carouselTrack {
-    animation: scroll 35s linear infinite;
-  }
-
-  .carouselItem {
-    margin: 0 20px;
-  }
-
-  .carouselItem img {
-    width: 140px;
-  }
-
-  .growthMindSetArea {
-    padding: 100px 20px;
-  }
-
-  .growthText {
-    font-size: 150%;
-  }
+  .bannerContainer { padding: 80px 15px; }
+  .bannerText      { font-size: var(--font-size-xl); padding: 0; }
+  .bannerSubText   { margin-top: var(--space-lg); font-size: var(--font-size-base); }
+  .homeCarouselArea { margin-top: var(--space-xl); }
+  .carouselTrack   { animation-duration: 35s; }
+  .carouselItem    { margin: 0 20px; }
+  .carouselItem img { width: 140px; }
+  .growthMindSetArea { padding: 100px 20px; }
+  .growthText      { font-size: var(--font-size-xl); }
 }
 
-
 @media (max-width: 480px) {
-
-  .bannerText {
-    font-size: 22px;
-  }
-
-  .bannerSubText {
-    font-size: 14px;
-  }
-
-  .carouselItem img {
-    width: 120px;
-  }
-
-  .growthText {
-    font-size: 130%;
-  }
+  .bannerText       { font-size: var(--font-size-xl); }
+  .bannerSubText    { font-size: var(--font-size-sm); }
+  .carouselItem img { width: 120px; }
+  .growthText       { font-size: var(--font-size-lg); }
 }
