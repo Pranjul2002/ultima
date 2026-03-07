@@ -1,0 +1,437 @@
+/* ===================== */
+/* Layout */
+/* ===================== */
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fb;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ===================== */
+/* Sidebar */
+/* ===================== */
+
+.sidebar {
+  width: 240px;
+  padding: 30px 20px;
+  position: fixed;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  color: white;
+  overflow: hidden;
+
+  /* Animated Gradient */
+  background: linear-gradient(
+    -45deg,
+    #223150,
+    #1e346f,
+    #172749,
+    #1b194a
+  );
+  background-size: 300% 300%;
+  animation: gradientMove 12s ease infinite;
+
+  box-shadow: 4px 0 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Gradient animation */
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ===================== */
+/* Logo */
+/* ===================== */
+
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 40px;
+  letter-spacing: 1px;
+
+  animation: logoGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes logoGlow {
+  from { text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+  to { text-shadow: 0 0 15px rgba(255,255,255,0.6); }
+}
+
+/* ===================== */
+/* Navigation */
+/* ===================== */
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.navItem {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 15px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+/* Slide + glow hover */
+.navItem:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  transform: translateX(6px);
+  backdrop-filter: blur(4px);
+}
+
+/* Active indicator bar */
+.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: white !important;
+}
+
+.active::before {
+  content: "";
+  position: absolute;
+  left: -20px;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: #ffffff;
+  border-radius: 4px;
+}
+/* ===================== */
+/* Main */
+/* ===================== */
+
+.main {
+  flex: 1;
+  margin-left: 240px;
+  padding: 100px 40px 40px;
+}
+
+/* ===================== */
+/* Mobile Nav */
+/* ===================== */
+
+.mobileNav {
+  display: none;
+}
+
+/* ===================== */
+/* Profile Card */
+/* ===================== */
+
+.profileCard{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #6c63ff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.plan {
+  display: inline-block;
+  margin-top: 8px;
+  background: #623f7d;
+  color: rgb(243, 248, 248);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+/* ===================== */
+/* Stats Section */
+/* ===================== */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.statCard {
+  background: white;
+  padding: 25px;
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.statCard h3 {
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.statCard p {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* ===================== */
+/* Courses Section */
+/* ===================== */
+
+.courses h3 {
+  margin-bottom: 20px;
+}
+
+.courseCard {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.courseTop {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.progressBar {
+  background: #e5e7eb;
+  height: 8px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.progressFill {
+  height: 100%;
+  background: #2563eb;
+  transition: width 0.4s ease;
+}
+
+.continueBtn {
+  background: #4f4f4f;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.continueBtn:hover {
+  background: #aae8f6;
+  color: black;
+}
+
+/* ===================== */
+/* Test Attempts Section */
+/* ===================== */
+
+.testSection {
+  margin-top: 40px;
+}
+
+.testSection h3 {
+  margin-bottom: 15px;
+}
+
+.testCard {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  margin-top: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.resumeBtn {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.resumeBtn:hover {
+  background: #1e40af;
+}
+
+.noTest {
+  color: #6b7280;
+}
+
+/* ===================== */
+/* Responsive */
+/* ===================== */
+
+@media (max-width: 768px) {
+
+  .sidebar {
+    display: none;
+  }
+
+  .main {
+    margin-left: 0;
+    padding: 100px 20px 40px;
+  }
+
+  .mobileNav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: white;
+    padding: 16px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    font-size: 20px;
+  }
+
+  .profileCard {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .testCard {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+/* ===================== */
+/* Page Fade Animation */
+/* ===================== */
+
+.main {
+  animation: fadeInPage 0.8s ease-in-out;
+}
+
+@keyframes fadeInPage {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===================== */
+/* Sidebar Smooth Hover */
+/* ===================== */
+
+.navItem {
+  transition: all 0.3s ease;
+}
+
+.navItem:hover {
+  transform: translateX(6px);
+}
+
+/* ===================== */
+/* Avatar Floating + Hover */
+/* ===================== */
+
+@keyframes floatAvatar {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+.avatar {
+  animation: floatAvatar 4s ease-in-out infinite;
+  transition: all 0.4s ease;
+}
+
+.avatar:hover {
+  transform: scale(1.08) rotate(3deg);
+  box-shadow: 0 15px 30px rgba(108, 99, 255, 0.4);
+}
+
+/* ===================== */
+/* Cards Lift Animation */
+/* ===================== */
+
+.statCard,
+.courseCard,
+.testCard {
+  transition: all 0.35s ease;
+}
+
+.statCard:hover,
+.courseCard:hover,
+.testCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+}
+
+/* ===================== */
+/* Button Animations */
+/* ===================== */
+
+.continueBtn,
+.resumeBtn {
+  transition: all 0.3s ease;
+}
+
+.continueBtn:hover,
+.resumeBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+}
+
+.continueBtn:active,
+.resumeBtn:active {
+  transform: scale(0.95);
+}
+
+/* ===================== */
+/* Progress Bar Smooth Fill */
+/* ===================== */
+
+.progressFill {
+  transition: width 0.8s ease-in-out;
+}
+
+/* ===================== */
+/* Mobile Nav Animation */
+/* ===================== */
+
+.mobileNav {
+  animation: fadeInMobile 0.5s ease-in-out;
+}
+
+@keyframes fadeInMobile {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
