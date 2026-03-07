@@ -38,6 +38,16 @@ const Page = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(loginCredentials),
       })
+
+      // ✅ Add these debug lines temporarily
+      console.log("Status:", res.status)
+      console.log("Content-Type:", res.headers.get("content-type"))
+      const rawText = await res.text()   // read as text first
+      console.log("Raw response:", rawText)
+
+      // Then parse manually
+      if (!rawText) throw new Error("Server returned empty response")
+      
       const data = await res.json()
       console.log(data)
       if (!res.ok) throw new Error(data.message || "Invalid credentials")
