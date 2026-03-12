@@ -7,7 +7,6 @@ import styles from "./header.module.css"
 const NAV_LINKS = [
   { href: "/",           label: "Home" },
   { href: "/upskilling", label: "Upskilling" },
-  { href: "/test",       label: "Tests" },
   { href: "/products",   label: "Products" },
   { href: "/about",      label: "About" },
   { href: "/contact",    label: "Contact" },
@@ -235,4 +234,4 @@ const Header = () => {
   )
 }
 
-export default Header
+export default Header 

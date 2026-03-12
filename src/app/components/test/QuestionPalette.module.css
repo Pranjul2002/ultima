@@ -1,0 +1,66 @@
+.paletteSide{
+  position: sticky;
+  top: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.08);
+  height: fit-content;
+}
+
+.paletteLegend{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-bottom:15px;
+  font-size:14px;
+}
+
+.legendBox{
+  display:inline-block;
+  width:14px;
+  height:14px;
+  margin-right:8px;
+  border-radius:3px;
+}
+
+.paletteGrid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px;
+}
+
+.paletteBtn{
+  padding:8px;
+  border:none;
+  border-radius:6px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.notVisited{
+  background:#e5e7eb;
+}
+
+.visited{
+  background:#facc15;
+}
+
+.answered{
+  background:#22c55e;
+  color:white;
+}
+
+.currentQuestion{
+  border:2px solid #2563eb;
+}
+.paletteStats{
+  margin-top:18px;
+  padding-top:12px;
+  border-top:1px solid #e5e7eb;
+  font-size:14px;
+  font-weight:600;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}

@@ -1,0 +1,60 @@
+.questionCard{
+  background:white;
+  padding:25px;
+  border-radius:10px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.08);
+}
+
+.questionHeader{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+
+.questionNumber{
+  font-weight:600;
+  color:#2563eb;
+}
+
+.questionText{
+  margin-bottom:20px;
+  line-height:1.5;
+}
+
+.optionsContainer{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.optionButton{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:6px;
+  background:white;
+  cursor:pointer;
+  transition:0.25s;
+}
+
+.optionButton:hover{
+  background:#f3f4f6;
+  transform:translateX(5px);
+}
+
+.optionLabel{
+  font-weight:bold;
+}
+
+.selected{
+  border:2px solid #2563eb;
+  background:#eff6ff;
+  animation:selectPop 0.3s ease;
+}
+
+@keyframes selectPop{
+  0%{transform:scale(0.95);}
+  100%{transform:scale(1);}
+}

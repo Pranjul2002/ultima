@@ -1,9 +1,8 @@
-/* ===============================
-   GRID BACKGROUND
-================================= */
-
 .pageBackground {
   min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 100px 20px;
   background-color: #e6f1fc;
 
@@ -13,14 +12,40 @@
     linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
 
   background-size: 80px 80px; 
-}
-/* ===============================
-   PAGE ANIMATION
-================================= */
-.pageBackground {
   animation: moveGrid 20s linear infinite;
 }
+.testLayout{
+  display:grid;
+  grid-template-columns: 3fr 1fr;
+  gap:25px;
+  align-items:start;
+}
 
+.questionArea{
+  background:white;
+  padding:35px;
+  border-radius:12px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.08);
+  min-height:65vh;
+}
+.startTestCard{
+  background:white;
+  padding:40px;
+  border-radius:12px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.08);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:20px;
+  max-width:420px;
+  margin:auto;
+}
+
+.startTitle{
+  font-size:24px;
+  font-weight:600;
+  text-align:center;
+}
 @keyframes moveGrid {
   from {
     background-position: 0 0;
@@ -43,20 +68,15 @@
     transform: translateY(0);
   }
 }
-/* ===============================
-   TEST PAGE CONTAINER
-================================= */
 
 .testContainer {
-  max-width: 900px;
-  margin:60px auto; 
+  width: 100%;
+  margin: 60px auto;
   padding: 40px;
-  background: #b2b2b3; 
-  color: #0b0b0b;
+  background: #b2b2b3;
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  min-height: 70vh; 
-
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  min-height: 70vh;
 }
 .fullScreenWrapper {
   min-height: 80vh;   
@@ -64,140 +84,6 @@
   justify-content: center;
   align-items: center;
 }
-/* ===============================
-   CONFIG PANEL
-================================= */
-
-.configBox {
-  width: 100%;
-  max-width: 700px;              
-  padding: 50px;
-  background: #f2f2f2;
-  color: rgb(22, 22, 22);
-  border-radius: 20px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-}
-
-.configBox h2 {
-  margin-bottom: 35px;           
-  text-align: center;
-  font-size: 28px;               
-  font-weight: 600;
-}
-
-.configBox select,
-.configBox input {
-  width: 100%;
-  padding: 16px;                 
-  margin-bottom: 25px;           
-  border-radius: 12px;
-  border: 1px solid #334155;
-  background: #f0f1f3;
-  color: rgb(27, 26, 26);
-  font-size: 16px;               
-  outline: none;
-  transition: 0.3s ease;
-}
-
-.configBox select:focus,
-.configBox input:focus {
-  border-color: #5a6e8e;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
-}
-/* ===============================
-   BUTTONS
-================================= */
-
-.buttonPrimary {
-  width: 100%;
-  padding: 16px;
-  font-size: 16px;
-  border-radius: 12px;
-  margin-top: 10px;
-  border: none;
-  background: #040405;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.buttonPrimary:hover {
-  background: #193345;
-}
-
-.buttonSecondary {
-  padding: 10px 18px;
-  border-radius: 8px;
-  border: none;
-  background: #0b0c0d;
-  color: white;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.buttonSecondary:hover {
-  background: #193345;
-}
-
-/* ===============================
-   TIMER
-================================= */
-
-.timer {
-  text-align: right;
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 25px;
-  color: #251353; 
-}
-
-/* ===============================
-   QUESTION CARD
-================================= */
-
-.questionCard {
-  background: #ffffff;
-  padding: 30px;
-  border-radius: 14px;
-  margin-bottom: 30px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-}
-
-.questionCard h3 {
-  margin-bottom: 25px;
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.optionButton {
-  display: block;
-  width: 100%;
-  padding: 14px;
-  margin-bottom: 15px;
-  border-radius: 10px;
-  border: 1px solid #cbd5e1;
-  background: #f1f5f9;
-  color: #1e293b;
-  cursor: pointer;
-  text-align: left;
-  transition: 0.2s ease;
-  font-size: 15px;
-}
-
-.optionButton:hover {
-  background: #98c2fa;
-}
-
-.selected {
-  background: #74f9fe;
-  color: rgb(7, 7, 7);
-  border-color: #3bd4f6;
-}
-/* ===============================
-   NAVIGATION
-================================= */
 
 .navigation {
   display: flex;
@@ -233,10 +119,10 @@
 .buttonPrimary:hover {
   background: #1d77e6;
 }
-/* ===============================
-   RESULT SCREEN
-================================= */
-
+.submitButton {
+  margin-top: 20px;
+  width: 100%;
+}
 .resultWrapper {
   min-height: 80vh;
   display: flex;
@@ -285,6 +171,18 @@
   font-weight: bold;
   color: #101214;
 }
+.timerRow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.overallTimer{
+  font-size:18px;
+  font-weight:600;
+  color:#1e293b;
+}
 
 /* Animation */
 @keyframes fadeIn {
@@ -300,7 +198,13 @@
 /* ===============================
    RESPONSIVE
 ================================= */
+@media (max-width:900px){
 
+  .testLayout{
+    grid-template-columns:1fr;
+  }
+
+}
 @media (max-width: 768px) {
   .testContainer,
   .configBox {

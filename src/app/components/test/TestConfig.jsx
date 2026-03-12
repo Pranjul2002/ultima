@@ -1,35 +1,46 @@
 "use client";
 import { useState } from "react";
-import styles from "../../test/page.module.css";
+import styles from "./TestConfig.module.css";
 
 export default function TestConfig({ onStart }) {
+
   const [subject, setSubject] = useState("");
   const [topic, setTopic] = useState("");
-  const [questionsPerPage, setQuestionsPerPage] = useState(1);
-  const [negativeMarks, setNegativeMarks] = useState();
-  const [duration, setDuration] = useState(10);
+  const [negativeMarks, setNegativeMarks] = useState(0);
+  const [duration, setDuration] = useState(30);
   const [customTime, setCustomTime] = useState("");
 
   const handleStart = () => {
+
     if (!subject || !topic) {
       alert("Please select subject and topic");
+      return;
+    }
+
+    const finalDuration = customTime ? Number(customTime) : duration;
+
+    if (finalDuration <= 0) {
+      alert("Duration must be greater than 0");
       return;
     }
 
     onStart({
       subject,
       topic,
-      questionsPerPage,
+      questionsPerPage: 1,
       negativeMarks,
-      duration: customTime ? Number(customTime) : duration,
+      duration: finalDuration
     });
   };
 
   return (
+    <div className={styles.configWrapper}>
     <div className={styles.configBox}>
+
       <h2>Test Configuration</h2>
 
-      {/* Subject */}
+      {/* SUBJECT */}
+      <label>Subject</label>
       <select
         value={subject}
         onChange={(e) => setSubject(e.target.value)}
@@ -40,58 +51,74 @@ export default function TestConfig({ onStart }) {
         <option value="Computer Science">Computer Science</option>
       </select>
 
-      {/* Topic */}
+
+      {/* TOPIC */}
+      <label>Topic</label>
       <select
         value={topic}
         onChange={(e) => setTopic(e.target.value)}
       >
         <option value="">Select Topic</option>
-        <option value="Algebra">Algebra</option>
-        <option value="Geometry">Geometry</option>
-        <option value="Physics">Physics</option>
-        <option value="Chemistry">Chemistry</option>
-        <option value="Programming">Programming</option>
-        <option value="DBMS">DBMS</option>
+
+        {subject === "Math" && (
+          <>
+            <option value="Algebra">Algebra</option>
+            <option value="Geometry">Geometry</option>
+          </>
+        )}
+
+        {subject === "Science" && (
+          <>
+            <option value="Physics">Physics</option>
+            <option value="Chemistry">Chemistry</option>
+          </>
+        )}
+
+        {subject === "Computer Science" && (
+          <>
+            <option value="Programming">Programming</option>
+            <option value="DBMS">DBMS</option>
+          </>
+        )}
+
       </select>
 
-      {/* Questions per page */}
-      <select
-        value={questionsPerPage}
-        onChange={(e) => setQuestionsPerPage(Number(e.target.value))}
-      >
-        <option value={1}>1 Question</option>
-        <option value={2}>2 Questions</option>
-      </select>
 
-      {/* Negative Marks */}
+      {/* NEGATIVE MARKS */}
+      <label>Negative Marks (per wrong answer)</label>
       <select
         value={negativeMarks}
         onChange={(e) => setNegativeMarks(Number(e.target.value))}
       >
-        <option value="">Negative per wrong answer</option>
+        <option value={0}>No Negative Marking</option>
         <option value={0.33}>0.33</option>
         <option value={0.5}>0.5</option>
         <option value={0.66}>0.66</option>
       </select>
 
-      {/* Duration */}
+
+      {/* QUESTION TIMER */}
+      <label>Time Per Question</label>
       <select
         value={duration}
         onChange={(e) => setDuration(Number(e.target.value))}
       >
-        <option value={5}>5 Sec</option>
-        <option value={10}>10 Sec</option>
-        <option value={15}>15 Sec</option>
-        <option value={30}>30 Sec</option>
+        <option value={10}>10 Seconds</option>
+        <option value={15}>15 Seconds</option>
+        <option value={30}>30 Seconds</option>
+        <option value={60}>60 Seconds</option>
       </select>
 
-      {/* Custom Time */}
+
+      {/* CUSTOM TIMER */}
+      <label>Custom Time (seconds)</label>
       <input
         type="number"
-        placeholder="Custom Seconds"
+        placeholder="Enter custom seconds"
         value={customTime}
         onChange={(e) => setCustomTime(e.target.value)}
       />
+
 
       <button
         className={styles.buttonPrimary}
@@ -99,6 +126,8 @@ export default function TestConfig({ onStart }) {
       >
         Start Test
       </button>
+
+    </div>
     </div>
   );
 }
