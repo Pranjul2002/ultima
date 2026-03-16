@@ -66,6 +66,7 @@ const Page = () => {
         body: JSON.stringify(signupCredentials),
       })
       const data = await res.json()
+      console.log(data)
       if (!res.ok) throw new Error(data.message || "Registration failed")
       setSignupCredentials(defaultRegister)
       setSuccess("Account created! You can now sign in.")
