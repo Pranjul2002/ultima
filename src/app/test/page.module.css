@@ -1,61 +1,219 @@
+/* ================= PAGE BACKGROUND ================= */
 .pageBackground {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 100px 20px;
-  background-color: #e6f1fc;
-
-  /* Big grid effect */
+  padding: 80px 40px;
+  background-color: var(--color-background);
   background-image:
     linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
-
-  background-size: 80px 80px; 
-  animation: moveGrid 20s linear infinite;
+  background-size: 80px 80px;
 }
-.testLayout{
-  display:grid;
+
+/* ================= TEST CONTAINER ================= */
+.testContainer {
+  width: 100%;
+  max-width: 100%;
+  margin: auto;
+  padding: 40px;
+  background: var(--color-background);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  min-height: 70vh;
+  /* ✅ Removed floatCard animation — distracting during a test */
+}
+
+.fullScreenWrapper {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ================= LAYOUT ================= */
+.testLayout {
+  display: grid;
   grid-template-columns: 3fr 1fr;
-  gap:25px;
-  align-items:start;
+  gap: 25px;
+  align-items: start;
 }
 
-.questionArea{
-  background:white;
-  padding:35px;
-  border-radius:12px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.08);
-  min-height:65vh;
-}
-.startTestCard{
-  background:white;
-  padding:40px;
-  border-radius:12px;
-  box-shadow:0 6px 18px rgba(0,0,0,0.08);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:20px;
-  max-width:420px;
-  margin:auto;
+.questionArea {
+  background: white;
+  padding: 35px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  min-height: 65vh;
 }
 
-.startTitle{
-  font-size:24px;
-  font-weight:600;
-  text-align:center;
+/* ================= TIMER ROW ================= */
+.timerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
-@keyframes moveGrid {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 80px 80px;
-  }
+
+.overallTimer {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text);
 }
+
+/* Apply this class via JS when time < 60s */
+.overallTimerWarning {
+  color: var(--color-primary);
+  animation: pulseTimer 1s infinite;
+}
+
+/* ================= NAVIGATION ================= */
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+/* ================= BUTTONS ================= */
+.buttonPrimary {
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: var(--color-primary);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+.buttonPrimary:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+}
+.buttonPrimary:active {
+  transform: scale(0.97);
+}
+
+.buttonSecondary {
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-border);
+  background: white;
+  color: var(--color-text);
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+.buttonSecondary:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  transform: translateY(-2px);
+}
+.buttonSecondary:active {
+  transform: scale(0.97);
+}
+.buttonSecondary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.submitButton {
+  margin-top: 20px;
+  width: 100%;
+}
+
+/* ================= START CARD ================= */
+.startTestCard {
+  background: white;
+  padding: 40px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 420px;
+  margin: auto;
+}
+
+.startTitle {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ================= RESULT SCREEN ================= */
+.resultWrapper {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.resultCard {
+  background: var(--color-surface);
+  padding: 60px;
+  border-radius: var(--radius-lg);
+  text-align: center;
+  box-shadow: var(--shadow-lg);
+  animation: resultPop 0.6s ease forwards;
+}
+
+.resultCard h2 {
+  font-size: var(--font-size-2xl);
+  margin-bottom: 20px;
+}
+
+.successIcon {
+  font-size: 50px;
+  margin-bottom: 20px;
+  display: block;
+  animation: bounce 1.2s infinite;
+}
+
+.score {
+  font-size: var(--font-size-lg);
+  margin-bottom: 30px;
+}
+
+.score span {
+  font-size: var(--font-size-xl);
+  font-weight: bold;
+  color: var(--color-text);
+}
+
+.percentage {
+  font-size: 26px;
+  font-weight: bold;
+  color: var(--color-text);
+  margin-bottom: 20px;
+}
+
+.suggestion {
+  margin-bottom: 30px;
+  font-size: var(--font-size-base);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+/* ================= OPTION BUTTONS ================= */
+.optionButton {
+  transition: transform 0.25s ease;
+}
+.optionButton:hover {
+  transform: translateX(5px);
+}
+
+.selected {
+  animation: selectPop 0.3s ease;
+}
+
+/* ================= ANIMATIONS ================= */
 .fadeIn {
-  animation: fadeSlide 1s ease forwards;
+  animation: fadeSlide 0.6s ease forwards;
 }
 
 @keyframes fadeSlide {
@@ -69,265 +227,91 @@
   }
 }
 
-.testContainer {
-  width: 100%;
-  margin: 60px auto;
-  padding: 40px;
-  background: #b2b2b3;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  min-height: 70vh;
-}
-.fullScreenWrapper {
-  min-height: 80vh;   
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.navigation {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 30px;
-}
-
-.buttonSecondary {
-  padding: 12px 20px;
-  border-radius: 10px;
-  border: none;
-  background: #605f60;
-  color: white;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.buttonSecondary:hover {
-  background: #1d77e6;
-}
-
-.buttonPrimary {
-  padding: 12px 24px;
-  border-radius: 10px;
-  border: none;
-  background: #605f60;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
-.buttonPrimary:hover {
-  background: #1d77e6;
-}
-.submitButton {
-  margin-top: 20px;
-  width: 100%;
-}
-.resultWrapper {
-  min-height: 80vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.percentage {
-  font-size: 26px;
-  font-weight: bold;
-  color: #0a0a0a;
-  margin-bottom: 20px;
-}
-
-.suggestion {
-  margin-bottom: 30px;
-  font-size: 16px;
-  color: #455161;
-  line-height: 1.6;
-}
-.resultCard {
-  background: #f7f7f7;
-  padding: 60px;
-  border-radius: 20px;
-  text-align: center;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-.successIcon {
-  font-size: 50px;
-  margin-bottom: 20px;
-}
-
-.resultCard h2 {
-  font-size: 28px;
-  margin-bottom: 20px;
-}
-
-.score {
-  font-size: 20px;
-  margin-bottom: 30px;
-}
-
-.score span {
-  font-size: 28px;
-  font-weight: bold;
-  color: #101214;
-}
-.timerRow{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
-}
-
-.overallTimer{
-  font-size:18px;
-  font-weight:600;
-  color:#1e293b;
-}
-
-/* Animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-/* ===============================
-   RESPONSIVE
-================================= */
-@media (max-width:900px){
-
-  .testLayout{
-    grid-template-columns:1fr;
-  }
-
-}
-@media (max-width: 768px) {
-  .testContainer,
-  .configBox {
-    padding: 25px;
-    margin: 30px 15px;
-  }
-
-  .navigation {
-    flex-direction: column;
-    gap: 10px;
-  }
-}
-
-.testContainer {
-  animation: floatCard 6s ease-in-out infinite alternate;
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
-
-
-@keyframes floatCard {
-  from {
-    transform: translateY(0px);
-  }
-  to {
-    transform: translateY(-10px);
-  }
-}
-.configBox {
-  animation: scaleFade 0.8s ease forwards;
-}
-
-@keyframes scaleFade {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-.buttonPrimary,
-.buttonSecondary {
-  position: relative;
-  overflow: hidden;
-  transform: translateY(0);
-}
-
-.buttonPrimary:hover,
-.buttonSecondary:hover {
-  transform: translateY(-3px) scale(1.03);
-}
-
-.buttonPrimary:active,
-.buttonSecondary:active {
-  transform: scale(0.97);
-}
-.timer {
-  animation: pulseTimer 2s infinite;
-}
-
-@keyframes pulseTimer {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.08); }
-  100% { transform: scale(1); }
-}
-
-
-@keyframes slideUpCard {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.optionButton {
-  transition: all 0.25s ease;
-}
-
-.optionButton:hover {
-  transform: translateX(5px);
-}
-
-.selected {
-  animation: selectPop 0.3s ease;
-}
-
-@keyframes selectPop {
-  0% { transform: scale(0.95); }
-  100% { transform: scale(1); }
-}
-.navigation button {
-  transition: all 0.3s ease;
-}
-
-.navigation button:hover {
-  transform: translateY(-4px);
-}
-.resultCard {
-  animation: resultPop 0.6s ease;
-}
-
 @keyframes resultPop {
-  0% {
-    opacity: 0;
-    transform: scale(0.8) rotate(-2deg);
-  }
-  60% {
-    transform: scale(1.05) rotate(1deg);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1) rotate(0);
-  }
-}
-.successIcon {
-  animation: bounce 1.2s infinite;
+  0%   { opacity: 0; transform: scale(0.85) rotate(-1deg); }
+  60%  { transform: scale(1.04) rotate(0.5deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0); }
 }
 
 @keyframes bounce {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  50%       { transform: translateY(-10px); }
+}
+
+@keyframes selectPop {
+  0%   { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes pulseTimer {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+@keyframes scaleFade {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.configBox {
+  animation: scaleFade 0.8s ease forwards;
+}
+
+/* ================= LOADING (Suspense fallback) ================= */
+.loadingWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+  .testLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .testContainer {
+    padding: 25px;
+    margin: 30px 15px;
+  }
+  .resultCard {
+    padding: 40px 24px;
+  }
+  .navigation {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .navigation button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .timerRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .startTestCard {
+    padding: 30px 20px;
+  }
 }

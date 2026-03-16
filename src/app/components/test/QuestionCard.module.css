@@ -1,60 +1,72 @@
-.questionCard{
-  background:white;
-  padding:25px;
-  border-radius:10px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.08);
+.questionCard {
+  background: white;
+  padding: 25px;
+  border-radius: var(--radius-md);
 }
 
-.questionHeader{
-  display:flex;
-  justify-content:space-between;
-  margin-bottom:10px;
+.questionHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 
-.questionNumber{
-  font-weight:600;
-  color:#2563eb;
+.questionNumber {
+  font-weight: 600;
+  color: var(--color-brand); /* ✅ was hardcoded #2563eb */
 }
 
-.questionText{
-  margin-bottom:20px;
-  line-height:1.5;
+.questionText {
+  margin-bottom: 20px;
+  line-height: 1.6;
+  font-size: var(--font-size-base);
+  color: var(--color-text);
 }
 
-.optionsContainer{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
+.optionsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.optionButton{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:12px;
-  border:1px solid #ddd;
-  border-radius:6px;
-  background:white;
-  cursor:pointer;
-  transition:0.25s;
+.optionButton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: white;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+  text-align: left;
+  width: 100%;
+  font-size: var(--font-size-base);
+  color: var(--color-text);
 }
 
-.optionButton:hover{
-  background:#f3f4f6;
-  transform:translateX(5px);
+.optionButton:hover {
+  background: var(--color-surface);
+  transform: translateX(5px);
+  border-color: var(--color-brand);
 }
 
-.optionLabel{
-  font-weight:bold;
+.optionLabel {
+  font-weight: 700;
+  color: var(--color-brand);
+  min-width: 24px;
 }
 
-.selected{
-  border:2px solid #2563eb;
-  background:#eff6ff;
-  animation:selectPop 0.3s ease;
+.selected {
+  border: 2px solid var(--color-brand);
+  background: #eff6ff;
+  animation: selectPop 0.25s ease;
 }
 
-@keyframes selectPop{
-  0%{transform:scale(0.95);}
-  100%{transform:scale(1);}
+.selected .optionLabel {
+  color: var(--color-brand);
+}
+
+@keyframes selectPop {
+  0%   { transform: scale(0.97); }
+  100% { transform: scale(1); }
 }
