@@ -48,6 +48,7 @@ const Page = () => {
 
       router.push("/dashboard")
     } catch (err) {
+      console.log(err)
       setError(err.message || "Something went wrong.")
     } finally {
       setLoading(false)
@@ -72,6 +73,7 @@ const Page = () => {
       setSuccess("Account created! You can now sign in.")
       setIsLoginToggle(true)
     } catch (err) {
+      console.log(err)
       setError(err.message || "Something went wrong.")
     } finally {
       setLoading(false)
