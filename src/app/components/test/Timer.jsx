@@ -1,10 +1,16 @@
 "use client"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import styles from "./Timer.module.css"
 
 export default function Timer({ duration, onTimeUp }) {
   const [timeLeft, setTimeLeft] = useState(duration)
-
+  const onTimeUpRef = useRef(onTimeUp)
+   useEffect(() => {
+    onTimeUpRef.current = onTimeUp
+  }, [onTimeUp])
+useEffect(() => {
+  window.currentTimeLeft = timeLeft
+}, [timeLeft])
   useEffect(() => {
     setTimeLeft(duration)
     const interval = setInterval(() => {
@@ -18,7 +24,7 @@ export default function Timer({ duration, onTimeUp }) {
       })
     }, 1000)
     return () => clearInterval(interval)
-  }, [duration, onTimeUp]) // ✅ Added onTimeUp to deps
+  }, [duration]) 
 
   const percentage = (timeLeft / duration) * 100
   const isWarning  = timeLeft <= 5

@@ -7,6 +7,8 @@ export default function QuestionPalette({
   visited,
   currentPage,
   setCurrentPage,
+  markedForReview,
+  lockedQuestions,
 }) {
   const total = filteredQuestions.length
   const answeredCount = filteredQuestions.filter((q) => answers[q.id]).length
@@ -15,10 +17,12 @@ export default function QuestionPalette({
   const answeredPercent = total > 0 ? Math.round((answeredCount / total) * 100) : 0
 
   const legend = [
-    { label: "Not Visited", cls: styles.notVisited },
-    { label: "Visited",     cls: styles.visited },
-    { label: "Answered",    cls: styles.answered },
-  ]
+  { label: "Not Visited", cls: styles.notVisited },
+  { label: "Visited", cls: styles.visited },
+  { label: "Answered & Locked", cls: styles.answered },
+  { label: "Marked for Review", cls: styles.review },
+  { label: "Answered + Review", cls: styles.answeredReview },
+]
 
   return (
     <div className={styles.paletteSide}>
@@ -45,9 +49,20 @@ export default function QuestionPalette({
               aria-label={`Go to question ${index + 1}`}
               aria-current={index === currentPage ? "true" : undefined}
               onClick={() => setCurrentPage(index)}
-              className={`${styles.paletteBtn}
-                ${isAnswered ? styles.answered : isVisited ? styles.visited : styles.notVisited}
-                ${index === currentPage ? styles.currentQuestion : ""}
+              className={`
+                ${styles.paletteButton}
+                ${currentPage === index ? styles.active : ""}
+                ${
+                  markedForReview[q.id] && answers[q.id]
+                    ? styles.answeredReview
+                    : markedForReview[q.id]
+                    ? styles.review
+                    : lockedQuestions?.[q.id] && answers[q.id]
+                    ? styles.answered
+                    : visited[q.id] && !answers[q.id]
+                    ? styles.visited
+                    : styles.notVisited
+                }
               `}
             >
               {index + 1}

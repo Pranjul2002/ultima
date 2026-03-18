@@ -1,6 +1,6 @@
 .questionCard {
   background: white;
-  padding: 25px;
+  padding: 2px;
   border-radius: var(--radius-md);
 }
 
@@ -14,7 +14,35 @@
   font-weight: 600;
   color: var(--color-brand); /* ✅ was hardcoded #2563eb */
 }
+.timeUpText {
+  color: red;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.reviewButton {
+  margin-top: 380px;
+  left: 0;
+  padding: 8px 14px;
+  border-radius: 6px;
+  background: #e5e7eb;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
 
+.reviewButton:hover {
+  background: #d1d5db;
+}
+
+.marked {
+  background: orange;
+  color: white;
+}
+.locked {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 .questionText {
   margin-bottom: 20px;
   line-height: 1.6;
@@ -25,7 +53,8 @@
 .optionsContainer {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 20px;
 }
 
 .optionButton {

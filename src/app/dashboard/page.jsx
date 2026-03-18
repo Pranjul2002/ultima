@@ -291,7 +291,7 @@ const Dashboard = () => {
               <div className={styles.actionGrid}>
                 <button
                   className={styles.actionCard}
-                  onClick={() => router.push("/test")}
+                  onClick={() => router.push("/products")}
                 >
                   <FiFileText className={styles.actionIcon} />
                   <span>Start a Test</span>

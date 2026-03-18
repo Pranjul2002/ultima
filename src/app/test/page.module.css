@@ -1,10 +1,11 @@
 /* ================= PAGE BACKGROUND ================= */
 .pageBackground {
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 80px 40px;
+  padding:0;
   background-color: var(--color-background);
   background-image:
     linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
@@ -17,16 +18,17 @@
   width: 100%;
   max-width: 100%;
   margin: auto;
-  padding: 40px;
+  padding: 10px;
   background: var(--color-background);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
-  min-height: 70vh;
-  /* ✅ Removed floatCard animation — distracting during a test */
+  height: 100%; 
+  display: flex; 
+  flex-direction: column; 
 }
 
 .fullScreenWrapper {
-  min-height: 80vh;
+  min-height: 90vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,8 +37,9 @@
 /* ================= LAYOUT ================= */
 .testLayout {
   display: grid;
+  justify-content: space-between;
   grid-template-columns: 3fr 1fr;
-  gap: 25px;
+  gap: 15px;
   align-items: start;
 }
 
@@ -45,7 +48,7 @@
   padding: 35px;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
-  min-height: 65vh;
+  min-height: 90vh;
 }
 
 /* ================= TIMER ROW ================= */
@@ -72,9 +75,32 @@
 .navigation {
   display: flex;
   justify-content: space-between;
-  margin-top: 30px;
+  margin-top: 15px;
+}
+.rulesBox {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  text-align: left;
 }
 
+.rulesTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.rulesList {
+  padding-left: 18px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.rulesList li {
+  margin-bottom: 6px;
+}
 /* ================= BUTTONS ================= */
 .buttonPrimary {
   padding: 12px 24px;
@@ -121,7 +147,8 @@
 }
 
 .submitButton {
-  margin-top: 20px;
+  margin-top: 10px;
+  background-color: grey;
   width: 100%;
 }
 
@@ -135,10 +162,21 @@
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  max-width: 420px;
   margin: auto;
 }
-
+.rulesBox {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 10px;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  text-align: left;
+}
+.rulesList {
+  padding-left: 20px;
+  font-size: 14px;
+  line-height: 1.7; /* 🔥 more breathing space */
+}
 .startTitle {
   font-size: var(--font-size-xl);
   font-weight: 600;
@@ -146,20 +184,65 @@
 }
 
 /* ================= RESULT SCREEN ================= */
-.resultWrapper {
-  min-height: 80vh;
+
+.fullResultPage {
+  width: 100%;
+  height: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
 }
 
-.resultCard {
-  background: var(--color-surface);
-  padding: 60px;
-  border-radius: var(--radius-lg);
+/* ✅ Sticky top */
+.resultHeader {
+  position: sticky;
+  top: 0;
+  background: white;
+  padding: 15px;
+  border-bottom: 1px solid #e5e7eb;
+  z-index: 10;
   text-align: center;
-  box-shadow: var(--shadow-lg);
-  animation: resultPop 0.6s ease forwards;
+}
+
+
+/* ✅ States */
+.correct {
+  border-color: #22c55e;
+  background-color: #ecfdf5;
+}
+
+.wrong {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.skipped {
+  border-color: #f59e0b;
+  background-color: #fffbeb;
+}
+
+.resultFooter {
+  padding: 15px;
+  border-top: 1px solid #e5e7eb;
+  background: white;
+  text-align: center;
+}
+.analysisContainer {
+  flex: 1;             
+  overflow-y: auto;    
+  padding: 20px;
+}
+
+.analysisCard {
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border-left: 5px solid;
+  background: #f9fafb;
+}
+
+.questionText {
+  font-weight: 600;
+  margin-bottom: 6px;
 }
 
 .resultCard h2 {
@@ -198,7 +281,24 @@
   color: var(--color-text-muted);
   line-height: 1.6;
 }
+.configItem{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  width:100%;
+}
 
+.configItem input,
+.configItem select{
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+.totalTime{
+  font-size:16px;
+  margin-top:10px;
+}
 /* ================= OPTION BUTTONS ================= */
 .optionButton {
   transition: transform 0.25s ease;
@@ -302,6 +402,9 @@
   }
   .navigation button {
     width: 100%;
+  }
+  .startTestCard {
+    max-width: 600px;
   }
 }
 

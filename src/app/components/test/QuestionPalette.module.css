@@ -5,6 +5,7 @@
   padding: 20px;
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
+  min-height: 90vh;
   height: fit-content;
 }
 
@@ -59,11 +60,35 @@
 .paletteBtn:hover {
   transform: scale(1.1);
 }
-
+.review {
+  background-color: orange !important;
+  color: white;
+}
 /* States */
-.notVisited { background: var(--color-border); color: var(--color-text); }
-.visited    { background: #fde68a; color: #92400e; } /* ✅ softer yellow, readable text */
-.answered   { background: #22c55e; color: white; }
+.notVisited {
+  background-color: #e5e7eb;
+  color: black;
+}
+
+.visited {
+  background-color: #93c5fd;
+  color: black;
+}
+
+.answered {
+  background-color: #22c55e;
+  color: white;
+}
+
+.review {
+  background-color: orange;
+  color: white;
+}
+
+.answeredReview {
+  background-color: purple;
+  color: white;
+}
 
 .currentQuestion {
   outline: 2px solid var(--color-brand);
