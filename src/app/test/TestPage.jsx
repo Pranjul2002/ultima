@@ -445,7 +445,7 @@ if (isFinished) {
                 }}
                   disabled={end >= filteredQuestions.length}
                 >
-                  Next →
+                  Save & Next →
                 </button>
             </div>
 
