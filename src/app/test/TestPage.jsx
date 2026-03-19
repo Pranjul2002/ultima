@@ -335,9 +335,29 @@ if (isFinished) {
 
           {!lockedQuestions[filteredQuestions[currentPage]?.id] && (
             <Timer
-              duration={config.duration}
-              onTimeUp={handleTimeUp}
-            />
+                key={filteredQuestions[currentPage]?.id} // forces re-mount **only for new questions**
+                duration={questionTimers[filteredQuestions[currentPage]?.id] ?? config.duration} // use saved time if exists
+                onTimeUp={() => {
+                  const currentQuestionId = filteredQuestions[currentPage]?.id;
+
+                  // Lock if not marked for review
+                  if (!markedForReview[currentQuestionId]) {
+                    setLockedQuestions((prev) => ({
+                      ...prev,
+                      [currentQuestionId]: true,
+                    }));
+                  }
+
+                  handleTimeUp(); // move to next question
+                }}
+                onTimeUpdate={(timeLeft) => {
+                  const currentQuestionId = filteredQuestions[currentPage]?.id;
+                  setQuestionTimers((prev) => ({
+                    ...prev,
+                    [currentQuestionId]: timeLeft,
+                  }));
+                }}
+              />
           )}
         </div>
 
