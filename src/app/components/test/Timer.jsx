@@ -2,30 +2,39 @@
 import { useEffect, useState, useRef } from "react"
 import styles from "./Timer.module.css"
 
-export default function Timer({ duration, onTimeUp }) {
-  const [timeLeft, setTimeLeft] = useState(duration)
+export default function Timer({ duration, onTimeUp, onTimeUpdate }) {
+const [timeLeft, setTimeLeft] = useState(duration || 0)
   const onTimeUpRef = useRef(onTimeUp)
    useEffect(() => {
     onTimeUpRef.current = onTimeUp
   }, [onTimeUp])
-useEffect(() => {
-  window.currentTimeLeft = timeLeft
-}, [timeLeft])
-  useEffect(() => {
-    setTimeLeft(duration)
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval)
-          onTimeUp()
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
-    return () => clearInterval(interval)
-  }, [duration]) 
+const prevDurationRef = useRef(duration)
 
+useEffect(() => {
+  // Only set when switching question (not during ticking)
+  if (typeof duration === "number") {
+    setTimeLeft(duration)
+    prevDurationRef.current = duration
+  }
+}, [duration])
+useEffect(() => {
+  if (timeLeft <= 0) {
+    onTimeUpRef.current()
+    return
+  }
+
+  const interval = setInterval(() => {
+    setTimeLeft((prev) => {
+      const newTime = prev - 1
+
+      onTimeUpdate?.(newTime)   // ✅ THIS LINE FIXES EVERYTHING
+
+      return newTime
+    })
+  }, 1000)
+
+  return () => clearInterval(interval)
+}, [timeLeft])
   const percentage = (timeLeft / duration) * 100
   const isWarning  = timeLeft <= 5
 

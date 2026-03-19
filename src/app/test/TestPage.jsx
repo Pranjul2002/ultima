@@ -238,7 +238,7 @@ const toggleReview = (id) => {
     [id]: !prev[id],
   }))
 }
-  /* ── Result screen ── */
+/* ── Result screen ── */
 if (isFinished) {
   const totalQuestions = filteredQuestions.length
   let correctAnswers = 0
@@ -250,7 +250,6 @@ if (isFinished) {
   })
 
   let score = correctAnswers
-
   if (config?.negativeMarking) {
     score = correctAnswers - wrongAnswers * 0.25
   }
@@ -267,40 +266,72 @@ if (isFinished) {
             Score: <strong>{score}</strong> / {totalQuestions}
           </p>
 
-          <p>
-            ✔ Correct: {correctAnswers} | ❌ Wrong: {wrongAnswers} | 🟡 Skipped: {totalQuestions - correctAnswers - wrongAnswers}
-          </p>
+          <div className={styles.summaryBoxes}>
+            <div className={`${styles.summaryBox} ${styles.correct}`}>
+              ✔ Correct
+              <span className={styles.count}>{correctAnswers}</span>
+            </div>
+
+            <div className={`${styles.summaryBox} ${styles.wrong}`}>
+              ❌ Wrong
+              <span className={styles.count}>{wrongAnswers}</span>
+            </div>
+
+            <div className={`${styles.summaryBox} ${styles.skipped}`}>
+              🟡 Skipped
+              <span className={styles.count}>
+                {totalQuestions - correctAnswers - wrongAnswers}
+              </span>
+            </div>
+          </div>
         </div>
 
-        {/* ✅ ANALYSIS */}
+        {/* ✅ DETAILED ANALYSIS */}
         <div className={styles.analysisContainer}>
           {filteredQuestions.map((q, index) => {
-            const userAnswer = answers[q.id]
-            const isCorrect = userAnswer === q.answer
-            const isSkipped = !userAnswer
+            const userAnswer = answers[q.id] || null; // null if skipped
+            const isSkipped = !userAnswer;
+            const isCorrect = userAnswer === q.answer;
+            const isMarked = markedForReview[q.id];
 
             return (
               <div
                 key={q.id}
                 className={`${styles.analysisCard} ${
-                  isCorrect
-                    ? styles.correct
-                    : isSkipped
-                    ? styles.skipped
-                    : styles.wrong
+                  isCorrect ? styles.correct : isSkipped ? styles.skipped : styles.wrong
                 }`}
               >
                 <h4>Q{index + 1}. {q.question}</h4>
 
                 <p>
                   Your Answer: <strong>{userAnswer || "Not Attempted"}</strong>
+                  {isMarked && <span className={styles.markedReview}> (Marked for Review)</span>}
                 </p>
 
                 <p>
                   Correct Answer: <strong>{q.answer}</strong>
                 </p>
+
+                <div className={styles.optionsList}>
+                  {q.options.map((opt) => {
+                    const isUser = opt === userAnswer;
+                    const isCorrectOpt = opt === q.answer;
+                    return (
+                      <div
+                        key={opt}
+                        className={`${styles.optionItem} ${
+                          isCorrectOpt ? styles.correctOption : ""
+                        } ${isUser && !isCorrectOpt ? styles.wrongOption : ""}`}
+                      >
+                        {opt}
+                        {isUser && !isCorrectOpt ? " ← Your Choice" : ""}
+                        {isCorrectOpt ? " ←  Answer" : ""}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            )
+            );
           })}
         </div>
 
@@ -324,6 +355,7 @@ if (isFinished) {
   )
 }
   /* ── Test screen ── */
+  const currentQuestionId = filteredQuestions[currentPage]?.id;
   return (
     <div className={styles.pageBackground}>
       <div className={`${styles.testContainer} ${styles.fadeIn}`}>
@@ -332,32 +364,34 @@ if (isFinished) {
             Time Left: {Math.floor(overallTime / 60)}:
             {String(overallTime % 60).padStart(2, "0")}
           </div>
-
           {!lockedQuestions[filteredQuestions[currentPage]?.id] && (
             <Timer
-                key={filteredQuestions[currentPage]?.id} // forces re-mount **only for new questions**
-                duration={questionTimers[filteredQuestions[currentPage]?.id] ?? config.duration} // use saved time if exists
-                onTimeUp={() => {
-                  const currentQuestionId = filteredQuestions[currentPage]?.id;
+              duration={
+                  questionTimers[currentQuestionId] !== undefined
+                    ? questionTimers[currentQuestionId]   // revisit → resume
+                    : config.duration                     // first time → fresh
+                }
+              onTimeUp={() => {
+                const currentQuestionId = filteredQuestions[currentPage]?.id;
 
-                  // Lock if not marked for review
-                  if (!markedForReview[currentQuestionId]) {
-                    setLockedQuestions((prev) => ({
-                      ...prev,
-                      [currentQuestionId]: true,
-                    }));
-                  }
-
-                  handleTimeUp(); // move to next question
-                }}
-                onTimeUpdate={(timeLeft) => {
-                  const currentQuestionId = filteredQuestions[currentPage]?.id;
-                  setQuestionTimers((prev) => ({
+                // Lock if not marked for review
+                if (!markedForReview[currentQuestionId]) {
+                  setLockedQuestions((prev) => ({
                     ...prev,
-                    [currentQuestionId]: timeLeft,
+                    [currentQuestionId]: true,
                   }));
-                }}
-              />
+                }
+
+                handleTimeUp(); // move to next question
+              }}
+              onTimeUpdate={(timeLeft) => {
+                const currentQuestionId = filteredQuestions[currentPage]?.id;
+                setQuestionTimers((prev) => ({
+                  ...prev,
+                  [currentQuestionId]: timeLeft,
+                }));
+              }}
+            />
           )}
         </div>
 
@@ -391,10 +425,7 @@ if (isFinished) {
                   const currentQuestionId = filteredQuestions[currentPage]?.id
 
                   // ✅ Save remaining time
-                  setQuestionTimers((prev) => ({
-                    ...prev,
-                    [currentQuestionId]: window.currentTimeLeft || config.duration,
-                  }))
+                  setQuestionTimers((prev) => prev)
 
                  if (answers[currentQuestionId] && !markedForReview[currentQuestionId]) {
                     setLockedQuestions((prev) => ({
