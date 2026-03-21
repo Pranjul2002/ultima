@@ -31,6 +31,7 @@ export default function TestPage() {
   const [overallTime, setOverallTime] = useState(900)
   const [markedForReview, setMarkedForReview] = useState({})
   const [questionTimers, setQuestionTimers] = useState({})
+  const [perQuestionTimeEnabled, setPerQuestionTimeEnabled] = useState(true)
   /* ── Fullscreen ── */
   const enterFullscreen = () => {
     const elem = document.documentElement
@@ -116,84 +117,145 @@ export default function TestPage() {
       setQuestionStartTime(Date.now())
     }, [currentPage])
   /* ── Start screen (from URL params) ── */
-  if (autoStartConfig && !config) {
-    return (
-      <div className={styles.pageBackground}>
-        <div className={styles.startTestCard}>
-          <h2 className={styles.startTitle}>Configure Your Test</h2>
-
-          <div className={styles.configItem}>
-            <label>Number of Questions</label>
-            <input
-              type="number"
-              min="1"
-              max="100"
-              value={numQuestions}
-              onChange={(e) => setNumQuestions(Number(e.target.value))}
-            />
-          </div>
-
-          <div className={styles.configItem}>
-            <label>Time per Question (seconds)</label>
-            <input
-              type="number"
-              min="10"
-              max="300"
-              value={timePerQuestion}
-              onChange={(e) => setTimePerQuestion(Number(e.target.value))}
-            />
-          </div>
-
-          <div className={styles.configItem}>
-            <label>Negative Marking</label>
-            <select
-              value={negativeMarking}
-              onChange={(e) => setNegativeMarking(e.target.value === "true")}
-            >
-              <option value="false">No</option>
-              <option value="true">Yes</option>
-            </select>
-          </div>
-
-          <div className={styles.totalTime}>
-            Total Test Time:{" "}
-            <strong>
-              {Math.floor(calculatedTime / 60)}m {calculatedTime % 60}s
-            </strong>
-          </div>
-          <div className={styles.rulesBox}>
-            <h3 className={styles.rulesTitle}>Test Rules</h3>
-            <ul className={styles.rulesList}>
-              <li>Each question has a fixed time limit.</li>
-              <li>Once time is up, the question will be locked automatically.</li>
-              <li>Once you select an answer and move to the next question, you cannot change it.</li>
-              <li>Questions marked for review can be revisited and modified before time expires.</li>
-              <li>The overall test timer will keep running continuously.</li>
-              <li>Do not exit fullscreen mode during the test.</li>
-              <li>If you exit fullscreen mode during the test, your test will be submitted automatically.</li>
-            </ul>
-          </div>
-          <button
-            className={styles.buttonPrimary}
-            onClick={() => {
-              setOverallTime(calculatedTime)
-              enterFullscreen()
-              setConfig({
-                ...autoStartConfig,
-                duration: timePerQuestion,
-                questionsPerPage: 1,
-                numQuestions: numQuestions,
-                negativeMarking: negativeMarking,
-              })
-            }}
-          >
-            Start Test
-          </button>
+  {/* ── Start screen (from URL params) ── */}
+if (autoStartConfig && !config) {
+  return (
+    <div className={styles.pageBackground}>
+      <div className={styles.rulesBox}>
+          <h3 className={styles.rulesTitle}>Test Rules</h3>
+          <ul className={styles.rulesList}>
+            <li>Each question has a fixed time limit if enabled.</li>
+            <li>Once time is up, the question will be locked automatically.</li>
+            <li>Once you select an answer and move to the next question, you cannot change it.</li>
+            <li>Questions marked for review can be revisited and modified before time expires.</li>
+            <li>The overall test timer will keep running continuously.</li>
+            <li>Do not exit fullscreen mode during the test.</li>
+            <li>If you exit fullscreen mode, your test will be submitted automatically.</li>
+          </ul>
         </div>
-      </div>
-    )
-  }
+      <div className={styles.startTestCard}>
+        <h2 className={styles.startTitle}>Configure Your Test</h2>
 
+        {/* Number of Questions */}
+        <div className={styles.configItem}>
+          <label>Number of Questions</label>
+          <input
+            type="number"
+            min="1"
+            max="100"
+            value={numQuestions}
+            onChange={(e) => setNumQuestions(Number(e.target.value))}
+          />
+        </div>
+
+        {/* Negative Marking */}
+        <div className={styles.configItem}>
+          <label>Negative Marking</label>
+          <select
+            value={negativeMarking}
+            onChange={(e) => setNegativeMarking(e.target.value === "true")}
+          >
+            <option value="false">No</option>
+            <option value="true">Yes</option>
+          </select>
+        </div>
+
+        {/* Per-question vs total time toggle */}
+        <div className={styles.configItem}>
+          <label className={styles.checkboxLabel}>
+            <input
+              type="checkbox"
+              checked={perQuestionTimeEnabled}
+              onChange={() => setPerQuestionTimeEnabled(!perQuestionTimeEnabled)}
+            />
+            Enable Time Limit Per Question
+          </label>
+          <span className={styles.toggleInstruction}>
+              {perQuestionTimeEnabled
+                ? (
+                <>
+                  Each question will have its own countdown timer. You must answer before the timer ends,
+                  <br />
+                  or the question will be locked.
+                </>
+              )
+                : "A single timer counts down for the entire test. Manage your time freely across questions."}
+            </span>
+        </div>
+
+        {/* Time per Question */}
+        <div className={styles.configItem}>
+          <label>Time per Question (seconds)</label>
+          <input
+            type="number"
+            min="10"
+            max="300"
+            value={timePerQuestion}
+            onChange={(e) => setTimePerQuestion(Number(e.target.value))}
+            disabled={!perQuestionTimeEnabled}
+          />
+        </div>
+
+        {/* Total Test Time */}
+        <div className={styles.configItem}>
+          <label>Total Test Time (seconds)</label>
+          <input
+            type="number"
+            min="60"
+            max="10800"
+            value={overallTime}
+            onChange={(e) => setOverallTime(Number(e.target.value))}
+            disabled={perQuestionTimeEnabled}
+          />
+        </div>
+
+        <div className={styles.totalTime}>
+          Total Test Time:{" "}
+          <strong>
+            {perQuestionTimeEnabled
+              ? `${numQuestions * timePerQuestion} s`
+              : `${overallTime} s`}
+          </strong>
+        </div>
+
+        <button
+          className={styles.buttonPrimary}
+          onClick={() => {
+            enterFullscreen();
+
+            // Initialize question timers if per-question mode
+            const initialQuestionTimers = perQuestionTimeEnabled
+              ? Object.fromEntries(
+                  Array.from({ length: numQuestions }, (_, i) => [filteredQuestions[i]?.id, timePerQuestion])
+                )
+              : {};
+
+            // Set overallTime based on mode
+            const initialOverallTime = perQuestionTimeEnabled
+              ? numQuestions * timePerQuestion
+              : overallTime;
+
+            setOverallTime(initialOverallTime);
+            setQuestionTimers(initialQuestionTimers);
+
+            // Save config
+            setConfig({
+              ...autoStartConfig,
+              perQuestionTimeEnabled,      // toggle mode
+              duration: timePerQuestion,   // per-question duration
+              questionsPerPage: 1,
+              numQuestions,
+              negativeMarking,
+              totalTime: overallTime,
+            });
+          }}
+        >
+          Start Test
+        </button>
+      </div>
+    </div>
+  )
+}
   /* ── Config screen ── */
   if (!config) {
     return (
@@ -360,32 +422,35 @@ if (isFinished) {
     <div className={styles.pageBackground}>
       <div className={`${styles.testContainer} ${styles.fadeIn}`}>
         <div className={styles.timerRow}>
-          <div className={styles.overallTimer}>
-            Time Left: {Math.floor(overallTime / 60)}:
-            {String(overallTime % 60).padStart(2, "0")}
-          </div>
-          {!lockedQuestions[filteredQuestions[currentPage]?.id] && (
+          {/* Overall Timer (only if per-question mode is OFF) */}
+          {!perQuestionTimeEnabled && (
+            <div className={styles.overallTimer}>
+              Time Left: {Math.floor(overallTime / 60)}:
+              {String(overallTime % 60).padStart(2, "0")}
+            </div>
+          )}
+
+          {/* Per-question Timer (only if per-question mode is ON) */}
+          {perQuestionTimeEnabled && !lockedQuestions[currentQuestionId] && (
             <Timer
-              duration={
-                  questionTimers[currentQuestionId] !== undefined
-                    ? questionTimers[currentQuestionId]   // revisit → resume
-                    : config.duration                     // first time → fresh
-                }
+              duration={questionTimers[currentQuestionId] ?? timePerQuestion}
               onTimeUp={() => {
-                const currentQuestionId = filteredQuestions[currentPage]?.id;
+                // Lock question and move to next
+                setLockedQuestions((prev) => ({
+                  ...prev,
+                  [currentQuestionId]: true,
+                }));
 
-                // Lock if not marked for review
-                if (!markedForReview[currentQuestionId]) {
-                  setLockedQuestions((prev) => ({
-                    ...prev,
-                    [currentQuestionId]: true,
-                  }));
-                }
+                const totalPages = Math.ceil(filteredQuestions.length / (config.questionsPerPage || 1));
+                if (currentPage + 1 < totalPages) setCurrentPage((p) => p + 1);
+                else setIsFinished(true);
 
-                handleTimeUp(); // move to next question
+                setQuestionTimers((prev) => ({
+                  ...prev,
+                  [currentQuestionId]: 0,
+                }));
               }}
               onTimeUpdate={(timeLeft) => {
-                const currentQuestionId = filteredQuestions[currentPage]?.id;
                 setQuestionTimers((prev) => ({
                   ...prev,
                   [currentQuestionId]: timeLeft,
@@ -394,7 +459,6 @@ if (isFinished) {
             />
           )}
         </div>
-
         <div className={styles.testLayout}>
           <div className={styles.questionArea}>
             {currentQuestions.map((q) => (
@@ -422,27 +486,32 @@ if (isFinished) {
               <button
                   className={styles.buttonSecondary}
                   onClick={() => {
-                  const currentQuestionId = filteredQuestions[currentPage]?.id
+                    const currentQuestionId = filteredQuestions[currentPage]?.id;
 
-                  // ✅ Save remaining time
-                  setQuestionTimers((prev) => prev)
+                    // Lock if answered and not marked for review
+                    if (answers[currentQuestionId] && !markedForReview[currentQuestionId]) {
+                      setLockedQuestions((prev) => ({
+                        ...prev,
+                        [currentQuestionId]: true,
+                      }));
+                    }
 
-                 if (answers[currentQuestionId] && !markedForReview[currentQuestionId]) {
-                    setLockedQuestions((prev) => ({
-                      ...prev,
-                      [currentQuestionId]: true,
-                    }))
-                  }
+                    if (perQuestionTimeEnabled) {
+                      // Save remaining time for this question
+                      const timeSpent = Math.floor((Date.now() - questionStartTime) / 1000);
+                      setQuestionTimers((prev) => ({
+                        ...prev,
+                        [currentQuestionId]: Math.max((prev[currentQuestionId] ?? timePerQuestion) - timeSpent, 0),
+                      }));
+                    } else {
+                      // Deduct spent time from overall timer
+                      const timeSpent = Math.floor((Date.now() - questionStartTime) / 1000);
+                      setOverallTime((prev) => Math.max(prev - timeSpent, 0));
+                    }
 
-                  const timeSpent = Math.floor((Date.now() - questionStartTime) / 1000)
-                  const remainingTime = config.duration - timeSpent
-
-                  if (remainingTime > 0) {
-                    setOverallTime((prev) => prev - remainingTime)
-                  }
-
-                  setCurrentPage((p) => p + 1)
-                }}
+                    // Move to next question
+                    setCurrentPage((p) => p + 1);
+                  }}
                   disabled={end >= filteredQuestions.length}
                 >
                   Save & Next →
