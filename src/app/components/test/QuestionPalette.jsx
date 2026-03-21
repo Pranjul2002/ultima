@@ -57,7 +57,7 @@ export default function QuestionPalette({
                     ? styles.answeredReview
                     : markedForReview[q.id]
                     ? styles.review
-                    : lockedQuestions?.[q.id] && answers[q.id]
+                    : answers[q.id] !== undefined
                     ? styles.answered
                     : visited[q.id] && !answers[q.id]
                     ? styles.visited
