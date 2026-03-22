@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata = {
-  title: "EduTech — Learn, Practice, Grow",
-  description: "EduTech is an online learning platform for students to practice tests, track progress, and build skills for JEE, NEET, and board exams.",
+  title: "Ultima — Learn, Practice, Grow",
+  description: "Ultima is an online learning platform for students to practice tests, track progress, and build skills for JEE, NEET, and board exams.",
 }
 
 export default function RootLayout({ children }) {

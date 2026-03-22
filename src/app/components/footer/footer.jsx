@@ -15,11 +15,12 @@ const Footer = () => {
               {/* Brand + About */}
               <div className={style.footerAboutUs}>
                 <Link href="/" className={style.logo}>
-                  <h2>EduTech</h2>
+                  <h2>Ultima - Reach the Peak</h2>
                 </Link>
                 <p className={style.footerAboutUsPara}>
-                  Build your network, share skills, and open up on the
-                  learning platform where education blooms.
+                  Practice is the only force that
+                    <br />
+                    transforms potential into identity. 
                 </p>
               </div>
 
@@ -42,7 +43,7 @@ const Footer = () => {
           {/* Bottom copyright bar */}
           <div className={style.copyrightContent}>
             <p className={style.copyrightText}>
-              Copyright © {new Date().getFullYear()} EduTech | All rights reserved.
+              Copyright © {new Date().getFullYear()} Ultima Edu Ltd. | All rights reserved.
             </p>
             <nav className={style.copyrightMenu}>
               <ul>

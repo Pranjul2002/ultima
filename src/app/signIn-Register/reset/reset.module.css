@@ -1,0 +1,144 @@
+/* ===== Page Container ===== */
+.container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--color-background, #f9fafb);
+}
+
+/* ===== Card ===== */
+.card {
+  background: white;
+  padding: 40px 35px;
+  border-radius: 14px;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.08);
+  width: 360px;
+  text-align: center;
+  animation: fadeIn 0.5s ease;
+}
+
+/* ===== Title ===== */
+.title {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* ===== Subtitle ===== */
+.subtitle {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* ===== Input ===== */
+.input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.1);
+}
+
+/* ===== Button ===== */
+.button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #4f46e5;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.button:hover {
+  background: #4338ca;
+  transform: translateY(-1px);
+}
+
+.button:active {
+  transform: scale(0.98);
+}
+
+.button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+/* ===== Message ===== */
+.message {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #16a34a; /* green success */
+}
+
+.error {
+  color: #dc2626; /* red error */
+}
+
+/* ===== Optional Back Link ===== */
+.backLink {
+  display: block;
+  margin-top: 15px;
+  font-size: 13px;
+  color: #4f46e5;
+  text-decoration: none;
+}
+
+.backLink:hover {
+  text-decoration: underline;
+}
+.inputGroup {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px 12px;
+  position: relative;
+}
+
+.inputGroup input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+  padding-right: 35px;
+}
+
+/* 👁️ icon */
+.eyeIcon {
+  position: absolute;
+  right: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  color: #555;
+  display: flex;
+  align-items: center;
+}
+
+.eyeIcon:hover {
+  color: #000;
+}
+/* ===== Animation ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

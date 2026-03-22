@@ -40,7 +40,7 @@ const Home = () => {
         <div className={style.bannerContainer}>
           <div className={`${style.bannerText} ${gideon.className}`}>
             <h1 className={style.bannerHeading}>
-              Welcome to the <span className={style.highlight}>Ultimate</span>  practice Platform.<br/>
+              Welcome to the <span className={style.highlight}>Ultimate</span> Platform.<br/>
               <span className={style.divider}></span>
               Practice is the only force that
               <br />

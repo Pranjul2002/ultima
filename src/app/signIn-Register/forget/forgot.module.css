@@ -1,0 +1,122 @@
+.container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  padding: 35px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  text-align: center;
+  animation: fadeIn 0.4s ease;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Input with icon */
+.inputGroup {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px 12px;
+  transition: border 0.2s;
+}
+
+.inputGroup:focus-within {
+  border-color: #6366f1;
+}
+
+.inputGroup input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+}
+
+.icon {
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+/* Button */
+.button {
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #6366f1;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.button:hover {
+  background: #4f46e5;
+  transform: translateY(-1px);
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Messages */
+.success {
+  margin-top: 15px;
+  color: #16a34a;
+  font-size: 14px;
+}
+
+.error {
+  margin-top: 15px;
+  color: #dc2626;
+  font-size: 14px;
+}
+
+/* Back link */
+.backLink {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #6366f1;
+  text-decoration: none;
+}
+
+.backLink:hover {
+  text-decoration: underline;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
