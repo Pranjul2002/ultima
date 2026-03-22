@@ -1,5 +1,7 @@
 .container {
-  height: 100vh;
+  /* FIX 6: min-height + padding-top accounts for fixed header (~90px) */
+  min-height: 100vh;
+  padding-top: 90px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,7 +14,7 @@
   background: white;
   padding: 35px;
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   text-align: center;
   animation: fadeIn 0.4s ease;
 }
@@ -54,6 +56,7 @@
   outline: none;
   flex: 1;
   font-size: 14px;
+  background: transparent;
 }
 
 .icon {
@@ -70,17 +73,19 @@
   color: white;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
-.button:hover {
+.button:hover:not(:disabled) {
   background: #4f46e5;
   transform: translateY(-1px);
 }
 
+/* FIX 7: disabled state explicitly blocks hover transform */
 .button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
 }
 
 /* Messages */
@@ -118,5 +123,17 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 480px) {
+  .card {
+    margin: 0 16px;
+    padding: 24px;
+  }
+
+  .title {
+    font-size: 1.5rem;
   }
 }

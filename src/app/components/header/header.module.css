@@ -23,7 +23,7 @@
   display: flex;
   gap: 40px;
   align-items: center;
-  justify-content: center; 
+  justify-content: center;
 }
 
 /* ── Column 1 ── */
@@ -32,26 +32,27 @@
   align-items: center;
   gap: 25px;
 }
+
 .logoContainer {
   display: flex;
   align-items: center;
   gap: 10px;
 }
+
 .logoWrapper {
   position: relative;
   width: 70px;
   height: 70px;
-  background: white;              /* contrast */
-  padding: 6px;                   /* breathing space */
-  border-radius: 12px;            /* modern look */
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  background: white;
+  padding: 6px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .logoImage {
   object-fit: contain;
   filter: contrast(1.2) saturate(1.1);
 }
-
 
 .exploreTestButton {
   border: 1px solid var(--color-brand);
@@ -109,7 +110,7 @@
 }
 
 /* ── Column 2 ── */
-.navContainer {}
+/* FIX 8: Removed empty .navContainer rule */
 
 .menuItem {
   display: flex;
@@ -117,18 +118,27 @@
   align-items: center;
   padding: 0;
   margin: 0;
+  list-style: none;
 }
 
+/* FIX 9: Underline only on hover/active, not all links */
 .item {
-  border-bottom: 3px solid var(--color-nav-underline, #1900ff);
+  border-bottom: 3px solid transparent;
   color: rgb(40, 40, 40);
   padding: 10px 18px;
   transition: border-color 200ms ease, color 200ms ease;
 }
 
 .item:hover {
-  border-bottom-color: var(--color-nav-underline-hover, #0f009a);
+  border-bottom-color: var(--color-nav-underline, #1900ff);
   color: black;
+}
+
+/* FIX 5: activeItem was used in JSX but missing from CSS */
+.activeItem {
+  border-bottom-color: var(--color-nav-underline, #1900ff);
+  color: black;
+  font-weight: 600;
 }
 
 /* ── Column 3 ── */
@@ -137,10 +147,11 @@
   align-items: center;
 }
 
-.profileDropdownWrapper{
+/* FIX 7: position:relative so dropdown aligns to avatar, not the page */
+.profileDropdownWrapper {
+  position: relative;
   cursor: pointer;
 }
-
 
 /* Avatar circle */
 .profileAvatar {
@@ -168,8 +179,9 @@
 /* Dropdown panel */
 .profileDropdownMenu {
   position: absolute;
-  right: auto;
-  left: 67%;
+  /* FIX 7: right:0 + left:auto replaces the fragile left:67% hack */
+  right: 0;
+  left: auto;
   top: calc(100% + 8px);
   background: white;
   border: 1px solid #e2e8f0;
@@ -186,7 +198,6 @@
   transition: opacity 200ms ease, transform 200ms ease, visibility 200ms ease;
 }
 
-
 /* Show on hover */
 .profileDropdownWrapper:hover .profileDropdownMenu {
   opacity: 1;
@@ -197,7 +208,8 @@
 /* Arrow tip pointing up */
 .dropdownArrow {
   position: absolute;
-  right: 10;
+  /* FIX 6: right:10 → right:10px (was missing unit) */
+  right: 10px;
   top: -7px;
   width: 13px;
   height: 13px;
@@ -261,9 +273,9 @@
   background-color: rgba(239, 68, 68, 0.08);
 }
 
-
-
 .loginRegisterButton {
+  display: inline-block;
+  text-decoration: none;
   padding: 18px;
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -279,46 +291,7 @@
   background-color: var(--color-brand-hover, #595394);
 }
 
-
-/* Auth button group — shown when logged in */
-.authGroup {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.dashboardButton {
-  padding: 12px 18px;
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
-  font-weight: bold;
-  color: var(--color-brand, #362C93);
-  border: 2px solid var(--color-brand, #362C93);
-  background: transparent;
-  transition: background-color 150ms ease, color 150ms ease;
-}
-
-.dashboardButton:hover {
-  background-color: var(--color-brand, #362C93);
-  color: white;
-}
-
-.logoutButton {
-  padding: 12px 18px;
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
-  font-weight: bold;
-  background-color: #ef4444;
-  color: white;
-  border: none;
-  cursor: pointer;
-  transition: background-color 150ms ease;
-}
-
-.logoutButton:hover {
-  background-color: #dc2626;
-}
-
+/* FIX 4: Removed unused .authGroup, .dashboardButton, .logoutButton */
 
 /* ================= MOBILE ================= */
 @media (max-width: 768px) {

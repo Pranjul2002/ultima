@@ -1,36 +1,26 @@
 /* ================= ROOT ================= */
 .footer {
-  margin-top: 10px;
   display: flex;
   flex-direction: column;
   background-color: #181A1B;
   color: white;
-}
-
-/* ================= FOOTER AREA ================= */
-.footerArea {
-  margin-top: 100px;
-  margin-bottom: 50px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.footerAreaWrapper {
-  width: 100%;
-  max-width: 1100px;
-  padding: 0 var(--space-lg);
+  /* FIX 3: margin-top moved here from footerArea — cleaner */
+  margin-top: 10px;
 }
 
 /* ================= TOP SECTION ================= */
-.container {
-  padding: 25px;
+/* FIX 3: Merged footerArea + footerAreaWrapper + container into one */
+/* FIX 4: margin-top → padding-top so background shows correctly    */
+.footerTop {
+  padding: 60px var(--space-lg) 30px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  /* ↑ softer than solid white — more refined look */
+  display: flex;
+  justify-content: center;
 }
 
-.footerColumn {
+.footerInner {
+  width: 100%;
+  max-width: 1100px;
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
@@ -43,14 +33,13 @@
   gap: var(--space-md);
 }
 
+/* FIX 5: text-decoration:none + display:inline-block for logo <Link> */
 .logo {
+  display: inline-block;
+  text-decoration: none;
   color: white;
   font-size: 1.4rem;
   font-weight: bold;
-}
-
-.logo h2 {
-  margin: 0;
 }
 
 .footerAboutUsPara {
@@ -69,6 +58,7 @@
 .socialMediaBlock a {
   color: rgba(255, 255, 255, 0.7);
   font-size: var(--font-size-base);
+  text-decoration: none;
   transition: color 0.2s ease;
 }
 
@@ -80,7 +70,11 @@
 .copyrightContent {
   display: flex;
   gap: 50px;
-  margin: 20px 0;
+  padding: 20px var(--space-lg);
+  justify-content: center;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
   font-family: 'Courier New', Courier, monospace;
   letter-spacing: -0.2px;
   align-items: center;
@@ -91,14 +85,19 @@
   font-size: var(--font-size-sm);
 }
 
+/* FIX 2 & 7: Reset ul default margin, padding, bullets */
 .copyrightMenu ul {
   display: flex;
   gap: var(--space-lg);
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .copyrightMenu ul li a {
   color: rgba(255, 255, 255, 0.6);
   font-size: var(--font-size-sm);
+  text-decoration: none;
   transition: color 0.2s ease;
 }
 
@@ -108,6 +107,10 @@
 
 /* ================= RESPONSIVE ================= */
 @media (max-width: 768px) {
+  .footerTop {
+    padding: 40px var(--space-md) 24px;
+  }
+
   .copyrightContent {
     flex-direction: column;
     align-items: center;
@@ -115,6 +118,13 @@
     font-size: var(--font-size-sm);
     font-weight: bold;
     text-align: center;
+    padding: 20px var(--space-md);
+  }
+
+  .copyrightMenu ul {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
   }
 
   .socialMediaBlock {

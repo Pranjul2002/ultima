@@ -9,7 +9,6 @@
 /* ================= BANNER AREA ================= */
 .bannerArea {
   width: 100%;
-  padding: 0px 20px;
 }
 
 .bannerContainer {
@@ -33,10 +32,10 @@
       rgba(0, 0, 0, 0.06) 0px,
       rgba(0, 0, 0, 0.06) 1px,
       transparent 1px,
-      transparent 40px
+      transparent 45px
     );
-  -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 90%, transparent 100%);
 }
 
 .bannerText {
@@ -45,10 +44,11 @@
   max-width: 1500px;
 }
 
-/* ================= BANNER ENHANCEMENT ================= */
+/* ================= BANNER HEADING ================= */
 
 .bannerHeading {
-  font-size: 4.5rem;
+  /* FIX 7: fluid font-size instead of hardcoded 4.5rem */
+  font-size: clamp(2rem, 5vw, 4.5rem);
   letter-spacing: -0.5px;
   line-height: 1.3;
   font-weight: 600;
@@ -73,26 +73,31 @@
 .bannerTagline {
   margin-top: 8px;
   font-size: 1.6rem;
-  color: #1c1b1b;
+  color: #111010;
   font-style: italic;
 }
+
+/* FIX 2 & 6: display:inline-block + text-decoration reset for <Link> (renders as <a>) */
 .ctaButton {
+  display: inline-block;
+  text-decoration: none;
   margin-top: 20px;
   padding: 12px 26px;
   font-size: 1.5rem;
   border-radius: 8px;
   border: none;
-  background:rgb(130, 174, 180);
-  color: rgb(5, 5, 5);
+  background: rgb(130, 174, 180);
+  color: rgb(0, 0, 0);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.ctaButton:hover {
+.ctaButton:hover {  
   transform: translateY(-2px);
-  background:aqua;
+  background: aqua;
 }
+
 /* ================= CAROUSEL ================= */
 .homeCarouselArea {
   margin-top: var(--space-xl);
@@ -134,13 +139,14 @@
 .growthMindSetArea {
   position: relative;
   background: linear-gradient(135deg, #8fbfce, #a8d3df);
-  padding: 80px 20px;
+
+  /* FIX 4: Removed duplicate padding declaration (80px 20px was dead code) */
+  padding: 140px 20px;
+
   text-align: center;
-  
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 140px 20px;
   overflow: hidden;
 }
 
@@ -169,19 +175,26 @@
   color: rgb(14, 14, 14);
 }
 
+/* FIX 3: Replaced hardcoded 900px with responsive min() */
 .divider {
   display: block;
-  width: 900px;
+  width: min(900px, 90%);
   height: 2px;
   background-color: rgb(14, 14, 14);
   margin: 16px auto;
   opacity: 0.6;
 }
+
 /* ================= QUOTE STYLING ================= */
 
+/* FIX 5: Reset browser default blockquote margin */
 .quoteBlock {
   margin-top: 50px;
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0;
   text-align: center;
+  border: none;
 }
 
 .quoteLine {
@@ -191,8 +204,9 @@
   margin-bottom: 6px;
 }
 
+/* FIX 1: Removed invalid space in "4 rem" → 4rem */
 .quoteMain {
-  font-size: 4 rem;
+  font-size: 4rem;
   font-style: italic;
   font-weight: 500;
   color: #222;
@@ -207,6 +221,31 @@
   margin-top: 6px;
 }
 
+/* Growth blockquote reset */
+.growthText {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.growthLine {
+  font-size: var(--font-size-2xl);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.growthQuote {
+  font-style: italic;
+  font-size: var(--font-size-3xl);
+  margin: 8px 0;
+}
+
+.growthAuthor {
+  font-size: 1rem;
+  text-align: right;
+  opacity: 0.8;
+  margin-top: 8px;
+}
 
 /* ================= RESPONSIVE ================= */
 @media (max-width: 1024px) {
@@ -225,6 +264,9 @@
   .carouselItem img { width: 140px; }
   .growthMindSetArea { padding: 100px 20px; }
   .growthText      { font-size: var(--font-size-xl); }
+  .bannerSubText   { font-size: 1.4rem; }
+  .bannerTagline   { font-size: 1.2rem; }
+  .quoteLine       { font-size: 1.4rem; }
 }
 
 @media (max-width: 480px) {
@@ -232,4 +274,6 @@
   .bannerSubText    { font-size: var(--font-size-sm); }
   .carouselItem img { width: 120px; }
   .growthText       { font-size: var(--font-size-lg); }
+  .ctaButton        { font-size: 1.2rem; padding: 10px 20px; }
+  .quoteLine        { font-size: 1.2rem; }
 }

@@ -11,6 +11,7 @@
 
 .signInRegisterHero {
   flex: 1;
+  min-width: 280px;
   background: linear-gradient(135deg, #817bff, #4d00d3);
   color: white;
   display: flex;
@@ -42,8 +43,6 @@
   justify-content: center;
   padding: 2rem;
 }
-
-/* Card Wrapper */
 
 .signInRegisterWrapper {
   width: 100%;
@@ -101,7 +100,7 @@
   font-weight: 600;
 }
 
-/* ================= INPUTS ================= */
+/* ================= INPUTS & SELECTS ================= */
 
 .form input,
 .form select {
@@ -125,9 +124,8 @@
   border-bottom: 2px solid #4f46e5;
 }
 
-/* Select needs explicit background so dropdown is readable */
 .form select {
-  background-color: #ffffff;
+  background-color: var(--color-background, #ffffff);
   color: var(--color-text);
   cursor: pointer;
 }
@@ -139,7 +137,6 @@
   color: var(--color-text-muted);
   margin-bottom: 0.3rem;
   margin-top: -0.5rem;
-  /* pulls it closer to the input below it */
 }
 
 /* ================= MESSAGES ================= */
@@ -191,6 +188,24 @@
   opacity: 0.6;
 }
 
+/* ================= FORGOT PASSWORD LINK ================= */
+
+/* Sits between password input and submit — right-aligned */
+.forgotLink {
+  align-self: flex-end;
+  color: #4f46e5;
+  font-size: 0.85rem;
+  text-decoration: none;
+  margin-bottom: 1rem;
+  margin-top: -0.6rem; /* pulls it closer to the password field */
+  transition: color 0.2s ease;
+}
+
+.forgotLink:hover {
+  color: #4338ca;
+  text-decoration: underline;
+}
+
 /* ================= RESPONSIVE ================= */
 
 @media (max-width: 1024px) {
@@ -205,6 +220,7 @@
   }
 
   .signInRegisterHero {
+    min-width: unset;
     height: 220px;
     border-radius: 0;
   }

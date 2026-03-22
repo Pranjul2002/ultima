@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
 import styles from "./header.module.css"
@@ -9,13 +9,14 @@ const NAV_LINKS = [
   { href: "/",           label: "Home" },
   { href: "/upskilling", label: "Upskilling" },
   { href: "/products",   label: "Products" },
-  { href: "/about-us",      label: "About" },
+  { href: "/about-us",   label: "About" },
   { href: "/contact",    label: "Contact" },
 ]
 
 const EXPLORE_LINKS = [
-  { href: "/products/competetive/jee",  label: "JEE Preparation" },
-  { href: "/products/competetive/neet", label: "NEET Preparation" },
+  // FIX 3: "competetive" → "competitive"
+  { href: "/products/competitive/jee",  label: "JEE Preparation" },
+  { href: "/products/competitive/neet", label: "NEET Preparation" },
   { href: "/products/class_10",         label: "School 10th Boards" },
   { href: "/products/class_12",         label: "School 12th Boards" },
   { href: "/products",                  label: "All" },
@@ -33,10 +34,12 @@ const Header = () => {
   const closeMenu  = () => setMenuOpen(false)
 
   /* ────────────────────────────────────────────
-     Core auth check — reads token from
-     localStorage and updates state
+     FIX 1: Wrapped in useCallback so the same
+     function reference is used across renders.
+     This ensures addEventListener/removeEventListener
+     correctly pair up and prevents memory leaks.
   ──────────────────────────────────────────── */
-  const checkAuth = () => {
+  const checkAuth = useCallback(() => {
     const token = localStorage.getItem("token")
     setIsLoggedIn(!!token)
 
@@ -44,7 +47,6 @@ const Header = () => {
       try {
         // JWT = header.payload.signature
         // atob() decodes base64 → gives us JSON string
-        // JSON.parse() converts to object
         const payload = JSON.parse(atob(token.split(".")[1]))
 
         // "sub" = subject = email (Spring Boot default)
@@ -61,27 +63,18 @@ const Header = () => {
     } else {
       setUserInitial("U")
     }
-  }
+  }, [])
 
   /* ────────────────────────────────────────────
-     Re-check auth on EVERY route change
-
-     Why needed:
-     Header lives in layout.jsx → never unmounts
-     When user logs in → router.push("/dashboard")
-     pathname changes → this useEffect fires
-     checkAuth runs → reads new token → updates UI ✅
-
-     Without this: header only checks on first load
-     and never again until manual refresh ❌
+     Re-check auth on EVERY route change.
+     FIX 2: Added checkAuth to dependency array.
   ──────────────────────────────────────────── */
   useEffect(() => {
     checkAuth()
-  }, [pathname])
+  }, [pathname, checkAuth])
 
   /* ────────────────────────────────────────────
-     Listen for manual auth events
-
+     Listen for manual auth events.
      "authChange" → fired by login/logout in same tab
      "storage"    → fired when OTHER tab changes localStorage
   ──────────────────────────────────────────── */
@@ -89,28 +82,22 @@ const Header = () => {
     window.addEventListener("authChange", checkAuth)
     window.addEventListener("storage",    checkAuth)
 
-    // Cleanup — remove listeners when header unmounts
-    // prevents memory leaks
     return () => {
       window.removeEventListener("authChange", checkAuth)
       window.removeEventListener("storage",    checkAuth)
     }
-  }, [])
+  }, [checkAuth])
 
   /* ────────────────────────────────────────────
      Logout handler
   ──────────────────────────────────────────── */
   const handleLogout = () => {
     localStorage.removeItem("token")
-    // Notify header (same tab) immediately
     window.dispatchEvent(new Event("authChange"))
     closeMenu()
     router.push("/")
   }
 
-  /* ────────────────────────────────────────────
-     Render
-  ──────────────────────────────────────────── */
   return (
     <header className={styles.header}>
 
@@ -128,16 +115,16 @@ const Header = () => {
 
         {/* ── Column 1 — Logo + Explore dropdown ── */}
         <div className={styles.headerCol1}>
-        <Link href="/" className={styles.logoContainer} onClick={closeMenu}>
-          <div className={styles.logoWrapper}>
-            <Image
-              src="/logo.png"
-              alt="EduTech Logo"
-              fill
-              className={styles.logoImage}
-            />
-          </div>
-        </Link>
+          <Link href="/" className={styles.logoContainer} onClick={closeMenu}>
+            <div className={styles.logoWrapper}>
+              <Image
+                src="/logo.png"
+                alt="EduTech Logo"
+                fill
+                className={styles.logoImage}
+              />
+            </div>
+          </Link>
 
           <div className={styles.exploreTestButton}>
             Explore Test
@@ -155,11 +142,10 @@ const Header = () => {
               </div>
             </div>
           </div>
-
         </div>
 
         {/* ── Column 2 — Nav links ── */}
-        <nav className={styles.navContainer}>
+        <nav>
           <ul className={styles.menuItem}>
             {NAV_LINKS.map(({ href, label }) => (
               <li key={href}>
@@ -188,7 +174,6 @@ const Header = () => {
 
               <div className={styles.profileDropdownMenu}>
 
-                {/* Arrow tip */}
                 <div className={styles.dropdownArrow} />
 
                 <Link
@@ -241,4 +226,4 @@ const Header = () => {
   )
 }
 
-export default Header 
+export default Header
