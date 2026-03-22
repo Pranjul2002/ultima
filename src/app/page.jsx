@@ -3,7 +3,7 @@ import React from "react"
 import Image from "next/image"
 import { Gideon_Roman } from "next/font/google"
 import style from "./page.module.css"
-
+import Link from "next/link"
 const gideon = Gideon_Roman({
   weight: "400",
   subsets: ["latin"],
@@ -24,6 +24,10 @@ const QUOTE = {
   text: '"An investment in knowledge always pays the best interest."',
   author: "– Benjamin Franklin",
 }
+const QUOTE2 = {
+  line: "You don't have to be great to start, but you have to start to be great." ,
+  author: "– Zig Ziglar",
+}
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
@@ -35,13 +39,31 @@ const Home = () => {
       <div className={style.bannerArea}>
         <div className={style.bannerContainer}>
           <div className={`${style.bannerText} ${gideon.className}`}>
-            <h1>
-              An easier, more powerful <br />
-              platform to Grow Skills
+            <h1 className={style.bannerHeading}>
+              Welcome to the <span className={style.highlight}>Ultimate</span>  practice Platform.<br/>
+              <span className={style.divider}></span>
+              Practice is the only force that
+              <br />
+              <span className={style.highlight}>transforms potential</span>
+              <br />
+              into identity.
             </h1>
-            <div className={style.bannerSubText}>
-              Build your skills, and open up on the Learning <br />
-              platform where Education Blooms.
+
+            <p className={style.bannerSubText}>
+              From <strong>what you could do</strong> → to <strong>who you become</strong>.
+            </p>
+
+            <p className={style.bannerTagline}>
+              You are the sum of your repetitions.
+            </p>
+            <Link href="/products">
+              <button className={style.ctaButton}>
+                Practice Now →
+              </button>
+            </Link>
+            <div className={style.quoteBlock}>
+              <p className={style.quoteLine}>{QUOTE2.line}</p>
+              <p className={style.quoteAuthor}>{QUOTE2.author}</p>
             </div>
           </div>
         </div>

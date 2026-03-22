@@ -23,7 +23,7 @@
   display: flex;
   gap: 40px;
   align-items: center;
-  justify-content: center;
+  justify-content: center; 
 }
 
 /* ── Column 1 ── */
@@ -32,12 +32,26 @@
   align-items: center;
   gap: 25px;
 }
-
-.logo {
-  font-weight: bold;
-  font-size: 20px;
-  color: var(--color-text);
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
+.logoWrapper {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  background: white;              /* contrast */
+  padding: 6px;                   /* breathing space */
+  border-radius: 12px;            /* modern look */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.logoImage {
+  object-fit: contain;
+  filter: contrast(1.2) saturate(1.1);
+}
+
 
 .exploreTestButton {
   border: 1px solid var(--color-brand);

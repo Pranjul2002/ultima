@@ -9,11 +9,12 @@
 /* ================= BANNER AREA ================= */
 .bannerArea {
   width: 100%;
+  padding: 0px 20px;
 }
 
 .bannerContainer {
   position: relative;
-  padding: 140px 20px;
+  padding: 50px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -41,15 +42,57 @@
 .bannerText {
   padding: var(--space-md);
   font-size: var(--font-size-3xl);
-  max-width: 1000px;
+  max-width: 1500px;
+}
+
+/* ================= BANNER ENHANCEMENT ================= */
+
+.bannerHeading {
+  font-size: 4.5rem;
+  letter-spacing: -0.5px;
+  line-height: 1.3;
+  font-weight: 600;
+  color: #222;
+}
+
+.highlight {
+  color: var(--color-primary);
+  font-weight: 700;
 }
 
 .bannerSubText {
-  font-size: var(--font-size-lg);
-  margin-top: var(--space-lg);
-  color: var(--color-text);
+  margin-top: 12px;
+  font-size: 1.9rem;
+  color: #555;
 }
 
+.bannerSubText strong {
+  color: #222;
+}
+
+.bannerTagline {
+  margin-top: 8px;
+  font-size: 1.6rem;
+  color: #1c1b1b;
+  font-style: italic;
+}
+.ctaButton {
+  margin-top: 20px;
+  padding: 12px 26px;
+  font-size: 1.5rem;
+  border-radius: 8px;
+  border: none;
+  background:rgb(130, 174, 180);
+  color: rgb(5, 5, 5);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ctaButton:hover {
+  transform: translateY(-2px);
+  background:aqua;
+}
 /* ================= CAROUSEL ================= */
 .homeCarouselArea {
   margin-top: var(--space-xl);
@@ -90,7 +133,10 @@
 /* ================= GROWTH SECTION ================= */
 .growthMindSetArea {
   position: relative;
-  background-color: var(--color-primary);
+  background: linear-gradient(135deg, #8fbfce, #a8d3df);
+  padding: 80px 20px;
+  text-align: center;
+  
   display: flex;
   justify-content: center;
   align-items: center;
@@ -120,17 +166,47 @@
 .growthText {
   font-size: var(--font-size-3xl);
   line-height: 1.6;
-  color: white;
+  color: rgb(14, 14, 14);
 }
 
 .divider {
   display: block;
-  width: 280px;
+  width: 900px;
   height: 2px;
-  background-color: white;
+  background-color: rgb(14, 14, 14);
   margin: 16px auto;
   opacity: 0.6;
 }
+/* ================= QUOTE STYLING ================= */
+
+.quoteBlock {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.quoteLine {
+  font-size: 1.9rem;
+  font-weight: 500;
+  color: #161616;
+  margin-bottom: 6px;
+}
+
+.quoteMain {
+  font-size: 4 rem;
+  font-style: italic;
+  font-weight: 500;
+  color: #222;
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+.quoteAuthor {
+  font-size: 1rem;
+  color: #0c0c0c;
+  text-align: right;
+  margin-top: 6px;
+}
+
 
 /* ================= RESPONSIVE ================= */
 @media (max-width: 1024px) {

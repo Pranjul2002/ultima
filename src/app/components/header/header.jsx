@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
 import styles from "./header.module.css"
+import Image from "next/image"
 
 const NAV_LINKS = [
   { href: "/",           label: "Home" },
@@ -127,10 +128,16 @@ const Header = () => {
 
         {/* ── Column 1 — Logo + Explore dropdown ── */}
         <div className={styles.headerCol1}>
-
-          <Link href="/" className={styles.logo} onClick={closeMenu}>
-            EduTech
-          </Link>
+        <Link href="/" className={styles.logoContainer} onClick={closeMenu}>
+          <div className={styles.logoWrapper}>
+            <Image
+              src="/logo.png"
+              alt="EduTech Logo"
+              fill
+              className={styles.logoImage}
+            />
+          </div>
+        </Link>
 
           <div className={styles.exploreTestButton}>
             Explore Test
