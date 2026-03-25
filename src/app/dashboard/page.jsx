@@ -3,7 +3,6 @@
 import { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import Image from "next/image"
 import {
   FiUser, FiFileText, FiBarChart2, FiSettings,
   FiLogOut, FiHome, FiAward, FiCalendar,
@@ -38,10 +37,20 @@ const Dashboard = () => {
   const [counters, setCounters] = useState({ tests: 0, score: 0 })
   const animated = useRef(false)
 
+  // Test history
+  const [testHistory, setTestHistory] = useState([])
+  const [historyLoading, setHistoryLoading] = useState(false)
+
   /* ── Fetch profile ── */
   useEffect(() => {
     const token = localStorage.getItem("token")
+    const role = localStorage.getItem("role")
+
+    // not logged in → go to login
     if (!token) { router.push("/signIn-Register"); return }
+
+    // admin trying to access student dashboard → redirect
+    if (role === "ADMIN") { router.push("/dashboard/admin"); return }
 
     const fetchProfile = async () => {
       try {
@@ -50,6 +59,8 @@ const Dashboard = () => {
         })
         if (res.status === 401) {
           localStorage.removeItem("token")
+          localStorage.removeItem("role")
+          localStorage.removeItem("name")
           router.push("/signIn-Register")
           return
         }
@@ -64,11 +75,37 @@ const Dashboard = () => {
     fetchProfile()
   }, [router])
 
+  /* ── Fetch test history when tests tab is opened ── */
+  useEffect(() => {
+    if (activeTab !== "tests" && activeTab !== "results") return
+    const token = localStorage.getItem("token")
+    if (!token || testHistory.length > 0) return
+
+    const fetchHistory = async () => {
+      setHistoryLoading(true)
+      try {
+        const res = await fetch(`${API_URL}/api/tests/history`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        const data = await res.json()
+        setTestHistory(data)
+      } catch {
+        // silently fail — profile data still shows
+      } finally {
+        setHistoryLoading(false)
+      }
+    }
+    fetchHistory()
+  }, [activeTab])
+
   /* ── Counter animation ── */
   useEffect(() => {
     if (!profile || animated.current) return
     animated.current = true
-    const target = { tests: profile.totalTestsTaken || 0, score: Math.round(profile.averageScore || 0) }
+    const target = {
+      tests: profile.totalTestsTaken || 0,
+      score: Math.round(profile.averageScore || 0)
+    }
     const duration = 1200
     const steps = 40
     const interval = duration / steps
@@ -85,13 +122,12 @@ const Dashboard = () => {
     return () => clearInterval(timer)
   }, [profile])
 
-  
-
   /* ── Logout ── */
   const handleLogout = () => {
     localStorage.removeItem("token")
-    // ↓ this fires the "storage" event the header is listening to
-    window.dispatchEvent(new Event("storage"))
+    localStorage.removeItem("role")    // ✅ fixed
+    localStorage.removeItem("name")    // ✅ fixed
+    window.dispatchEvent(new Event("authChange"))  // ✅ consistent event
     router.push("/")
   }
 
@@ -291,7 +327,7 @@ const Dashboard = () => {
               <div className={styles.actionGrid}>
                 <button
                   className={styles.actionCard}
-                  onClick={() => router.push("/products")}
+                  onClick={() => router.push("/test")}  // ✅ fixed
                 >
                   <FiFileText className={styles.actionIcon} />
                   <span>Start a Test</span>
@@ -382,38 +418,44 @@ const Dashboard = () => {
           <div className={styles.tabContent}>
             <h2 className={styles.pageTitle}>My Tests</h2>
 
-            {profile?.totalTestsTaken === 0 ? (
+            {historyLoading ? (
+              <div className={styles.loadingScreen}>
+                <div className={styles.loadingSpinner}></div>
+              </div>
+            ) : testHistory.length === 0 ? (
               <div className={styles.emptyState}>
                 <FiFileText className={styles.emptyIcon} />
                 <h3>No tests taken yet</h3>
                 <p>Start your first test to see your history here.</p>
-                <button
-                  className={styles.ctaBtn}
-                  onClick={() => router.push("/test")}
-                >
+                <button className={styles.ctaBtn} onClick={() => router.push("/test")}>
                   Take a Test
                 </button>
               </div>
             ) : (
               <div className={styles.testList}>
-                <div className={styles.testSummaryCard}>
-                  <div className={styles.testSummaryRow}>
-                    <span>Total Tests Attempted</span>
-                    <strong>{profile?.totalTestsTaken}</strong>
+                {testHistory.map((session) => (
+                  <div key={session.sessionId} className={styles.testHistoryCard}>
+                    <div className={styles.testHistoryLeft}>
+                      <p className={styles.testHistoryTitle}>{session.testTitle}</p>
+                      <p className={styles.testHistorySubject}>{session.subjectName}</p>
+                      <p className={styles.testHistoryDate}>{formatDate(session.takenAt)}</p>
+                    </div>
+                    <div className={styles.testHistoryRight}>
+                      <p className={styles.testHistoryScore}
+                        style={{ color: getGrade(session.percentage).color }}>
+                        {session.score}/{session.totalQuestions}
+                      </p>
+                      <p className={styles.testHistoryPercent}
+                        style={{ color: getGrade(session.percentage).color }}>
+                        {session.percentage.toFixed(1)}%
+                      </p>
+                      <p className={styles.testHistoryGrade}>
+                        {getGrade(session.percentage).label}
+                      </p>
+                    </div>
                   </div>
-                  <div className={styles.testSummaryRow}>
-                    <span>Average Score</span>
-                    <strong style={{ color: grade.color }}>{profile?.averageScore?.toFixed(1)}%</strong>
-                  </div>
-                  <div className={styles.testSummaryRow}>
-                    <span>Grade</span>
-                    <strong style={{ color: grade.color }}>{grade.label}</strong>
-                  </div>
-                </div>
-                <button
-                  className={styles.ctaBtn}
-                  onClick={() => router.push("/test")}
-                >
+                ))}
+                <button className={styles.ctaBtn} onClick={() => router.push("/test")}>
                   Take Another Test
                 </button>
               </div>
@@ -466,7 +508,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {profile?.totalTestsTaken === 0 && (
+            {testHistory.length === 0 && (
               <div className={styles.emptyState}>
                 <FiBarChart2 className={styles.emptyIcon} />
                 <h3>No results yet</h3>

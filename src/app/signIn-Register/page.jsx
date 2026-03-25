@@ -6,7 +6,7 @@ import style from "./siginRegister.module.css"
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
-const defaultLogin    = { email: "", password: "" }
+const defaultLogin = { email: "", password: "" }
 const defaultRegister = { name: "", email: "", password: "", gender: "", dateOfBirth: "", role: "" }
 
 const TODAY = new Date().toISOString().split("T")[0]
@@ -14,11 +14,11 @@ const TODAY = new Date().toISOString().split("T")[0]
 const Page = () => {
   const router = useRouter()
 
-  const [showLogin,         setShowLogin]         = useState(true)
-  const [loading,           setLoading]           = useState(false)
-  const [error,             setError]             = useState("")
-  const [success,           setSuccess]           = useState("")
-  const [loginCredentials,  setLoginCredentials]  = useState(defaultLogin)
+  const [showLogin, setShowLogin] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
+  const [success, setSuccess] = useState("")
+  const [loginCredentials, setLoginCredentials] = useState(defaultLogin)
   const [signupCredentials, setSignupCredentials] = useState(defaultRegister)
 
   const clearMessages = () => { setError(""); setSuccess("") }
@@ -50,9 +50,20 @@ const Page = () => {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.message || "Invalid credentials")
+
+      // ── Save to localStorage ──
       localStorage.setItem("token", data.token)
+      localStorage.setItem("role", data.role)
+      localStorage.setItem("name", data.name)
       window.dispatchEvent(new Event("authChange"))
-      router.push("/dashboard")
+
+      // ── Redirect based on role ──
+      if (data.role === "ADMIN") {
+        router.push("/dashboard/admin")
+      } else {
+        router.push("/dashboard")
+      }
+
     } catch (err) {
       setError(err.message || "Something went wrong.")
     } finally {
@@ -87,9 +98,20 @@ const Page = () => {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.message || "Registration failed")
-      setSignupCredentials(defaultRegister)
-      setSuccess("Account created! You can now sign in.")
-      switchView(true)
+
+      // ── Auto-login after registration ──
+      localStorage.setItem("token", data.token)
+      localStorage.setItem("role", data.role)
+      localStorage.setItem("name", data.name)
+      window.dispatchEvent(new Event("authChange"))
+
+      // Redirect based on role
+      if (data.role === "ADMIN") {
+        router.push("/dashboard/admin")
+      } else {
+        router.push("/dashboard")
+      }
+
     } catch (err) {
       setError(err.message || "Something went wrong.")
     } finally {
