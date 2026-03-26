@@ -2,13 +2,13 @@
 
 import { useSearchParams, useRouter } from "next/navigation"
 import { useState, useEffect, useMemo } from "react"
-import TestConfig from "../components/test/TestConfig"
-import Timer from "../components/test/Timer"
-import QuestionCard from "../components/test/QuestionCard"
 import QuestionPalette from "../components/test/QuestionPalette"
 import StartConfig from "./start/Startconfig"
 import ResultPage from "./result/ResultPage"
 import questionsData from "../../data/questions"
+import questionsData from "../../components/test/TestConfig"
+import questionsData from "../../components/test/Timer"
+import questionsData from "../../components/test/QuestionCard"
 import styles from "./page.module.css"
 
 export default function TestPage() {
