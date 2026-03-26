@@ -1,0 +1,770 @@
+/* ================= MAIN CARD ================= */
+.analysisCard {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  margin-bottom: 28px;
+  animation: fadeUp 0.5s ease;
+}
+
+.analysisTitle {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 22px;
+  color: #1e293b;
+}
+
+/* ================= SUMMARY BOXES ================= */
+.timeSummary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.timeBox {
+  background: linear-gradient(135deg, #f8fafc, #eef2ff);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.timeBox span {
+  display: block;
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 6px;
+}
+
+.timeBox strong {
+  font-size: 20px;
+  color: #1e293b;
+}
+
+.timeBox:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* ================= TIME BARS ================= */
+.timeBars {
+  margin-bottom: 28px;
+}
+
+.timeRow {
+  display: grid;
+  grid-template-columns: 40px 1fr 50px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.timeLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.timeBarWrapper {
+  height: 10px;
+  background: #e2e8f0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.timeBar {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.4s ease;
+}
+
+/* Correct vs Wrong coloring */
+.correctBar {
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+.wrongBar {
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+.timeValue {
+  font-size: 12px;
+  color: #334155;
+  font-weight: 500;
+}
+
+/* ================= BEHAVIOR GRID ================= */
+.behaviorGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.behaviorCard {
+  background: #f9fafb;
+  border-radius: 14px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.behaviorCard h4 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #1e293b;
+}
+
+.behaviorCard p {
+  font-size: 13px;
+  color: #475569;
+  margin: 3px 0;
+}
+
+.behaviorCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+
+/* ================= INSIGHT BOX ================= */
+.insightBox {
+  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+  border-left: 5px solid #6366f1;
+  padding: 18px;
+  border-radius: 12px;
+}
+
+.insightBox h4 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #1e293b;
+}
+
+.insightBox ul {
+  padding-left: 18px;
+}
+
+.insightBox li {
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #334155;
+  line-height: 1.5;
+}
+
+/* ================= ANIMATION ================= */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .behaviorGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .timeRow {
+    grid-template-columns: 30px 1fr 40px;
+  }
+
+  .analysisCard {
+    padding: 20px;
+  }
+}
+/* ================= INSIGHTS PANEL ================= */
+
+.insightsPanel {
+  margin-top: 30px;
+  display: grid;
+  gap: 20px;
+}
+
+/* Section Title */
+.sectionTitle {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 10px;
+}
+
+/* ================= INSIGHT CARD ================= */
+
+.insightCard {
+  position: relative;
+  padding: 20px 22px;
+  border-radius: 16px;
+
+  /* Glass effect */
+  background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(248,250,252,0.75));
+  backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(226, 232, 240, 0.8);
+
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.06),
+    0 2px 6px rgba(0, 0, 0, 0.04);
+
+  transition: all 0.25s ease;
+  overflow: hidden;
+}
+
+/* Subtle gradient border glow */
+.insightCard::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  padding: 1px;
+  background: linear-gradient(120deg, #6366f1, #22c55e, #06b6d4);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+/* Hover effect */
+.insightCard:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.1),
+    0 6px 14px rgba(0, 0, 0, 0.06);
+}
+
+/* ================= HEADINGS ================= */
+
+.insightCard h4 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ================= TEXT ================= */
+
+.insightCard p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #475569;
+}
+
+/* Highlight important values */
+.insightCard strong {
+  color: #1e293b;
+  font-weight: 600;
+}
+
+/* ================= LISTS ================= */
+
+.insightCard ul {
+  margin-top: 10px;
+  padding-left: 18px;
+}
+
+.insightCard li {
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  color: #334155;
+  line-height: 1.5;
+}
+
+/* Custom bullet style */
+.insightCard li::marker {
+  color: #6366f1;
+}
+
+/* ================= SPECIAL VARIANTS ================= */
+
+/* Confidence Card Glow */
+.insightCard:nth-child(3) {
+  border: 1px solid rgba(99, 102, 241, 0.25);
+}
+
+/* Recommendations Highlight */
+.insightCard:nth-child(5) {
+  background: linear-gradient(135deg, #f8fafc, #eef2ff);
+}
+
+/* Strategy Card */
+.insightCard:nth-child(6) {
+  background: linear-gradient(135deg, #ecfeff, #f0fdf4);
+}
+
+/* ================= MINI BADGES ================= */
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+/* Performance Level Colors */
+.badgeExcellent {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badgeStrong {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.badgeAverage {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badgeWeak {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* ================= GRID ENHANCEMENT ================= */
+
+@media (min-width: 900px) {
+  .insightsPanel {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .insightCard:nth-child(1) {
+    grid-column: span 2;
+  }
+}
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 600px) {
+  .insightCard {
+    padding: 16px;
+  }
+
+  .sectionTitle {
+    font-size: 1.3rem;
+  }
+
+  .insightCard h4 {
+    font-size: 1rem;
+  }
+}
+/* ================= PERFORMANCE SUMMARY ================= */
+
+.performanceSummary {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Header */
+.summaryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.performanceBadge {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* Badge colors */
+.excellent {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.strong {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.average {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.weak {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Score Card */
+.scoreCard {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.scoreValue {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.accuracyText {
+  color: #475569;
+}
+
+/* Metric Cards */
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.metricCard {
+  padding: 16px;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 600;
+  background: #f8fafc;
+}
+
+.metricCard.correct {
+  border: 1px solid #22c55e;
+}
+
+.metricCard.wrong {
+  border: 1px solid #ef4444;
+}
+
+.metricCard.skipped {
+  border: 1px solid #facc15;
+}
+
+/* Progress */
+.progressSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.progressItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.progressBar {
+  flex: 1;
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+}
+
+.progressFillAlt {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #818cf8);
+}
+
+/* Insight */
+.quickInsight {
+  padding: 16px;
+  border-radius: 12px;
+  background: #f1f5f9;
+}
+/* ================= QUESTION REVIEW ================= */
+
+.reviewContainer {
+  margin-top: 40px;
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Filters */
+.filterTabs {
+  display: flex;
+  gap: 8px;
+}
+
+.filterBtn {
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  border: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.activeFilter {
+  background: #6366f1;
+  color: white;
+}
+
+/* Cards */
+.reviewList {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.reviewCard {
+  border-radius: 12px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid #e5e7eb;
+}
+
+.reviewCard:hover {
+  transform: translateY(-2px);
+}
+
+/* Status colors */
+.reviewCard.correct {
+  border-left: 4px solid #22c55e;
+}
+
+.reviewCard.wrong {
+  border-left: 4px solid #ef4444;
+}
+
+.reviewCard.skipped {
+  border-left: 4px solid #facc15;
+}
+
+/* Top */
+.reviewTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Badges */
+.statusBadges {
+  display: flex;
+  gap: 6px;
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+}
+
+.badge.correct {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge.wrong {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.badge.skipped {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.reviewMark {
+  font-size: 0.7rem;
+  color: #6366f1;
+}
+
+/* Body */
+.reviewBody {
+  margin-top: 12px;
+}
+
+/* Answers */
+.answerRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+/* Options */
+.optionsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.optionItem {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.correctOption {
+  background: #d4edda;
+}
+
+.wrongOption {
+  background: #f8d7da;
+}
+
+/* Explanation */
+.explanationBox {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #f1f5f9;
+}
+/* ================= TOPIC SECTIONS ================= */
+.topicSection {
+  margin-bottom: 28px;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: #1e293b;
+}
+
+/* ================= TOPIC CARD ================= */
+.topicCard {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 14px;
+  border: 1px solid #e5e7eb;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.topicCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+/* ================= HEADER ================= */
+.topicHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.accuracyGreen {
+  color: #16a34a;
+}
+
+.accuracyRed {
+  color: #dc2626;
+}
+
+/* ================= PROGRESS BAR ================= */
+.topicBarWrapper {
+  height: 10px;
+  background: #e2e8f0;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.topicBar {
+  height: 100%;
+  border-radius: 6px;
+  transition: width 0.4s ease;
+}
+
+.topicBarGreen {
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+.topicBarRed {
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+/* ================= INSIGHT TEXT ================= */
+.topicInsight {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.5;
+}
+
+/* ================= FULL TABLE ================= */
+.topicTable {
+  margin-top: 24px;
+}
+
+.topicRow {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 2fr 60px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 10px;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.2s ease;
+}
+
+.topicRow:hover {
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+/* Topic Name */
+.topicName {
+  font-weight: 500;
+  color: #1e293b;
+}
+
+/* Stats (correct / wrong / attempted) */
+.topicStats {
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+  color: #475569;
+}
+
+.topicStats span {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* Accuracy Text */
+.topicAccuracy {
+  font-weight: 600;
+  font-size: 13px;
+  color: #1e293b;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .topicRow {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .topicStats {
+    justify-content: space-between;
+  }
+
+  .topicAccuracy {
+    text-align: right;
+  }
+}
