@@ -1,75 +1,56 @@
 "use client"
-
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import styles from "./Timer.module.css"
 
 export default function Timer({ duration, onTimeUp, onTimeUpdate }) {
-
-  const [timeLeft, setTimeLeft] = useState(duration || 0)
-
+const [timeLeft, setTimeLeft] = useState(duration || 0)
   const onTimeUpRef = useRef(onTimeUp)
-  const onTimeUpdateRef = useRef(onTimeUpdate)
-
-  /* ================= REF UPDATES ================= */
-  useEffect(() => {
+   useEffect(() => {
     onTimeUpRef.current = onTimeUp
   }, [onTimeUp])
+const prevDurationRef = useRef(duration)
 
-  useEffect(() => {
-    onTimeUpdateRef.current = onTimeUpdate
-  }, [onTimeUpdate])
+useEffect(() => {
+  // Only set when switching question (not during ticking)
+  if (typeof duration === "number") {
+    setTimeLeft(duration)
+    prevDurationRef.current = duration
+  }
+}, [duration])
+useEffect(() => {
+  if (timeLeft <= 0) {
+    onTimeUpRef.current()
+    return
+  }
 
-  /* ================= RESET ON QUESTION CHANGE ================= */
-  useEffect(() => {
-    if (typeof duration === "number") {
-      setTimeLeft(duration)
-    }
-  }, [duration])
+  const interval = setInterval(() => {
+    setTimeLeft((prev) => {
+      const newTime = prev - 1
 
-  /* ================= TIMER LOGIC ================= */
-  useEffect(() => {
-    if (timeLeft <= 0) return
+      onTimeUpdate?.(newTime)   // ✅ THIS LINE FIXES EVERYTHING
 
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => prev - 1)
-    }, 1000)
+      return newTime
+    })
+  }, 1000)
 
-    return () => clearInterval(interval)
-  }, [timeLeft])
-
-  /* ================= SAFE CALLBACKS ================= */
-  useEffect(() => {
-    if (timeLeft <= 0) {
-      onTimeUpRef.current?.()
-    } else {
-      onTimeUpdateRef.current?.(timeLeft)
-    }
-  }, [timeLeft])
-
-  /* ================= UI HELPERS ================= */
-  const percentage = duration ? (timeLeft / duration) * 100 : 0
-  const isWarning = timeLeft <= 5
+  return () => clearInterval(interval)
+}, [timeLeft])
+  const percentage = (timeLeft / duration) * 100
+  const isWarning  = timeLeft <= 5
 
   return (
     <div className={styles.timerWrapper}>
-
       <div className={`${styles.timerText} ${isWarning ? styles.timerTextWarning : ""}`}>
+        {/* ✅ Replaced emoji with CSS clock icon for layout stability */}
         <span className={styles.clockIcon} aria-hidden="true">◷</span>
         {timeLeft}s
       </div>
-
-      <div
-        className={styles.timerBar}
-        role="progressbar"
-        aria-valuenow={timeLeft}
-        aria-valuemax={duration}
-      >
+      <div className={styles.timerBar} role="progressbar" aria-valuenow={timeLeft} aria-valuemax={duration}>
         <div
           className={`${styles.timerProgress} ${isWarning ? styles.timerWarning : ""}`}
           style={{ width: `${percentage}%` }}
         />
       </div>
-
     </div>
   )
 }
