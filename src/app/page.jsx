@@ -1,5 +1,7 @@
 // Server Component — no "use client" needed
+"use client"
 import React from "react"
+import { motion } from "framer-motion"
 import Image from "next/image"
 import { Gideon_Roman } from "next/font/google"
 import style from "./page.module.css"
@@ -9,7 +11,38 @@ const gideon = Gideon_Roman({
   weight: "400",
   subsets: ["latin"],
 })
+const containerVariant = {
+  hidden: {},
+  visible: {
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.2,
+    },
+  },
+}
 
+const fadeUp = {
+  hidden: {
+    opacity: 0,
+    y: 40,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1], // smooth cubic-bezier
+    },
+  },
+}
+
+const fadeIn = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 1 },
+  },
+}
 const images = Object.freeze([
   "/homePage/carousel1.png",
   "/homePage/carousel2.png",
@@ -28,8 +61,7 @@ const FRANKLIN_QUOTE = {
 }
 
 const ZIGLAR_QUOTE = {
-  line: "You don't have to be great to start, but you have to start to be great.",
-  author: "– Zig Ziglar",
+  line: '"Ace the clock and conquer your next big exam with Ultima"',
 }
 
 // FIX 2: Configurable carousel repeat count
@@ -42,41 +74,63 @@ const Home = () => {
       {/* ── Banner ── */}
       <div className={style.bannerArea}>
         <div className={style.bannerContainer}>
-          <div className={`${style.bannerText} ${gideon.className}`}>
-
-            <h1 className={style.bannerHeading}>
-              Welcome to the{" "}
-              <span className={style.highlight}>Ultimate</span> Platform.
-              <br />
-              <span className={style.divider}></span>
+          <div className={style.bubbles}>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            </div> {/* NEW */}
+          <motion.div
+            className={`${style.bannerText} ${gideon.className}`}
+            variants={containerVariant}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.div
+              className={style.floatingShape}
+              animate={{ y: [0, -20, 0] }}
+              transition={{
+                duration: 6,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+            />
+            <motion.h1 className={style.bannerHeading} variants={fadeUp}>
               Practice is the only force that
               <br />
               <span className={style.highlight}>transforms potential</span>
               <br />
               into identity.
-            </h1>
+            </motion.h1>
 
-            <p className={style.bannerSubText}>
+            <motion.p className={style.bannerSubText} variants={fadeUp}>
               From <strong>what you could do</strong> → to{" "}
               <strong>who you become</strong>.
-            </p>
+            </motion.p>
 
-            <p className={style.bannerTagline}>
+            <motion.p className={style.bannerTagline} variants={fadeUp}>
               You are the sum of your repetitions.
-            </p>
+            </motion.p>
+            <motion.div
+              whileHover={{ scale: 1.08, y: -3 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link href="/products" className={style.ctaButton}>
+                Practice Now →
+              </Link>
+            </motion.div>
 
-            {/* FIX 5: <Link> styled directly — no nested <button> inside <Link> */}
-            <Link href="/products" className={style.ctaButton}>
-              Practice Now →
-            </Link>
+            <motion.blockquote
+              className={style.quoteBlock}
+              variants={fadeIn}
+            >
+              <p className={style.quoteLine}>
+                "Ace the clock and conquer your next big exam with Ultima"
+              </p>
+            </motion.blockquote>
 
-            {/* FIX 6: Semantic <blockquote> for the Ziglar quote */}
-            <blockquote className={style.quoteBlock}>
-              <p className={style.quoteLine}>{ZIGLAR_QUOTE.line}</p>
-              <footer className={style.quoteAuthor}>{ZIGLAR_QUOTE.author}</footer>
-            </blockquote>
-
-          </div>
+          </motion.div>
         </div>
       </div>
 
