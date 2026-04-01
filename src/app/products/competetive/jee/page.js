@@ -1,6 +1,43 @@
 import Link from "next/link";
 import styles from "./jee.module.css";
 
+import BookShelf from "@/components/books/BookShelf";
+const JEE_BOOKS = [
+  {
+    title: "Concepts of Physics (Vol. 1 & 2)",
+    author: "H.C. Verma",
+    label: "Physics · JEE",
+    spineText: "H.C. Verma · Physics",
+    qCount: 8,
+    theme: "themeCrimson",
+    emoji: "⚛️",
+    practiceHref: "/test?class=12&subject=physics&book=hc-verma-jee",
+    fullTestHref: "/test?exam=jee&subject=physics",
+  },
+  {
+    title: "Problems in Physical Chemistry",
+    author: "N. Avasthi",
+    label: "Chemistry · JEE",
+    spineText: "N. Avasthi · Physical Chem",
+    qCount: 6,
+    theme: "themeNavy",
+    emoji: "🧬",
+    practiceHref: "/test?class=12&subject=chemistry&book=avasthi-chemistry-jee",
+    fullTestHref: "/test?exam=jee&subject=chemistry",
+  },
+  {
+    title: "Plane Trigonometry",
+    author: "S.L. Loney",
+    label: "Mathematics · JEE",
+    spineText: "S.L. Loney · Trigonometry",
+    qCount: 6,
+    theme: "themeSlate",
+    emoji: "📐",
+    practiceHref: "/test?class=12&subject=maths&book=sl-loney-maths-jee",
+    fullTestHref: "/test?exam=jee&subject=maths",
+  },
+]
+
 export default function JeePage() {
   return (
     <div className={styles.container}>
@@ -236,6 +273,9 @@ export default function JeePage() {
             </div>
           </div>
       </section>
+
+      <BookShelf books={JEE_BOOKS} />
+
     </div>
   );
 }

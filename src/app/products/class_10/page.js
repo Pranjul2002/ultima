@@ -1,5 +1,42 @@
 import Link from "next/link";
 import styles from "./class10.module.css";
+import BookShelf from "../../../components/books/BookShelf";
+
+const CLASS10_BOOKS = [
+  {
+    title: "Science for Tenth Class – Physics",
+    author: "Lakhmir Singh & Manjit Kaur",
+    label: "Physics · Class 10",
+    spineText: "Lakhmir Singh · Physics",
+    qCount: 8,
+    theme: "themeTeal",
+    emoji: "⚡",
+    practiceHref: "/test?class=10&subject=physics&book=lakhmir-physics-10",
+    fullTestHref: "/test?class=10&subject=physics",
+  },
+  {
+    title: "Secondary School Mathematics",
+    author: "R.D. Sharma",
+    label: "Mathematics · Class 10",
+    spineText: "R.D. Sharma · Mathematics",
+    qCount: 8,
+    theme: "themeIndigo",
+    emoji: "📐",
+    practiceHref: "/test?class=10&subject=maths&book=rd-sharma-maths-10",
+    fullTestHref: "/test?class=10&subject=maths",
+  },
+  {
+    title: "Science – NCERT",
+    author: "NCERT",
+    label: "Science · Class 10",
+    spineText: "NCERT · Science",
+    qCount: 6,
+    theme: "themeEmerald",
+    emoji: "🔬",
+    practiceHref: "/test?class=10&subject=chemistry&book=ncert-science-10",
+    fullTestHref: "/test?class=10&subject=chemistry",
+  },
+]
 
 export default function Class10Page() {
   return (
@@ -189,6 +226,9 @@ export default function Class10Page() {
             </div>
 
           </section>
+
+      <BookShelf books={CLASS10_BOOKS} />
+
     </div>
   );
 }

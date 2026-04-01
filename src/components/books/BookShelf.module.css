@@ -1,0 +1,316 @@
+/* ================================================
+   BookShelf.module.css
+   Book-cover-style cards — distinct from the flat
+   glass subject cards already on the product pages
+================================================ */
+
+/* ── Section wrapper ── */
+.bookSection {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 80px auto 60px;
+  padding: 0 4px;
+}
+
+/* ── Section header ── */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.sectionTitle {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.sectionSub {
+  font-size: 1rem;
+  color: #64748b;
+}
+
+/* ── Shelf grid — 3 books per row ── */
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+/* ══════════════════════════════════════
+   BOOK CARD
+   Portrait shape, coloured spine, paper cover
+══════════════════════════════════════ */
+.book {
+  position: relative;
+  display: flex;
+  min-height: 260px;
+  border-radius: 4px 12px 12px 4px;
+  overflow: hidden;
+  cursor: pointer;
+
+  /* Physical book shadow */
+  box-shadow:
+    3px 5px 14px rgba(0, 0, 0, 0.18),
+    1px 2px 4px rgba(0, 0, 0, 0.12);
+
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.32s ease;
+}
+
+/* Lift + slight tilt on hover — feels like picking a book off a shelf */
+.book:hover {
+  transform: translateY(-10px) rotate(0.8deg);
+  box-shadow:
+    6px 18px 32px rgba(0, 0, 0, 0.22),
+    2px 4px 8px rgba(0, 0, 0, 0.14);
+}
+
+/* ── Spine (left strip) ── */
+.spine {
+  width: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--spine-color);
+}
+
+.spineText {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--spine-text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 130px;
+  opacity: 0.85;
+}
+
+/* ── Cover (main face) ── */
+.cover {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 16px 14px;
+  position: relative;
+  overflow: hidden;
+  background: var(--cover-bg);
+}
+
+/* Subtle lined-paper texture */
+.cover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 23px,
+    rgba(0, 0, 0, 0.028) 23px,
+    rgba(0, 0, 0, 0.028) 24px
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* All direct children sit above the texture */
+.cover > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Subject label (small caps, top) ── */
+.bookLabel {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-color);
+  margin-bottom: 10px;
+  opacity: 0.8;
+}
+
+/* ── Title ── */
+.bookTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--title-color);
+  flex: 1;
+}
+
+/* ── Author ── */
+.bookAuthor {
+  font-size: 0.75rem;
+  color: var(--accent-color);
+  margin-top: 10px;
+  opacity: 0.7;
+  font-style: italic;
+}
+
+/* ── Divider ── */
+.bookDivider {
+  height: 1px;
+  background: var(--accent-color);
+  opacity: 0.15;
+  margin: 12px 0;
+}
+
+/* ── Footer row ── */
+.bookFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.bookQCount {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--accent-color);
+  opacity: 0.75;
+}
+
+/* ── Practice button ── */
+.practiceBtn {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 7px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: var(--spine-color);
+  color: var(--spine-text-color);
+  text-decoration: none;
+  display: inline-block;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.practiceBtn:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+/* ── Full-test ghost link ── */
+.fullTestLink {
+  font-size: 0.7rem;
+  color: var(--accent-color);
+  opacity: 0.6;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  margin-top: 6px;
+  display: block;
+  transition: opacity 0.2s;
+}
+
+.fullTestLink:hover {
+  opacity: 1;
+}
+
+/* ══════════════════════════════════════
+   COLOUR THEMES — one per book
+   CSS custom properties scoped to .book
+══════════════════════════════════════ */
+
+/* Teal — Lakhmir Singh Physics 10 */
+.themeTeal {
+  --spine-color:      #0d6b5e;
+  --spine-text-color: #a7f3e4;
+  --cover-bg:         #edfaf7;
+  --accent-color:     #0d6b5e;
+  --title-color:      #083d36;
+}
+
+/* Indigo — R.D. Sharma */
+.themeIndigo {
+  --spine-color:      #312e81;
+  --spine-text-color: #c7d2fe;
+  --cover-bg:         #eef2ff;
+  --accent-color:     #3730a3;
+  --title-color:      #1e1b6e;
+}
+
+/* Crimson — H.C. Verma */
+.themeCrimson {
+  --spine-color:      #7f1d1d;
+  --spine-text-color: #fecaca;
+  --cover-bg:         #fff5f5;
+  --accent-color:     #991b1b;
+  --title-color:      #450a0a;
+}
+
+/* Amber — O.P. Tandon */
+.themeAmber {
+  --spine-color:      #92400e;
+  --spine-text-color: #fde68a;
+  --cover-bg:         #fffbeb;
+  --accent-color:     #b45309;
+  --title-color:      #451a03;
+}
+
+/* Forest — NCERT Biology */
+.themeForest {
+  --spine-color:      #14532d;
+  --spine-text-color: #bbf7d0;
+  --cover-bg:         #f0fdf4;
+  --accent-color:     #15803d;
+  --title-color:      #052e16;
+}
+
+/* Navy — N. Avasthi / D.C. Pandey */
+.themeNavy {
+  --spine-color:      #1e3a5f;
+  --spine-text-color: #bfdbfe;
+  --cover-bg:         #eff6ff;
+  --accent-color:     #1d4ed8;
+  --title-color:      #0c1f3d;
+}
+
+/* Slate — S.L. Loney / V.K. Jaiswal */
+.themeSlate {
+  --spine-color:      #334155;
+  --spine-text-color: #cbd5e1;
+  --cover-bg:         #f8fafc;
+  --accent-color:     #475569;
+  --title-color:      #0f172a;
+}
+
+/* NCERT Science 10 */
+.themeEmerald {
+  --spine-color:      #065f46;
+  --spine-text-color: #a7f3d0;
+  --cover-bg:         #ecfdf5;
+  --accent-color:     #059669;
+  --title-color:      #022c22;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .shelf {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+}
+
+@media (max-width: 560px) {
+  .shelf {
+    grid-template-columns: 1fr;
+  }
+
+  .book {
+    min-height: 160px;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+}

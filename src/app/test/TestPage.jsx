@@ -9,6 +9,7 @@ import QuestionPalette from "../../components/test/QuestionPalette"
 import StartConfig from "./start/Startconfig"
 import ResultPage from "./result/ResultPage"
 import questionsData from "../../data/questions"
+import bookQuestionsData from "../../data/bookQuestions"
 import styles from "./page.module.css"
 
 export default function TestPage() {
@@ -39,6 +40,7 @@ export default function TestPage() {
   const classParam = searchParams.get("class")
   const subjectParam = searchParams.get("subject")
   const topicParam = searchParams.get("topic")
+  const bookParam = searchParams.get("book")
 
   /* ================= FULLSCREEN ================= */
   const enterFullscreen = () => {
@@ -50,16 +52,17 @@ export default function TestPage() {
 
   /* ================= AUTO CONFIG ================= */
   useEffect(() => {
-    if (classParam || subjectParam || topicParam) {
+    if (classParam || subjectParam || topicParam || bookParam) {
       setAutoStartConfig({
         class: classParam || "",
         subject: subjectParam || "",
         topic: topicParam || "",
+        book: bookParam || "",
         duration: timePerQuestion,
         questionsPerPage: 1,
       })
     }
-  }, [classParam, subjectParam, topicParam])
+  }, [classParam, subjectParam, topicParam, bookParam])
 
   /* ================= TIMER ================= */
   useEffect(() => {
@@ -81,12 +84,15 @@ export default function TestPage() {
 
   /* ================= FILTER QUESTIONS ================= */
   const filteredQuestions = useMemo(() => {
-    return questionsData
+    // If a book param is present, pull from bookQuestionsData; otherwise use the regular bank
+    const source = config?.book ? bookQuestionsData : questionsData
+    return source
       .filter((q) => {
         return (
-          (!config?.class || q.class?.toString() === config.class) &&
-          (!config?.subject || q.subject?.toLowerCase() === config.subject?.toLowerCase()) &&
-          (!config?.topic || q.topic?.toLowerCase() === config.topic?.toLowerCase())
+          (!config?.book    || q.book?.toLowerCase()    === config.book?.toLowerCase()) &&
+          (!config?.class   || q.class?.toString()       === config.class) &&
+          (!config?.subject || q.subject?.toLowerCase()  === config.subject?.toLowerCase()) &&
+          (!config?.topic   || q.topic?.toLowerCase()    === config.topic?.toLowerCase())
         )
       })
       .slice(0, config?.numQuestions || 10)

@@ -1,5 +1,42 @@
 import Link from "next/link";
 import styles from "./neet.module.css";
+import BookShelf from "@/components/books/BookShelf";
+
+const NEET_BOOKS = [
+  {
+    title: "Biology (Class XI & XII)",
+    author: "NCERT",
+    label: "Biology · NEET",
+    spineText: "NCERT · Biology",
+    qCount: 8,
+    theme: "themeForest",
+    emoji: "🧬",
+    practiceHref: "/test?class=12&subject=biology&book=ncert-biology-neet",
+    fullTestHref: "/test?exam=neet&subject=biology",
+  },
+  {
+    title: "Objective Physics for NEET",
+    author: "D.C. Pandey",
+    label: "Physics · NEET",
+    spineText: "D.C. Pandey · Physics",
+    qCount: 6,
+    theme: "themeNavy",
+    emoji: "⚡",
+    practiceHref: "/test?class=12&subject=physics&book=dc-pandey-neet",
+    fullTestHref: "/test?exam=neet&subject=physics",
+  },
+  {
+    title: "Inorganic Chemistry for NEET",
+    author: "V.K. Jaiswal",
+    label: "Chemistry · NEET",
+    spineText: "V.K. Jaiswal · Inorganic Chem",
+    qCount: 6,
+    theme: "themeSlate",
+    emoji: "🧪",
+    practiceHref: "/test?class=12&subject=chemistry&book=vk-jaiswal-neet",
+    fullTestHref: "/test?exam=neet&subject=chemistry",
+  },
+]
 
 export default function NeetPage() {
   return (
@@ -237,6 +274,8 @@ export default function NeetPage() {
             </div>
           </div>
       </section>
+
+      <BookShelf books={NEET_BOOKS} />
       
     </div>
   );

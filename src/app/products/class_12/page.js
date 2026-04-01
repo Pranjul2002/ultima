@@ -1,5 +1,42 @@
 import Link from "next/link";
 import styles from "./class12.module.css";
+import BookShelf from "../../../components/books/BookShelf";
+
+const CLASS12_BOOKS = [
+  {
+    title: "Concepts of Physics (Vol. 2)",
+    author: "H.C. Verma",
+    label: "Physics · Class 12",
+    spineText: "H.C. Verma · Physics",
+    qCount: 8,
+    theme: "themeCrimson",
+    emoji: "⚛️",
+    practiceHref: "/test?class=12&subject=physics&book=hc-verma-physics-12",
+    fullTestHref: "/test?class=12&subject=physics",
+  },
+  {
+    title: "Organic Chemistry",
+    author: "O.P. Tandon",
+    label: "Chemistry · Class 12",
+    spineText: "O.P. Tandon · Organic Chem",
+    qCount: 6,
+    theme: "themeAmber",
+    emoji: "🧪",
+    practiceHref: "/test?class=12&subject=chemistry&book=op-tandon-chemistry-12",
+    fullTestHref: "/test?class=12&subject=chemistry",
+  },
+  {
+    title: "Mathematics (Vol. I & II)",
+    author: "R.D. Sharma",
+    label: "Mathematics · Class 12",
+    spineText: "R.D. Sharma · Mathematics",
+    qCount: 6,
+    theme: "themeIndigo",
+    emoji: "∫",
+    practiceHref: "/test?class=12&subject=maths&book=rd-sharma-maths-12",
+    fullTestHref: "/test?class=12&subject=maths",
+  },
+]
 
 export default function Class12Page() {
   return (
@@ -188,6 +225,9 @@ export default function Class12Page() {
         </div>
 
       </section>
+
+      <BookShelf books={CLASS12_BOOKS} />
+
     </div>
   );
 }
