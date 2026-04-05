@@ -4,11 +4,10 @@ import { useState, useRef, useEffect, useCallback } from "react"
 import styles from "./upskilling.module.css"
 
 // ─────────────────────────────────────────────────────────────
-//  Groq config  — free tier, no credit card needed
-//  Model: llama-3.3-70b-versatile (best free model on Groq)
+//  TEMPORARY: calling Groq directly until backend is integrated
+//  TODO: replace with backend proxy once Spring Boot is ready
 // ─────────────────────────────────────────────────────────────
-const GROQ_URL   = "https://api.groq.com/openai/v1/chat/completions"
-const GROQ_MODEL = "llama-3.3-70b-versatile"
+const GROQ_KEY = "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"  // replace with your key
 
 const MODES = [
   { id: "qa",         label: "Ask Freely",        emoji: "💬", desc: "Ask any question about your material" },
@@ -19,17 +18,18 @@ const MODES = [
 ]
 
 // ─────────────────────────────────────────────────────────────
-//  Groq API call — OpenAI-compatible endpoint
+//  callAI — calls Groq directly (temporary until backend ready)
+//  Set NEXT_PUBLIC_GROQ_API_KEY in your .env.local
 // ─────────────────────────────────────────────────────────────
-async function callGroq(systemPrompt, userMessage, apiKey) {
-  const res = await fetch(GROQ_URL, {
+async function callAI(systemPrompt, userMessage) {
+  const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${apiKey}`,
+      "Authorization": `Bearer ${GROQ_KEY}`,
     },
     body: JSON.stringify({
-      model: GROQ_MODEL,
+      model: "llama-3.3-70b-versatile",
       messages: [
         { role: "system", content: systemPrompt },
         { role: "user",   content: userMessage  },
@@ -38,16 +38,13 @@ async function callGroq(systemPrompt, userMessage, apiKey) {
       max_tokens: 2048,
     }),
   })
-
   if (!res.ok) {
     const err = await res.json().catch(() => ({}))
     throw new Error(err?.error?.message || `Groq error ${res.status}`)
   }
-
   const data = await res.json()
   return data.choices?.[0]?.message?.content?.trim() ?? "No response."
 }
-
 // ─────────────────────────────────────────────────────────────
 //  PDF text extractor — pdf.js loaded lazily from CDN
 // ─────────────────────────────────────────────────────────────
@@ -207,34 +204,24 @@ function MCQWidget({ questions, onDone }) {
 // ─────────────────────────────────────────────────────────────
 export default function UpskillingPage() {
 
-  const [apiKey,         setApiKey]        = useState("")
-  const [material,       setMaterial]      = useState("")
-  const [materialLabel,  setMaterialLabel] = useState("")
-  const [mode,           setMode]          = useState(null)
-  const [messages,       setMessages]      = useState([])
-  const [input,          setInput]         = useState("")
-  const [loading,        setLoading]       = useState(false)
-  const [mcqQuestions,   setMcqQuestions]  = useState(null)
+  const [material,            setMaterial]            = useState("")
+  const [materialLabel,       setMaterialLabel]       = useState("")
+  const [mode,                setMode]                = useState(null)
+  const [messages,            setMessages]            = useState([])
+  const [input,               setInput]               = useState("")
+  const [loading,             setLoading]             = useState(false)
+  const [mcqQuestions,        setMcqQuestions]        = useState(null)
   const [isListening,         setIsListening]         = useState(false)
   const [isMaterialListening, setIsMaterialListening] = useState(false)
   const [voiceSupported,      setVoiceSupported]      = useState(false)
   const [uploadLoading,       setUploadLoading]       = useState(false)
   const [error,               setError]               = useState("")
-  const [step,                setStep]                = useState("apikey")
+  const [step,                setStep]                = useState("material")
 
   const chatEndRef          = useRef(null)
   const fileInputRef        = useRef(null)
   const recognitionRef      = useRef(null)   // chat voice
   const materialRecognition = useRef(null)   // material voice
-
-  // Restore saved API key on mount — skip key screen if found
-  useEffect(() => {
-    try {
-      const userId = localStorage.getItem("name") || "default"
-      const saved  = localStorage.getItem(`groq_key_${userId}`)
-      if (saved) { setApiKey(saved); setStep("material") }
-    } catch (_) {}
-  }, [])
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -311,27 +298,6 @@ export default function UpskillingPage() {
     else             { setError(""); recognitionRef.current.start(); setIsListening(true) }
   }
 
-  const handleSetKey = () => {
-    if (!apiKey.trim()) { setError("Please enter your Groq API key."); return }
-    try {
-      const userId = localStorage.getItem("name") || "default"
-      localStorage.setItem(`groq_key_${userId}`, apiKey.trim())
-    } catch (_) {}
-    setError("")
-    setStep("material")
-  }
-
-  const handleForgetKey = () => {
-    try {
-      const userId = localStorage.getItem("name") || "default"
-      localStorage.removeItem(`groq_key_${userId}`)
-    } catch (_) {}
-    setApiKey("")
-    setMessages([])
-    setMcqQuestions(null)
-    setStep("apikey")
-  }
-
   const handleFile = async (e) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -385,10 +351,9 @@ Always base every response strictly on this material. Be concise, clear, and enc
     if (selectedMode === "summary") {
       setLoading(true)
       try {
-        const reply = await callGroq(
+        const reply = await callAI(
           sys,
-          `Give a clear, well-structured summary of the study material using bullet points. Cover all key concepts. After the summary, ask: "Ready for a quiz on this? Type yes to start."`,
-          apiKey
+          `Give a clear, well-structured summary of the study material using bullet points. Cover all key concepts. After the summary, ask: "Ready for a quiz on this? Type yes to start."`
         )
         setMessages([{ role: "ai", text: reply }])
       } catch (err) { setError(err.message) }
@@ -397,7 +362,7 @@ Always base every response strictly on this material. Be concise, clear, and enc
     } else if (selectedMode === "mcq") {
       setLoading(true)
       try {
-        const reply = await callGroq(
+        const reply = await callAI(
           sys,
           `Generate exactly 5 multiple choice questions from this material. Use EXACTLY this format for every question:
 
@@ -408,8 +373,7 @@ C) [Option]
 D) [Option]
 Answer: [Letter only]
 
-Make questions progressively harder and cover different topics.`,
-          apiKey
+Make questions progressively harder and cover different topics.`
         )
         const parsed = parseMCQs(reply)
         if (parsed.length === 0) {
@@ -424,10 +388,9 @@ Make questions progressively harder and cover different topics.`,
     } else if (selectedMode === "subjective") {
       setLoading(true)
       try {
-        const reply = await callGroq(
+        const reply = await callAI(
           sys,
-          `You will quiz the student with 4-5 open-ended questions, one at a time. Ask your first question now. Make it thought-provoking but fair for the level of this material. After each answer, give 1-2 sentences of feedback, then ask the next question. After the final question, give an overall assessment.`,
-          apiKey
+          `You will quiz the student with 4-5 open-ended questions, one at a time. Ask your first question now. Make it thought-provoking but fair for the level of this material. After each answer, give 1-2 sentences of feedback, then ask the next question. After the final question, give an overall assessment.`
         )
         setMessages([{ role: "ai", text: reply }])
       } catch (err) { setError(err.message) }
@@ -459,7 +422,7 @@ Make questions progressively harder and cover different topics.`,
 
       } else if (mode === "summary") {
         if (/^\s*yes\s*$/i.test(userText)) {
-          const reply = await callGroq(
+          const reply = await callAI(
             sys,
             `Generate exactly 5 multiple choice questions from this material. Use EXACTLY this format:
 
@@ -468,9 +431,8 @@ A) [Option]
 B) [Option]
 C) [Option]
 D) [Option]
-Answer: [Letter only]`,
-            apiKey
-          )
+Answer: [Letter only]`
+        )
           const parsed = parseMCQs(reply)
           if (parsed.length > 0) {
             setMcqQuestions(parsed)
@@ -495,7 +457,7 @@ Answer: [Letter only]`,
 Be honest but encouraging.`
       }
 
-      const reply = await callGroq(sys, userMsg, apiKey)
+      const reply = await callAI(sys, userMsg)
       setMessages(prev => [...prev, { role: "ai", text: reply }])
 
     } catch (err) {
@@ -524,39 +486,9 @@ Be honest but encouraging.`
         </p>
       </section>
 
-      {/* Step 1 — API Key */}
-      {step === "apikey" && (
-        <div className={styles.card}>
-          <h2 className={styles.cardTitle}>🔑 Enter your Groq API Key</h2>
-          <p className={styles.cardDesc}>
-            Get a completely free key (no credit card) from{" "}
-            <a href="https://console.groq.com/keys" target="_blank" rel="noreferrer" className={styles.link}>
-              console.groq.com/keys
-            </a>
-            . Your key stays only in your browser — never sent to our servers.
-          </p>
-          <div className={styles.keyRow}>
-            <input
-              type="password"
-              className={styles.keyInput}
-              placeholder="gsk_..."
-              value={apiKey}
-              onChange={e => { setApiKey(e.target.value); setError("") }}
-              onKeyDown={e => e.key === "Enter" && handleSetKey()}
-            />
-            <button className={styles.primaryBtn} onClick={handleSetKey}>Continue →</button>
-          </div>
-          {error && <p className={styles.error}>{error}</p>}
-        </div>
-      )}
-
-      {/* Step 2 — Study Material */}
+      {/* Study Material */}
       {step === "material" && (
         <div className={styles.card}>
-          <div className={styles.keyStatusBar}>
-            <span className={styles.keyStatusText}>🔑 Groq key saved</span>
-            <button className={styles.forgetKeyBtn} onClick={handleForgetKey}>Change key</button>
-          </div>
           <h2 className={styles.cardTitle}>📂 Add Your Study Material</h2>
           <p className={styles.cardDesc}>
             Upload a text-based PDF, or paste your notes directly. Voice input is available in the chat.
@@ -594,7 +526,7 @@ Be honest but encouraging.`
         </div>
       )}
 
-      {/* Step 3 — Mode Selection */}
+      {/* Mode Selection */}
       {step === "mode" && (
         <div className={styles.card}>
           <div className={styles.materialBadge}>{materialLabel}</div>
@@ -613,7 +545,7 @@ Be honest but encouraging.`
         </div>
       )}
 
-      {/* Step 4 — Full-screen Chat */}
+      {/* Full-screen Chat */}
       {step === "chat" && (
         <div className={styles.fullscreenChat}>
 
