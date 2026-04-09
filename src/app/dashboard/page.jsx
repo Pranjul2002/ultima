@@ -1,586 +1,350 @@
-"use client"
+/**
+ * Dashboard Page
+ * ─────────────────────────────────────────────────────────────
+ * Modular dashboard for an EdTech / upskilling platform.
+ *
+ * Sections:
+ *   • Overview  — stats, course progress, recent activity
+ *   • Profile   — editable user info, skills, certificates
+ *   • My Tests  — filterable test history with review flow
+ *   • Settings  — notifications, privacy, security, prefs
+ *
+ * Usage (drop into app/dashboard/page.jsx):
+ *   No props required. Reads user from authService.
+ ─────────────────────────────────────────────────────────────── */
 
-import { useEffect, useState, useRef } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import {
-  FiUser, FiFileText, FiBarChart2, FiSettings,
-  FiLogOut, FiHome, FiAward, FiCalendar,
-  FiMail, FiTrendingUp, FiClock, FiChevronRight
-} from "react-icons/fi"
-import styles from "./dashboard.module.css"
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL
 
-const TABS = [
-  { id: "overview", label: "Overview", icon: FiHome },
-  { id: "profile", label: "Profile", icon: FiUser },
-  { id: "tests", label: "My Tests", icon: FiFileText },
-  { id: "results", label: "Results", icon: FiBarChart2 },
-  { id: "settings", label: "Settings", icon: FiSettings },
-]
 
-const Dashboard = () => {
-  const router = useRouter()
-  const [activeTab, setActiveTab] = useState("overview")
-  const [profile, setProfile] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState("")
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+"use client";
 
-  // Settings state
-  const [pwForm, setPwForm] = useState({ current: "", next: "", confirm: "" })
-  const [pwError, setPwError] = useState("")
-  const [pwSuccess, setPwSuccess] = useState("")
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
-  // Animated counters
-  const [counters, setCounters] = useState({ tests: 0, score: 0 })
-  const animated = useRef(false)
+import Overview from "./components/Overview/Overview";
+import Profile from "./components/Profile/Profile";
+import MyTest from "./components/MyTest/MyTest";
+import Settings from "./components/Settings/Settings";
 
-  // Test history
-  const [testHistory, setTestHistory] = useState([])
-  const [historyLoading, setHistoryLoading] = useState(false)
+import { useDashboard, NAV_ITEMS } from "./hooks/useDashboard";
+import { getDashboardData, updateProfile, updateSettings } from "@/services/dashboardService";
+import styles from "./dashboard.module.css";
 
-  /* ── Fetch profile ── */
-  useEffect(() => {
-    const token = localStorage.getItem("token")
-    const role = localStorage.getItem("role")
+const icons = {
+  overview: (
+    <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+      <rect x="2" y="2" width="6" height="6" rx="1.5" />
+      <rect x="10" y="2" width="6" height="6" rx="1.5" />
+      <rect x="2" y="10" width="6" height="6" rx="1.5" />
+      <rect x="10" y="10" width="6" height="6" rx="1.5" />
+    </svg>
+  ),
+  profile: (
+    <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+      <circle cx="9" cy="6" r="3" />
+      <path d="M2.5 15.5c0-3.314 2.91-6 6.5-6s6.5 2.686 6.5 6" />
+    </svg>
+  ),
+  mytest: (
+    <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+      <rect x="3" y="2" width="12" height="14" rx="2" />
+      <path d="M6 6h6M6 9h6M6 12h4" />
+    </svg>
+  ),
+  settings: (
+    <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+      <circle cx="9" cy="9" r="2.5" />
+      <path d="M9 2v1.5M9 14.5V16M2 9h1.5M14.5 9H16M3.93 3.93l1.06 1.06M13.01 13.01l1.06 1.06M3.93 14.07l1.06-1.06M13.01 4.99l1.06-1.06" />
+    </svg>
+  ),
+  collapse: (
+    <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+      <path d="M11 4L6 9l5 5" />
+    </svg>
+  ),
+  expand: (
+    <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+      <path d="M7 4l5 5-5 5" />
+    </svg>
+  ),
+  bell: (
+    <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+      <path d="M9 2a5 5 0 0 1 5 5v3l1.5 2.5H2.5L4 10V7a5 5 0 0 1 5-5z" />
+      <path d="M7 15a2 2 0 0 0 4 0" />
+    </svg>
+  ),
+};
 
-    // not logged in → go to login
-    if (!token) { router.push("/signIn-Register"); return }
+const sectionMeta = {
+  overview: {
+    title: "Dashboard",
+    subtitle: "Track your learning progress and activity.",
+  },
+  profile: {
+    title: "Profile",
+    subtitle: "Manage your personal information and achievements.",
+  },
+  mytest: {
+    title: "My Tests",
+    subtitle: "View assessments, scores, and pending tests.",
+  },
+  settings: {
+    title: "Settings",
+    subtitle: "Update preferences, privacy, and account controls.",
+  },
+};
 
-    // admin trying to access student dashboard → redirect
-    if (role === "ADMIN") { router.push("/dashboard/admin"); return }
+const initialDashboardState = {
+  user: null,
+  overview: {
+    stats: [],
+    progress: [],
+    activity: [],
+  },
+  profile: {
+    name: "",
+    email: "",
+    bio: "",
+    location: "",
+    website: "",
+    role: "",
+    avatarUrl: "",
+    skills: [],
+    certificates: [],
+    metrics: {
+      courses: 0,
+      tests: 0,
+      badges: 0,
+    },
+  },
+  tests: [],
+  settings: {
+    notifications: {
+      emailReminders: false,
+      testAlerts: false,
+      progressReports: false,
+      newCourses: false,
+      badges: false,
+    },
+    privacy: {
+      publicProfile: false,
+      showProgress: false,
+    },
+    security: {
+      twoFactor: false,
+      loginAlerts: false,
+    },
+    preferences: {
+      language: "en",
+      timezone: "Asia/Kolkata",
+      dailyGoal: 30,
+      recoveryEmail: "",
+    },
+  },
+};
 
-    const fetchProfile = async () => {
-      try {
-        const res = await fetch(`${API_URL}/api/students/profile`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        if (res.status === 401) {
-          localStorage.removeItem("token")
-          localStorage.removeItem("role")
-          localStorage.removeItem("name")
-          router.push("/signIn-Register")
-          return
-        }
-        const data = await res.json()
-        setProfile(data)
-      } catch {
-        setError("Failed to load profile. Please try again.")
-      } finally {
-        setLoading(false)
+export default function DashboardPage() {
+  const router = useRouter();
+  const { activeTab, setActiveTab, collapsed, setCollapsed } = useDashboard();
+
+  const [dashboardData, setDashboardData] = useState(initialDashboardState);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthorized, setIsAuthorized] = useState(true);
+  const [pageError, setPageError] = useState("");
+
+  const loadDashboard = async () => {
+    setIsLoading(true);
+    setPageError("");
+
+    try {
+      const data = await getDashboardData();
+      setDashboardData({
+        ...initialDashboardState,
+        ...data,
+      });
+      setIsAuthorized(true);
+    } catch (error) {
+      if (error?.status === 401 || error?.status === 403) {
+        setIsAuthorized(false);
+        router.replace("/signIn-Register");
+        return;
       }
-    }
-    fetchProfile()
-  }, [router])
 
-  /* ── Fetch test history when tests tab is opened ── */
+      setPageError(error.message || "Failed to load dashboard.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    if (activeTab !== "tests" && activeTab !== "results") return
-    const token = localStorage.getItem("token")
-    if (!token || testHistory.length > 0) return
+    loadDashboard();
+  }, []);
 
-    const fetchHistory = async () => {
-      setHistoryLoading(true)
-      try {
-        const res = await fetch(`${API_URL}/api/tests/history`, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
-        const data = await res.json()
-        setTestHistory(data)
-      } catch {
-        // silently fail — profile data still shows
-      } finally {
-        setHistoryLoading(false)
-      }
+  const user = dashboardData.user;
+  const currentSection = sectionMeta[activeTab];
+
+  const initials = useMemo(() => {
+    const name = user?.name || dashboardData.profile?.name || "";
+    if (!name) return "U";
+
+    return name
+      .split(" ")
+      .filter(Boolean)
+      .map((part) => part[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+  }, [user, dashboardData.profile]);
+
+  const handleProfileSave = async (nextProfile) => {
+    const saved = await updateProfile(nextProfile);
+
+    setDashboardData((prev) => ({
+      ...prev,
+      user: {
+        ...prev.user,
+        name: saved.name,
+        email: saved.email,
+        role: saved.role,
+      },
+      profile: saved,
+    }));
+  };
+
+  const handleSettingsSave = async (nextSettings) => {
+    const saved = await updateSettings(nextSettings);
+
+    setDashboardData((prev) => ({
+      ...prev,
+      settings: saved,
+    }));
+  };
+
+  const renderSection = () => {
+    switch (activeTab) {
+      case "overview":
+        return (
+          <Overview
+            user={user}
+            stats={dashboardData.overview.stats}
+            progress={dashboardData.overview.progress}
+            activity={dashboardData.overview.activity}
+            isLoading={isLoading}
+          />
+        );
+
+      case "profile":
+        return (
+          <Profile
+            user={dashboardData.profile}
+            isLoading={isLoading}
+            onSave={handleProfileSave}
+          />
+        );
+
+      case "mytest":
+        return <MyTest tests={dashboardData.tests} isLoading={isLoading} />;
+
+      case "settings":
+        return (
+          <Settings
+            data={dashboardData.settings}
+            isLoading={isLoading}
+            onSave={handleSettingsSave}
+          />
+        );
+
+      default:
+        return null;
     }
-    fetchHistory()
-  }, [activeTab])
+  };
 
-  /* ── Counter animation ── */
-  useEffect(() => {
-    if (!profile || animated.current) return
-    animated.current = true
-    const target = {
-      tests: profile.totalTestsTaken || 0,
-      score: Math.round(profile.averageScore || 0)
-    }
-    const duration = 1200
-    const steps = 40
-    const interval = duration / steps
-    let step = 0
-    const timer = setInterval(() => {
-      step++
-      const progress = step / steps
-      setCounters({
-        tests: Math.round(target.tests * progress),
-        score: Math.round(target.score * progress),
-      })
-      if (step >= steps) clearInterval(timer)
-    }, interval)
-    return () => clearInterval(timer)
-  }, [profile])
-
-  /* ── Logout ── */
-  const handleLogout = () => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("role")    // ✅ fixed
-    localStorage.removeItem("name")    // ✅ fixed
-    window.dispatchEvent(new Event("authChange"))  // ✅ consistent event
-    router.push("/")
+  if (!isAuthorized) {
+    return null;
   }
 
-  /* ── Password change ── */
-  const handlePasswordChange = async (e) => {
-    e.preventDefault()
-    setPwError(""); setPwSuccess("")
-    if (pwForm.next !== pwForm.confirm) {
-      setPwError("New passwords do not match.")
-      return
-    }
-    if (pwForm.next.length < 8) {
-      setPwError("Password must be at least 8 characters.")
-      return
-    }
-    setPwSuccess("Password change coming soon — backend endpoint not yet built.")
-    setPwForm({ current: "", next: "", confirm: "" })
+  if (isLoading && !dashboardData.user) {
+    return null;
   }
-
-  const formatDate = (dateStr) => {
-    if (!dateStr) return "—"
-    return new Date(dateStr).toLocaleDateString("en-IN", {
-      day: "numeric", month: "long", year: "numeric"
-    })
-  }
-
-  const getGrade = (score) => {
-    if (score >= 90) return { label: "Outstanding", color: "#22c55e" }
-    if (score >= 75) return { label: "Excellent", color: "#3b82f6" }
-    if (score >= 60) return { label: "Good", color: "#f59e0b" }
-    if (score >= 40) return { label: "Average", color: "#f97316" }
-    return { label: "Needs Work", color: "#ef4444" }
-  }
-
-  /* ── Loading ── */
-  if (loading) return (
-    <div className={styles.loadingScreen}>
-      <div className={styles.loadingSpinner}></div>
-      <p>Loading your dashboard…</p>
-    </div>
-  )
-
-  /* ── Error ── */
-  if (error) return (
-    <div className={styles.loadingScreen}>
-      <p className={styles.errorText}>{error}</p>
-      <button onClick={() => router.push("/signIn-Register")} className={styles.retryBtn}>
-        Back to Login
-      </button>
-    </div>
-  )
-
-  const grade = getGrade(profile?.averageScore || 0)
 
   return (
-    <div className={styles.layout}>
-
-      {/* ── Sidebar ── */}
-      <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ""}`}>
+    <div className={styles.dashboardRoot}>
+      <aside className={`${styles.sidebar} ${collapsed ? styles.collapsed : ""}`}>
         <div className={styles.sidebarTop}>
-          <Link href="/" className={styles.sidebarLogo}>EduTech</Link>
-          <div className={styles.sidebarUserMini}>
-            <div className={styles.avatarCircle}>
-              {profile?.name?.charAt(0)?.toUpperCase() || "?"}
-            </div>
-            <div>
-              <p className={styles.sidebarUserName}>{profile?.name || "Student"}</p>
-              <p className={styles.sidebarUserEmail}>{profile?.email || ""}</p>
-            </div>
-          </div>
+          <button
+            type="button"
+            className={styles.collapseIconBtn}
+            onClick={() => setCollapsed((prev) => !prev)}
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            <span className={styles.navIcon}>
+              {collapsed ? icons.expand : icons.collapse}
+            </span>
+          </button>
         </div>
 
         <nav className={styles.sidebarNav}>
-          {TABS.map(({ id, label, icon: Icon }) => (
+          {NAV_ITEMS.map((item) => (
             <button
-              key={id}
-              className={`${styles.navItem} ${activeTab === id ? styles.navActive : ""}`}
-              onClick={() => { setActiveTab(id); setSidebarOpen(false) }}
+              key={item.id}
+              type="button"
+              className={`${styles.navItem} ${activeTab === item.id ? styles.active : ""}`}
+              onClick={() => setActiveTab(item.id)}
+              title={collapsed ? item.label : undefined}
             >
-              <Icon className={styles.navIcon} />
-              <span>{label}</span>
-              {activeTab === id && <FiChevronRight className={styles.navArrow} />}
+              <span className={styles.navIcon}>{icons[item.icon]}</span>
+              <span className={styles.navLabel}>{item.label}</span>
             </button>
           ))}
         </nav>
-
-        <button className={styles.logoutBtn} onClick={handleLogout}>
-          <FiLogOut />
-          <span>Logout</span>
-        </button>
       </aside>
 
-      {/* ── Overlay for mobile ── */}
-      {sidebarOpen && (
-        <div className={styles.overlay} onClick={() => setSidebarOpen(false)} />
-      )}
+      <main className={`${styles.main} ${collapsed ? styles.expanded : ""}`}>
+        <header className={styles.topbar}>
+          <div className={styles.topbarLeft}>
+            <h1 className={styles.pageTitle}>{currentSection.title}</h1>
+            <p className={styles.pageSubtitle}>{currentSection.subtitle}</p>
+          </div>
 
-      {/* ── Main ── */}
-      <main className={styles.main}>
-
-        {/* Mobile topbar */}
-        <div className={styles.mobileTopbar}>
-          <button
-            className={styles.hamburger}
-            onClick={() => setSidebarOpen(prev => !prev)}
-            aria-label="Open menu"
-          >
-            <span /><span /><span />
-          </button>
-          <span className={styles.mobileTitle}>
-            {TABS.find(t => t.id === activeTab)?.label}
-          </span>
-          <button className={styles.mobileLogout} onClick={handleLogout} aria-label="Logout">
-            <FiLogOut />
-          </button>
-        </div>
-
-        {/* Mobile bottom nav */}
-        <nav className={styles.mobileNav}>
-          {TABS.map(({ id, label, icon: Icon }) => (
-            <button
-              key={id}
-              className={`${styles.mobileNavItem} ${activeTab === id ? styles.mobileNavActive : ""}`}
-              onClick={() => setActiveTab(id)}
-              aria-label={label}
-            >
-              <Icon />
-              <span>{label}</span>
+          <div className={styles.topbarRight}>
+            <button type="button" className={styles.iconBtn} aria-label="Notifications">
+              {icons.bell}
+              <span className={styles.notifDot} />
             </button>
-          ))}
-        </nav>
 
-        {/* ── OVERVIEW TAB ── */}
-        {activeTab === "overview" && (
-          <div className={styles.tabContent}>
-            <div className={styles.welcomeBanner}>
-              <div>
-                <p className={styles.welcomeSmall}>Good to see you back 👋</p>
-                <h1 className={styles.welcomeName}>{profile?.name || "Student"}</h1>
-                <p className={styles.welcomeSub}>Keep pushing — every test brings you closer.</p>
-              </div>
-              <div className={styles.welcomeBadge}>
-                <FiAward />
-                <span>{grade.label}</span>
-              </div>
-            </div>
-
-            <div className={styles.statsGrid}>
-              <div className={styles.statCard}>
-                <div className={styles.statIcon} style={{ background: "rgba(99,102,241,0.12)", color: "#6366f1" }}>
-                  <FiFileText />
-                </div>
-                <div>
-                  <h2 className={styles.statNumber}>{counters.tests}</h2>
-                  <p className={styles.statLabel}>Tests Taken</p>
-                </div>
-              </div>
-
-              <div className={styles.statCard}>
-                <div className={styles.statIcon} style={{ background: "rgba(34,197,94,0.12)", color: "#22c55e" }}>
-                  <FiTrendingUp />
-                </div>
-                <div>
-                  <h2 className={styles.statNumber}>{counters.score}%</h2>
-                  <p className={styles.statLabel}>Average Score</p>
-                </div>
-              </div>
-
-              <div className={styles.statCard}>
-                <div className={styles.statIcon} style={{ background: "rgba(251,146,60,0.12)", color: "#fb923c" }}>
-                  <FiAward />
-                </div>
-                <div>
-                  <h2 className={styles.statNumber} style={{ color: grade.color }}>
-                    {grade.label}
-                  </h2>
-                  <p className={styles.statLabel}>Current Grade</p>
-                </div>
-              </div>
-
-              <div className={styles.statCard}>
-                <div className={styles.statIcon} style={{ background: "rgba(14,165,233,0.12)", color: "#0ea5e9" }}>
-                  <FiClock />
-                </div>
-                <div>
-                  <h2 className={styles.statNumber}>
-                    {profile?.age || "—"}
-                    {profile?.age && <span className={styles.statUnit}> yrs</span>}
-                  </h2>
-                  <p className={styles.statLabel}>Age</p>
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.quickActions}>
-              <h3 className={styles.sectionTitle}>Quick Actions</h3>
-              <div className={styles.actionGrid}>
-                <button
-                  className={styles.actionCard}
-                  onClick={() => router.push("/test")}  // ✅ fixed
-                >
-                  <FiFileText className={styles.actionIcon} />
-                  <span>Start a Test</span>
-                  <FiChevronRight className={styles.actionArrow} />
-                </button>
-                <button
-                  className={styles.actionCard}
-                  onClick={() => setActiveTab("profile")}
-                >
-                  <FiUser className={styles.actionIcon} />
-                  <span>View Profile</span>
-                  <FiChevronRight className={styles.actionArrow} />
-                </button>
-                <button
-                  className={styles.actionCard}
-                  onClick={() => setActiveTab("results")}
-                >
-                  <FiBarChart2 className={styles.actionIcon} />
-                  <span>See Results</span>
-                  <FiChevronRight className={styles.actionArrow} />
-                </button>
-              </div>
+            <div className={styles.avatarPill}>
+              <span className={styles.avatarCircle}>{initials}</span>
             </div>
           </div>
-        )}
+        </header>
 
-        {/* ── PROFILE TAB ── */}
-        {activeTab === "profile" && (
-          <div className={styles.tabContent}>
-            <h2 className={styles.pageTitle}>My Profile</h2>
-
-            <div className={styles.profileCard}>
-              <div className={styles.profileAvatarLarge}>
-                {profile?.name?.charAt(0)?.toUpperCase() || "?"}
-              </div>
-              <div className={styles.profileMeta}>
-                <h2 className={styles.profileName}>{profile?.name}</h2>
-                <p className={styles.profileEmail}>{profile?.email}</p>
-              </div>
-            </div>
-
-            <div className={styles.infoGrid}>
-              <div className={styles.infoCard}>
-                <FiUser className={styles.infoIcon} />
-                <div>
-                  <p className={styles.infoLabel}>Full Name</p>
-                  <p className={styles.infoValue}>{profile?.name || "—"}</p>
-                </div>
-              </div>
-              <div className={styles.infoCard}>
-                <FiMail className={styles.infoIcon} />
-                <div>
-                  <p className={styles.infoLabel}>Email Address</p>
-                  <p className={styles.infoValue}>{profile?.email || "—"}</p>
-                </div>
-              </div>
-              <div className={styles.infoCard}>
-                <FiUser className={styles.infoIcon} />
-                <div>
-                  <p className={styles.infoLabel}>Gender</p>
-                  <p className={styles.infoValue}>
-                    {profile?.gender
-                      ? profile.gender.charAt(0) + profile.gender.slice(1).toLowerCase()
-                      : "—"}
-                  </p>
-                </div>
-              </div>
-              <div className={styles.infoCard}>
-                <FiCalendar className={styles.infoIcon} />
-                <div>
-                  <p className={styles.infoLabel}>Date of Birth</p>
-                  <p className={styles.infoValue}>{formatDate(profile?.dateOfBirth)}</p>
-                </div>
-              </div>
-              <div className={styles.infoCard}>
-                <FiClock className={styles.infoIcon} />
-                <div>
-                  <p className={styles.infoLabel}>Age</p>
-                  <p className={styles.infoValue}>{profile?.age ? `${profile.age} years` : "—"}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* ── MY TESTS TAB ── */}
-        {activeTab === "tests" && (
-          <div className={styles.tabContent}>
-            <h2 className={styles.pageTitle}>My Tests</h2>
-
-            {historyLoading ? (
-              <div className={styles.loadingScreen}>
-                <div className={styles.loadingSpinner}></div>
-              </div>
-            ) : testHistory.length === 0 ? (
-              <div className={styles.emptyState}>
-                <FiFileText className={styles.emptyIcon} />
-                <h3>No tests taken yet</h3>
-                <p>Start your first test to see your history here.</p>
-                <button className={styles.ctaBtn} onClick={() => router.push("/test")}>
-                  Take a Test
-                </button>
-              </div>
-            ) : (
-              <div className={styles.testList}>
-                {testHistory.map((session) => (
-                  <div key={session.sessionId} className={styles.testHistoryCard}>
-                    <div className={styles.testHistoryLeft}>
-                      <p className={styles.testHistoryTitle}>{session.testTitle}</p>
-                      <p className={styles.testHistorySubject}>{session.subjectName}</p>
-                      <p className={styles.testHistoryDate}>{formatDate(session.takenAt)}</p>
-                    </div>
-                    <div className={styles.testHistoryRight}>
-                      <p className={styles.testHistoryScore}
-                        style={{ color: getGrade(session.percentage).color }}>
-                        {session.score}/{session.totalQuestions}
-                      </p>
-                      <p className={styles.testHistoryPercent}
-                        style={{ color: getGrade(session.percentage).color }}>
-                        {session.percentage.toFixed(1)}%
-                      </p>
-                      <p className={styles.testHistoryGrade}>
-                        {getGrade(session.percentage).label}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-                <button className={styles.ctaBtn} onClick={() => router.push("/test")}>
-                  Take Another Test
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* ── RESULTS TAB ── */}
-        {activeTab === "results" && (
-          <div className={styles.tabContent}>
-            <h2 className={styles.pageTitle}>Results</h2>
-
-            <div className={styles.resultsOverview}>
-              <div className={styles.scoreRing}>
-                <svg viewBox="0 0 120 120" className={styles.ringsvg}>
-                  <circle cx="60" cy="60" r="50" className={styles.ringBg} />
-                  <circle
-                    cx="60" cy="60" r="50"
-                    className={styles.ringFill}
-                    style={{
-                      strokeDasharray: `${(profile?.averageScore || 0) * 3.14} 314`
-                    }}
-                  />
-                </svg>
-                <div className={styles.ringLabel}>
-                  <span className={styles.ringNumber}>
-                    {(profile?.averageScore || 0).toFixed(0)}%
-                  </span>
-                  <span className={styles.ringText}>avg score</span>
-                </div>
-              </div>
-
-              <div className={styles.resultsMeta}>
-                <div className={styles.resultMetaItem}>
-                  <p className={styles.resultMetaLabel}>Tests Completed</p>
-                  <p className={styles.resultMetaValue}>{profile?.totalTestsTaken || 0}</p>
-                </div>
-                <div className={styles.resultMetaItem}>
-                  <p className={styles.resultMetaLabel}>Performance Grade</p>
-                  <p className={styles.resultMetaValue} style={{ color: grade.color }}>
-                    {grade.label}
-                  </p>
-                </div>
-                <div className={styles.resultMetaItem}>
-                  <p className={styles.resultMetaLabel}>Status</p>
-                  <p className={styles.resultMetaValue}>
-                    {profile?.totalTestsTaken > 0 ? "Active Learner" : "Just Started"}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {testHistory.length === 0 && (
-              <div className={styles.emptyState}>
-                <FiBarChart2 className={styles.emptyIcon} />
-                <h3>No results yet</h3>
-                <p>Complete a test to see your results and analytics here.</p>
-                <button className={styles.ctaBtn} onClick={() => router.push("/test")}>
-                  Take Your First Test
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* ── SETTINGS TAB ── */}
-        {activeTab === "settings" && (
-          <div className={styles.tabContent}>
-            <h2 className={styles.pageTitle}>Settings</h2>
-
-            <div className={styles.settingsCard}>
-              <h3 className={styles.settingsSection}>Change Password</h3>
-
-              {pwError && <div className={styles.formError}>{pwError}</div>}
-              {pwSuccess && <div className={styles.formSuccess}>{pwSuccess}</div>}
-
-              <form onSubmit={handlePasswordChange} className={styles.settingsForm}>
-                <div className={styles.formGroup}>
-                  <label>Current Password</label>
-                  <input
-                    type="password"
-                    placeholder="Enter current password"
-                    value={pwForm.current}
-                    onChange={e => setPwForm(p => ({ ...p, current: e.target.value }))}
-                    required
-                  />
-                </div>
-                <div className={styles.formGroup}>
-                  <label>New Password</label>
-                  <input
-                    type="password"
-                    placeholder="At least 8 characters"
-                    value={pwForm.next}
-                    onChange={e => setPwForm(p => ({ ...p, next: e.target.value }))}
-                    required
-                  />
-                </div>
-                <div className={styles.formGroup}>
-                  <label>Confirm New Password</label>
-                  <input
-                    type="password"
-                    placeholder="Repeat new password"
-                    value={pwForm.confirm}
-                    onChange={e => setPwForm(p => ({ ...p, confirm: e.target.value }))}
-                    required
-                  />
-                </div>
-                <button type="submit" className={styles.ctaBtn}>
-                  Update Password
-                </button>
-              </form>
-            </div>
-
-            <div className={styles.settingsCard} style={{ marginTop: "24px" }}>
-              <h3 className={styles.settingsSection}>Account</h3>
-              <button className={styles.logoutBtnFull} onClick={handleLogout}>
-                <FiLogOut /> Sign Out
+        <section className={styles.content}>
+          {pageError ? (
+            <div style={{ padding: "20px", background: "#fff", borderRadius: "12px", border: "1px solid rgba(0,0,0,0.08)" }}>
+              <p style={{ margin: 0, color: "#b91c1c", fontWeight: 600 }}>{pageError}</p>
+              <button
+                type="button"
+                onClick={loadDashboard}
+                style={{
+                  marginTop: "12px",
+                  height: "40px",
+                  padding: "0 16px",
+                  border: "none",
+                  borderRadius: "10px",
+                  background: "#0f1117",
+                  color: "#fff",
+                  cursor: "pointer",
+                }}
+              >
+                Retry
               </button>
             </div>
-          </div>
-        )}
-
+          ) : (
+            renderSection()
+          )}
+        </section>
       </main>
     </div>
-  )
+  );
 }
-
-export default Dashboard

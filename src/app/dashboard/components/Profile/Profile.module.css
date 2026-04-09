@@ -1,0 +1,194 @@
+.root { display: flex; flex-direction: column; gap: 20px; }
+
+.topRow { display: grid; grid-template-columns: 260px 1fr; gap: 20px; }
+
+.avatarCard {
+  background: #0f1117;
+  border-radius: 16px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatarCircle {
+  width: 76px;
+  height: 76px;
+  border-radius: 20px;
+  background: #e8ff5a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 700;
+  color: #0f1117;
+}
+
+.avatarName { font-size: 16px; font-weight: 600; color: #fff; }
+.avatarRole { font-size: 12.5px; color: rgba(255,255,255,0.4); }
+
+.avatarStats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 8px 0;
+  padding: 14px 20px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  width: 100%;
+  justify-content: center;
+}
+
+.astatItem { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.astatVal { font-size: 18px; font-weight: 700; color: #e8ff5a; }
+.astatLbl { font-size: 11px; color: rgba(255,255,255,0.35); }
+.astatDivider { width: 1px; height: 28px; background: rgba(255,255,255,0.08); }
+
+.uploadBtn {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.6);
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  margin-top: 4px;
+}
+.uploadBtn:hover { background: rgba(255,255,255,0.12); }
+
+.formCard {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.formHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 22px; }
+.cardTitle { font-size: 14.5px; font-weight: 600; color: #0f1117; }
+
+.editToggle {
+  background: #f0efec;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  cursor: pointer;
+  color: #333;
+  font-family: inherit;
+  font-weight: 500;
+  transition: background 0.15s;
+}
+.editToggle:hover { background: #e4e3e0; }
+
+.formGrid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+
+.fieldGroup { display: flex; flex-direction: column; gap: 5px; }
+.fieldLabel { font-size: 11.5px; color: #999; font-weight: 500; text-transform: uppercase; letter-spacing: 0.4px; }
+
+.fieldInput, .fieldTextarea {
+  padding: 9px 12px;
+  border-radius: 9px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #f8f7f4;
+  font-size: 13.5px;
+  color: #1a1a1a;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.15s;
+  resize: none;
+}
+
+.fieldInput.editable, .fieldTextarea.editable {
+  background: #fff;
+  border-color: #9b7efc;
+}
+
+.fieldInput:read-only, .fieldTextarea:read-only { cursor: default; }
+
+.formActions { display: flex; justify-content: flex-end; margin-top: 10px; }
+
+.saveBtn {
+  background: #0f1117;
+  color: #e8ff5a;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+.saveBtn:hover { opacity: 0.85; }
+
+.bottomRow { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+.card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 22px 24px;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.cardHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+.cardLink { font-size: 12.5px; color: #9b7efc; background: none; border: none; cursor: pointer; font-family: inherit; }
+
+.legendRow { display: flex; gap: 12px; }
+.legendItem { display: flex; align-items: center; gap: 5px; font-size: 11.5px; color: #888; }
+.legendDot { width: 7px; height: 7px; border-radius: 50%; }
+
+.skillsWrap { display: flex; flex-wrap: wrap; gap: 8px; }
+.skillTag {
+  padding: 5px 13px;
+  border-radius: 99px;
+  font-size: 12.5px;
+  font-weight: 500;
+  border: 1px solid;
+}
+
+.certList { display: flex; flex-direction: column; gap: 0; }
+
+.certCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+.certCard:last-child { border-bottom: none; }
+
+.certIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #f5f4f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.certBody { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.certTitle { font-size: 13.5px; font-weight: 500; color: #1a1a1a; }
+.certIssuer { font-size: 12px; color: #aaa; }
+
+.certBtn {
+  background: #f0efec;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 7px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #555;
+  font-family: inherit;
+}
+
+@media (max-width: 960px) {
+  .topRow { grid-template-columns: 1fr; }
+  .bottomRow { grid-template-columns: 1fr; }
+  .formGrid { grid-template-columns: 1fr; }
+}

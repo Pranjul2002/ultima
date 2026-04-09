@@ -1,30 +1,23 @@
-import { Geist, Geist_Mono } from "next/font/google"
-import "./globals.css"
-import ClientLayout from "../components/ClientLayout";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-})
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-})
+import "./globals.css";
+import { AuthProvider } from "@/context/AuthContext";
+import Header from "@/components/header/header";
+import Footer from "@/components/footer/footer";
 
 export const metadata = {
-  title: "Ultima — Learn, Practice, Grow",
-  description: "Ultima is an online learning platform for students to practice tests, track progress, and build skills for JEE, NEET, and board exams.",
-}
+  title: "Ultima",
+  description: "EdTech Platform",
+};
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en-IN">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <ClientLayout>
-        {children}
-        </ClientLayout>
+    <html lang="en">
+      <body>
+        <AuthProvider>
+          <Header />
+          {children}
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
-  )
+  );
 }

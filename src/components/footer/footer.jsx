@@ -1,77 +1,84 @@
-import React from 'react'
-import Link from 'next/link'
-import style from './footer.module.css'
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
+import style from "./footer.module.css";
+import headerLogo from "../../assets/logo.png"
 
 const Footer = () => {
-  return (
-    <footer className={style.footer}>
+    return (
+        <footer className={style.footer}>
+            <div className={style.footerWrapper}>
+                <div className={style.footerAboutAndMore}>
+                    <div className={style.logoAndMoto}>
+                        <div className={style.logo}>
+                            <Link href="/">
+                                <div className={style.logoWrapper}>
+                                    <Image
+                                        src={headerLogo}
+                                        alt="EduTech Logo"
+                                        fill
+                                        className={style.logoImage}
+                                    />
+                                </div>
+                            </Link>
+                        </div>
+                        <p className={style.moto}>
+                            Practice is the only force that
+                            <br />
+                            transforms potential into identity.
+                        </p>
+                    </div>
 
-      {/* ── Top section ── */}
-      <div className={style.footerTop}>
-        <div className={style.footerInner}>
+                    <div className={style.importantLinks}>
+                        <div className={style.productLinks}>
+                            <h4>Product</h4>
+                            <ul className={style.listWrapper}>
+                                <li className={style.listItem}>Mock Tests</li>
+                                <li className={style.listItem}>Practice Sets</li>
+                                <li className={style.listItem}>Mentor Support</li>
+                            </ul>
+                        </div>
 
-          {/* Brand + About */}
-          <div className={style.footerAboutUs}>
-            {/* FIX 1: Removed <h2> inside <Link> — invalid HTML */}
-            {/* FIX 5: Logo styled as text directly on the <Link> */}
-            <Link href="/" className={style.logo}>
-              Ultima — Reach the Peak
-            </Link>
-            <p className={style.footerAboutUsPara}>
-              Practice is the only force that
-              <br />
-              transforms potential into identity.
-            </p>
-          </div>
+                        <div className={style.companyLinks}>
+                            <h4>Company</h4>
+                            <ul className={style.listWrapper}>
+                                <li className={style.listItem}>About Us</li>
+                                <li className={style.listItem}>Contact Us</li>
+                            </ul>
+                        </div>
 
-          {/* Social Links */}
-          {/* FIX 6: Added aria-label for screen reader context */}
-          <div className={style.socialMediaBlock}>
-            <Link
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Follow us on Twitter"
-            >
-              Twitter
-            </Link>
-            <Link
-              href="https://instagram.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Follow us on Instagram"
-            >
-              Instagram
-            </Link>
-            <Link
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Connect with us on LinkedIn"
-            >
-              LinkedIn
-            </Link>
-          </div>
+                        <div className={style.socialLinks}>
+                            <h4>Social</h4>
+                            <ul className={style.listWrapper}>
+                                <li className={style.listItem}>Twitter</li>
+                                <li className={style.listItem}>LinkedIn</li>
+                                <li className={style.listItem}>GitHub</li>
+                            </ul>
+                        </div>
 
-        </div>
-      </div>
+                        <div className={style.legalLinks}>
+                            <h4>Legal</h4>
+                            <ul className={style.listWrapper}>
+                                <li className={style.listItem}>Terms</li>
+                                <li className={style.listItem}>Privacy Policy</li>
+                                <li className={style.listItem}>Cookies</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
 
-      {/* ── Bottom copyright bar ── */}
-      <div className={style.copyrightContent}>
-        <p className={style.copyrightText}>
-          Copyright © {new Date().getFullYear()} Ultima Edu Ltd. | All rights reserved.
-        </p>
-        {/* FIX 8: &amp; → plain & (JSX handles it fine) */}
-        <nav className={style.copyrightMenu}>
-          <ul>
-            <li><Link href="/terms">Terms of Service</Link></li>
-            <li><Link href="/privacy">Privacy & Policy</Link></li>
-          </ul>
-        </nav>
-      </div>
+                <div className={style.footerTermsAndCopyright}>
+                    <div className={style.termsAndCopyright}>
+                        © 2026 Ultima. All rights reserved.
+                    </div>
 
-    </footer>
-  )
-}
+                    <div className={style.socialLinksIcon}>
+                        Built for focused learning.
+                    </div>
+                </div>
+            </div>
+        </footer>
+    );
+};
 
-export default Footer
+export default Footer;

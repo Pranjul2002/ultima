@@ -1,0 +1,126 @@
+.hero {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cover {
+  padding: 32px;
+  border-radius: 28px;
+  color: white;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+}
+
+.coverLabel {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.88;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.08;
+}
+
+.description {
+  margin: 14px 0 0;
+  max-width: 760px;
+  line-height: 1.75;
+  opacity: 0.92;
+}
+
+.info {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.statCard {
+  padding: 20px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.04);
+}
+
+.statValue {
+  display: block;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.statLabel {
+  display: block;
+  margin-top: 6px;
+  color: #64748b;
+  font-size: 0.92rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.secondaryBtn {
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #dbe2ef;
+  background: white;
+  color: #334155;
+}
+
+.themeTeal {
+  background: linear-gradient(135deg, #0d6b5e, #0f766e);
+}
+
+.themeIndigo {
+  background: linear-gradient(135deg, #312e81, #4338ca);
+}
+
+.themeCrimson {
+  background: linear-gradient(135deg, #7f1d1d, #b91c1c);
+}
+
+.themeAmber {
+  background: linear-gradient(135deg, #92400e, #d97706);
+}
+
+.themeForest {
+  background: linear-gradient(135deg, #14532d, #15803d);
+}
+
+.themeNavy {
+  background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
+}
+
+.themeSlate {
+  background: linear-gradient(135deg, #334155, #475569);
+}
+
+.themeEmerald {
+  background: linear-gradient(135deg, #065f46, #059669);
+}
+
+@media (max-width: 700px) {
+  .info {
+    grid-template-columns: 1fr;
+  }
+
+  .cover {
+    padding: 24px 20px;
+    border-radius: 22px;
+  }
+}
