@@ -12,7 +12,9 @@ import {
 
 const FileContext = createContext(null);
 
-const API_BASE_URL = "http://localhost:8080";
+//const API_BASE_URL = "http://localhost:8080";
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 const STATUS_POLL_INTERVAL = 2500;
 
 function createLocalId() {
