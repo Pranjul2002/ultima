@@ -78,13 +78,13 @@ const STATIC_ACTIONS = [
 
 // ─── API helper (inline — avoids import issues if productService doesn't exist yet) ──
 
-const BASE_URL =
+const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
 async function fetchLinkedTestId(bookSlug, chapterId) {
   try {
     const res = await fetch(
-      `${BASE_URL}/api/catalog/chapters/${bookSlug}/${chapterId}`,
+      `${API_BASE_URL}/api/catalog/chapters/${bookSlug}/${chapterId}`,
       { credentials: "include" }
     );
     if (!res.ok) return null;
@@ -110,7 +110,7 @@ function TestModal({ testId, chapterTitle, onClose }) {
     async function load() {
       try {
         const res = await fetch(
-          `${BASE_URL}/api/tests/${testId}/questions`,
+          `${API_BASE_URL}/api/tests/${testId}/questions`,
           { credentials: "include" }
         );
         if (res.status === 401) {
@@ -154,7 +154,7 @@ function TestModal({ testId, chapterTitle, onClose }) {
           selectedAnswer,
         })),
       };
-      const res = await fetch(`${BASE_URL}/api/tests/${testId}/submit`, {
+      const res = await fetch(`${API_BASE_URL}/api/tests/${testId}/submit`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

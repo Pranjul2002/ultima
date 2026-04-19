@@ -1,5 +1,5 @@
-const BASE_URL = "https://ultima-backend-c3fj.onrender.com";
-//const BASE_URL = "http://localhost:8080";
+const API_BASE_URL = "https://ultima-backend-c3fj.onrender.com";
+//const API_BASE_URL = "http://localhost:8080";
 
 export const apiClient = async (endpoint, options = {}) => {
   const {
@@ -9,7 +9,7 @@ export const apiClient = async (endpoint, options = {}) => {
     credentials = "include",
   } = options;
 
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
+  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     method,
     headers: {
       "Content-Type": "application/json",
