@@ -1,142 +1,81 @@
-import { mapProductsPageResponse } from "@/app/products/lib/productsMapper";
+import { apiClient } from "./apiClient";
+import { API_ENDPOINTS } from "./endpoints";
+import { PREP_PRODUCTS, CLASS_CATALOG, BOOK_CHAPTERS } from "@/app/products/dataa/catalogData";
 
-const PRODUCTS_PAGE_RESPONSE = {
-  hero: {
-    eyebrow: "ULTIMA PRODUCTS",
-    title: "Choose Your Learning Product",
-    subtitle:
-      "Explore books, exam preparation packs, and future learning formats through one modular product system.",
-  },
-  sections: [
-    {
-      id: "books",
-      title: "Books",
-      subtitle: "Study resources for school and exam preparation.",
-      products: [
-        {
-          id: "ncert-physics",
-          slug: "ncert-physics",
-          category: "books",
-          type: "book",
-          title: "NCERT Physics",
-          price: "₹299",
-          oldPrice: "₹399",
-          features: [
-            "Concept-focused chapters",
-            "Solved examples",
-            "Practice questions",
-          ],
-          isPopular: true,
-          badgeText: "🔥 Popular",
-        },
-        {
-          id: "ncert-chemistry",
-          slug: "ncert-chemistry",
-          category: "books",
-          type: "book",
-          title: "NCERT Chemistry",
-          price: "₹279",
-          oldPrice: "₹379",
-          features: [
-            "Chapter-wise learning",
-            "Reaction-focused practice",
-            "Exam-ready revision",
-          ],
-          isPopular: false,
-          badgeText: "",
-        },
-        {
-          id: "ncert-maths",
-          slug: "ncert-maths",
-          category: "books",
-          type: "book",
-          title: "NCERT Maths",
-          price: "₹249",
-          oldPrice: "₹349",
-          features: [
-            "Step-by-step methods",
-            "Topic-wise exercises",
-            "Board-oriented practice",
-          ],
-          isPopular: false,
-          badgeText: "",
-        },
-        {
-          id: "ncert-biology",
-          slug: "ncert-biology",
-          category: "books",
-          type: "book",
-          title: "NCERT Biology",
-          price: "₹289",
-          oldPrice: "₹389",
-          features: [
-            "Diagram-rich explanations",
-            "NCERT aligned content",
-            "Quick revision support",
-          ],
-          isPopular: false,
-          badgeText: "",
-        },
-      ],
-    },
-    {
-      id: "competitive-preparation",
-      title: "Competitive Exam Preparation",
-      subtitle: "Targeted preparation packs for high-stakes exams.",
-      products: [
-        {
-          id: "jee-preparation",
-          slug: "jee-preparation",
-          category: "competitive",
-          type: "exam-pack",
-          title: "JEE Preparation",
-          price: "₹999",
-          oldPrice: "₹1499",
-          features: [
-            "Advanced practice sets",
-            "Mock tests",
-            "Rank-oriented preparation",
-          ],
-          isPopular: true,
-          badgeText: "🔥 Most Popular",
-        },
-        {
-          id: "neet-preparation",
-          slug: "neet-preparation",
-          category: "competitive",
-          type: "exam-pack",
-          title: "NEET Preparation",
-          price: "₹999",
-          oldPrice: "₹1499",
-          features: [
-            "Biology-first structured prep",
-            "Mock simulations",
-            "Weak-area analysis",
-          ],
-          isPopular: true,
-          badgeText: "🔥 Trending",
-        },
-        {
-          id: "gate-preparation",
-          slug: "gate-preparation",
-          category: "competitive",
-          type: "exam-pack",
-          title: "GATE Preparation",
-          price: "₹1199",
-          oldPrice: "₹1699",
-          features: [
-            "Subject-wise preparation",
-            "Concept reinforcement",
-            "Exam-style practice",
-          ],
-          isPopular: false,
-          badgeText: "",
-        },
-      ],
-    },
-  ],
-};
+// ── Products page ─────────────────────────────────────────────────────────────
 
-export async function getProductsPageData() {
-  return mapProductsPageResponse(PRODUCTS_PAGE_RESPONSE);
+export async function getProductsPageData(category) {
+  try {
+    const url = category
+      ? `${API_ENDPOINTS.CATALOG.PRODUCTS}?category=${category}`
+      : API_ENDPOINTS.CATALOG.PRODUCTS;
+    const items = await apiClient(url);
+    // If backend returns data, use it; map to the shape the UI expects
+    if (Array.isArray(items) && items.length > 0) return items;
+  } catch (_) { /* fall through to static data */ }
+
+  // Fallback: use static catalogData.js so the page always works
+  const source = category
+    ? PREP_PRODUCTS.filter((p) => p.category === category)
+    : PREP_PRODUCTS;
+  return source;
+}
+
+// ── Class books page ──────────────────────────────────────────────────────────
+
+export async function getBooksForClass(classSlug) {
+  try {
+    const books = await apiClient(API_ENDPOINTS.CATALOG.BOOKS(classSlug));
+    if (Array.isArray(books) && books.length > 0) return books;
+  } catch (_) {}
+
+  // Fallback
+  return CLASS_CATALOG[classSlug]?.books ?? [];
+}
+
+// ── Book detail + chapters ────────────────────────────────────────────────────
+
+export async function getChaptersForBook(bookSlug) {
+  try {
+    const chapters = await apiClient(API_ENDPOINTS.CATALOG.CHAPTERS(bookSlug));
+    if (Array.isArray(chapters) && chapters.length > 0) return chapters;
+  } catch (_) {}
+
+  // Fallback
+  return BOOK_CHAPTERS[bookSlug]?.chapters ?? [];
+}
+
+// ── Chapter → Test bridge (THE KEY CONNECTION) ────────────────────────────────
+
+/**
+ * Given a chapterId + bookSlug, returns the linked backend testId (if any).
+ * The frontend "Take Test" button uses this to navigate to the live test.
+ */
+export async function getLinkedTestId(bookSlug, chapterId) {
+  try {
+    const chapter = await apiClient(
+      API_ENDPOINTS.CATALOG.CHAPTER(bookSlug, chapterId)
+    );
+    return chapter?.linkedTestId ?? null;
+  } catch (_) {
+    return null;
+  }
+}
+
+// ── Test interaction ──────────────────────────────────────────────────────────
+
+export async function getTestQuestions(testId) {
+  return apiClient(API_ENDPOINTS.TESTS.QUESTIONS(testId));
+}
+
+export async function submitTest(testId, answers) {
+  // answers: [{ questionId: Long, selectedAnswer: "A"|"B"|"C"|"D" }]
+  return apiClient(API_ENDPOINTS.TESTS.SUBMIT(testId), {
+    method: "POST",
+    body: { answers },
+  });
+}
+
+export async function getMyTestAttempts() {
+  return apiClient(API_ENDPOINTS.TESTS.MY_ATTEMPTS);
 }

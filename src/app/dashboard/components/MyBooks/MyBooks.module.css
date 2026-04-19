@@ -1,0 +1,221 @@
+/* ── Layout ─────────────────────────────────────────────────────────────────── */
+.root { display: flex; flex-direction: column; gap: 20px; }
+
+/* ── Summary cards ───────────────────────────────────────────────────────────── */
+.summRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.summCard {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 20px;
+  border: 1px solid rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.summVal { font-size: 26px; font-weight: 700; color: #0f1117; letter-spacing: -0.8px; }
+.summLbl { font-size: 12px; color: #999; }
+
+/* ── Panel ───────────────────────────────────────────────────────────────────── */
+.panel {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.panelTitle { font-size: 14.5px; font-weight: 600; color: #0f1117; }
+
+.filterRow { display: flex; gap: 4px; }
+
+.filterTab {
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #888;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.filterTab:hover { background: #f0efec; color: #333; }
+.filterTab.activeTab { background: #0f1117; color: #e8ff5a; }
+
+.panelBody { padding: 24px; }
+
+/* ── Grid ────────────────────────────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+/* ── Book card ───────────────────────────────────────────────────────────────── */
+.bookCard {
+  border: 1px solid rgba(0,0,0,0.07);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
+  background: #fff;
+}
+.bookCard:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,0.09);
+  transform: translateY(-2px);
+}
+
+.bookCardTop {
+  position: relative;
+  height: 88px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bookEmoji { font-size: 38px; line-height: 1; }
+
+.freeBadge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #3dba74;
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+}
+
+.bookCardBody {
+  padding: 14px 16px 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bookSubject {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.bookTitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f1117;
+  line-height: 1.35;
+}
+
+.bookSubtitle {
+  margin: 0;
+  font-size: 11.5px;
+  color: #888;
+  line-height: 1.4;
+}
+
+.bookMeta {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.metaChip {
+  font-size: 11px;
+  color: #666;
+  background: #f3f3f0;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-weight: 500;
+}
+
+.bookCardFooter { padding: 10px 16px 14px; }
+
+.openBtn {
+  width: 100%;
+  height: 36px;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.15s;
+}
+.openBtn:hover { opacity: 0.88; }
+
+/* ── Skeleton ────────────────────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeletonBlock {
+  background: linear-gradient(90deg, #f0efec 25%, #e8e7e3 50%, #f0efec 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+.skeletonCard { pointer-events: none; }
+.skeletonCard .bookCardTop { height: 88px; }
+
+.skeletonLine {
+  height: 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  background: linear-gradient(90deg, #f0efec 25%, #e8e7e3 50%, #f0efec 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+.skeletonShort { width: 40%; }
+.skeletonMed   { width: 70%; }
+.skeletonLong  { width: 90%; }
+
+/* ── Empty state ─────────────────────────────────────────────────────────────── */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 24px;
+  gap: 10px;
+  text-align: center;
+}
+.emptyIcon  { font-size: 42px; }
+.emptyTitle { margin: 0; font-size: 15px; font-weight: 600; color: #333; }
+.emptyHint  { margin: 0; font-size: 13px; color: #999; max-width: 320px; line-height: 1.5; }
+
+/* ── Error ───────────────────────────────────────────────────────────────────── */
+.errorMsg { color: #b91c1c; font-size: 13px; font-weight: 600; margin: 0 0 16px; }
+
+/* ── Responsive ──────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .summRow { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .summCard { padding: 14px; }
+  .summVal  { font-size: 20px; }
+  .panelHeader { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .panelBody { padding: 16px; }
+  .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+}

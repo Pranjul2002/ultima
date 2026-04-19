@@ -1,16 +1,7 @@
 import {
-  Headphones,
-  Presentation,
-  Video,
-  GitBranch,
-  FileText,
-  SquareStack,
-  BadgeHelp,
-  ChartColumn,
-  Table2,
-  Sparkles,
-  StickyNote,
-  PanelRightClose,
+  Headphones, Presentation, Video, GitBranch, FileText,
+  SquareStack, BadgeHelp, ChartColumn, Table2,
+  Sparkles, StickyNote, PanelRightClose,
 } from "lucide-react";
 import styles from "./StudioPanel.module.css";
 
@@ -31,25 +22,20 @@ export default function StudioPanel({ onClose }) {
     <aside className={styles.panel}>
       <div className={styles.header}>
         <h2 className={styles.title}>Studio</h2>
-        <button
-          type="button"
-          className={styles.closeButton}
-          onClick={onClose}
-          aria-label="Hide studio panel"
-        >
-          <PanelRightClose size={18} />
+        <button type="button" className={styles.closeButton} onClick={onClose} aria-label="Hide studio panel">
+          <PanelRightClose size={16} />
         </button>
       </div>
 
       <div className={styles.banner}>
-        Create an Audio Overview in: हिन्दी, বাংলা, ગુજરાતી, ಕನ್ನಡ, മലയാളം,
-        मराठी, ਪੰਜਾਬੀ, தமிழ், తెలుగు
+        <div className={styles.bannerLabel}>Audio available in</div>
+        हिन्दी · বাংলা · ગુજરાતી · ಕನ್ನಡ · മലയാളം · मराठी · ਪੰਜਾਬੀ · தமிழ் · తెలుగు
       </div>
 
       <div className={styles.grid}>
         {studioItems.map(({ label, icon: Icon }) => (
-          <button key={label} className={styles.gridItem}>
-            <Icon size={16} />
+          <button key={label} className={styles.gridItem} type="button">
+            <Icon size={15} />
             <span>{label}</span>
           </button>
         ))}
@@ -57,17 +43,16 @@ export default function StudioPanel({ onClose }) {
 
       <div className={styles.emptyState}>
         <div className={styles.sparkle}>
-          <Sparkles size={22} />
+          <Sparkles size={20} />
         </div>
-        <h3 className={styles.emptyTitle}>Studio output will be saved here.</h3>
+        <h3 className={styles.emptyTitle}>Studio outputs appear here</h3>
         <p className={styles.emptyText}>
-          After adding sources, click to add Audio Overview, Study Guide, Mind
-          Map, and more.
+          Select a format above to generate an Audio Overview, Flashcards, Mind Map, and more.
         </p>
       </div>
 
-      <button className={styles.noteButton}>
-        <StickyNote size={16} />
+      <button className={styles.noteButton} type="button">
+        <StickyNote size={15} />
         <span>Add note</span>
       </button>
     </aside>

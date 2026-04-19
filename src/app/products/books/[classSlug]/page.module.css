@@ -1,0 +1,208 @@
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+/* ── Top bar: back link + breadcrumb ── */
+.topBar {
+  width: min(1240px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 24px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #2563eb;
+  text-decoration: none;
+  background: rgba(37, 99, 235, 0.07);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  padding: 7px 14px;
+  border-radius: 10px;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.backLink:hover {
+  background: rgba(37, 99, 235, 0.13);
+  transform: translateX(-2px);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+}
+
+.breadcrumbLink {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.breadcrumbLink:hover {
+  text-decoration: underline;
+}
+
+.sep {
+  color: #cbd5e1;
+}
+
+.breadcrumbCurrent {
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* ── Hero ── */
+.hero {
+  width: min(1240px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 32px 0 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.heroInner {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.heroIcon {
+  font-size: 2.8rem;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 4px;
+}
+
+.heroEyebrow {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #2563eb;
+  margin: 0 0 8px;
+}
+
+.heroTitle {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  margin: 0 0 10px;
+}
+
+.heroSubtitle {
+  font-size: 0.95rem;
+  color: #64748b;
+  line-height: 1.7;
+  max-width: 560px;
+  margin: 0;
+}
+
+.heroStats {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 18px 26px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  width: fit-content;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+.heroStat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: center;
+}
+
+.heroStatNum {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #0f172a;
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.heroStatLabel {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.heroStatDivider {
+  width: 1px;
+  height: 36px;
+  background: #e2e8f0;
+}
+
+/* ── Books shelf ── */
+.booksSection {
+  padding-bottom: 80px;
+}
+
+.inner {
+  width: min(1240px, calc(100% - 32px));
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sectionTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #475569;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+/* Half-width books — 2 per row, but book itself is narrow like a real book */
+.shelf {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .shelf {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+}
+
+@media (max-width: 700px) {
+  .shelf {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+
+  .topBar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .shelf {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+}

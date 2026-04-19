@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Plus,
   Search,
@@ -6,12 +8,27 @@ import {
   ArrowRight,
   FileText,
   PanelLeftClose,
+  Trash2,
 } from "lucide-react";
 import styles from "./SourcesPanel.module.css";
-import { useFiles } from "../../context/FileContext"; // ✅ added
+import { useFiles } from "../../context/FileContext";
+
+function formatFileSize(size) {
+  if (!size) return "0 KB";
+  const units = ["B", "KB", "MB", "GB"];
+  let value = size;
+  let unitIndex = 0;
+
+  while (value >= 1024 && unitIndex < units.length - 1) {
+    value /= 1024;
+    unitIndex += 1;
+  }
+
+  return `${value.toFixed(value >= 10 || unitIndex === 0 ? 0 : 1)} ${units[unitIndex]}`;
+}
 
 export default function SourcesPanel({ onUploadClick, onClose }) {
-  const { files } = useFiles(); // ✅ get files
+  const { sources, activeSourceId, setActiveSourceId, removeFile } = useFiles();
 
   return (
     <aside className={styles.panel}>
@@ -32,37 +49,77 @@ export default function SourcesPanel({ onUploadClick, onClose }) {
         <span>Add sources</span>
       </button>
 
-      {/* ✅ FILE LIST */}
-      {files.length === 0 ? (
+      {sources.length === 0 ? (
         <div className={styles.emptyState}>
           <div className={styles.emptyIcon}>
             <FileText size={22} />
           </div>
           <h3 className={styles.emptyTitle}>No sources yet</h3>
-          <p className={styles.emptyText}>
-            Upload a file to see it here.
-          </p>
+          <p className={styles.emptyText}>Upload a file to see it here.</p>
         </div>
       ) : (
-        <div style={{ marginTop: "10px" }}>
-          {files.map((file, index) => (
-            <div
-              key={index}
-              style={{
-                padding: "10px",
-                border: "1px solid #e2e8f0",
-                borderRadius: "10px",
-                marginBottom: "8px",
-                fontSize: "0.9rem",
-              }}
+        <div className={styles.sourceList}>
+          {sources.map((source) => (
+            <button
+              key={source.localId}
+              type="button"
+              className={`${styles.sourceCard} ${
+                activeSourceId === source.localId ? styles.sourceCardActive : ""
+              }`}
+              onClick={() => setActiveSourceId(source.localId)}
             >
-              📄 {file.name}
-            </div>
+              <div className={styles.sourceTopRow}>
+                <div className={styles.sourceIconWrap}>
+                  <FileText size={18} />
+                </div>
+                <div className={styles.sourceMeta}>
+                  <div className={styles.sourceName}>{source.name}</div>
+                  <div className={styles.sourceSubMeta}>
+                    <span>{formatFileSize(source.size)}</span>
+                    <span className={styles.dot} />
+                    <span className={`${styles.statusPill} ${styles[`status_${source.status}`]}`}>
+                      {source.status}
+                    </span>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  className={styles.removeButton}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    removeFile(source.localId);
+                  }}
+                  aria-label={`Remove ${source.name}`}
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+
+              {typeof source.progress === "number" && source.status !== "ready" ? (
+                <div className={styles.progressTrack}>
+                  <div
+                    className={styles.progressFill}
+                    style={{ width: `${Math.max(8, source.progress)}%` }}
+                  />
+                </div>
+              ) : null}
+
+              {source.summary ? (
+                <p className={styles.summary}>{source.summary}</p>
+              ) : source.error ? (
+                <p className={styles.errorText}>{source.error}</p>
+              ) : (
+                <p className={styles.summaryMuted}>
+                  {source.status === "ready"
+                    ? "Ready for source-grounded chat."
+                    : "Waiting for summary from backend."}
+                </p>
+              )}
+            </button>
           ))}
         </div>
       )}
 
-      {/* existing search UI */}
       <div className={styles.searchCard}>
         <div className={styles.inputRow}>
           <Search size={18} className={styles.inputIcon} />
@@ -75,20 +132,20 @@ export default function SourcesPanel({ onUploadClick, onClose }) {
 
         <div className={styles.searchFooter}>
           <div className={styles.chips}>
-            <button className={styles.chip}>
+            <button className={styles.chip} type="button">
               <Globe size={15} />
               <span>Web</span>
               <ChevronDown size={14} />
             </button>
 
-            <button className={styles.chip}>
+            <button className={styles.chip} type="button">
               <Search size={15} />
               <span>Fast Research</span>
               <ChevronDown size={14} />
             </button>
           </div>
 
-          <button className={styles.arrowButton} aria-label="Search">
+          <button className={styles.arrowButton} aria-label="Search" type="button">
             <ArrowRight size={18} />
           </button>
         </div>

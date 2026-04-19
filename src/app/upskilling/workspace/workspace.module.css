@@ -1,34 +1,49 @@
 .page {
   position: relative;
-  min-height: 100vh;
+  height: 100vh;
   overflow: hidden;
-  background: linear-gradient(180deg, #f8fafc 0%, #eff4fa 100%);
-  padding: 14px;
+  background: #0d0f14;
+  padding: 90px 20px;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
 }
 
+/* ── Ambient background ── */
 .orbOne,
-.orbTwo {
+.orbTwo,
+.orbThree {
   position: absolute;
   border-radius: 999px;
   pointer-events: none;
-  filter: blur(90px);
-  opacity: 0.45;
+  filter: blur(120px);
 }
 
 .orbOne {
-  width: 260px;
-  height: 260px;
-  top: -50px;
-  left: -70px;
-  background: rgba(99, 102, 241, 0.14);
+  width: 380px;
+  height: 380px;
+  top: -120px;
+  left: -80px;
+  background: rgba(99, 102, 241, 0.18);
+  opacity: 0.7;
 }
 
 .orbTwo {
-  width: 240px;
-  height: 240px;
-  top: 120px;
-  right: -50px;
-  background: rgba(16, 185, 129, 0.12);
+  width: 320px;
+  height: 320px;
+  bottom: -80px;
+  right: -60px;
+  background: rgba(16, 185, 129, 0.14);
+  opacity: 0.6;
+}
+
+.orbThree {
+  width: 260px;
+  height: 260px;
+  top: 40%;
+  left: 40%;
+  background: rgba(139, 92, 246, 0.1);
+  opacity: 0.5;
 }
 
 .gridOverlay {
@@ -36,90 +51,88 @@
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(15, 23, 42, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(15, 23, 42, 0.025) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent 95%);
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: linear-gradient(180deg, rgba(0,0,0,0.6), transparent 80%);
 }
 
+/* ── Layout ── */
 .layout {
   position: relative;
   z-index: 1;
+  flex: 1;
+  min-height: 0;
   display: grid;
-  grid-template-columns: 320px minmax(0, 1fr);
-  gap: 14px;
-  height: calc(100vh - 86px);
-  max-height: calc(100vh - 86px);
+  grid-template-columns: 290px minmax(0, 1fr);
+  gap: 10px;
 }
 
 .panelClosed {
-  grid-template-columns: 56px minmax(0, 1fr);
+  grid-template-columns: 48px minmax(0, 1fr);
 }
 
+/* ── Left merged panel ── */
 .mergedPanel {
-  min-height: 0;
   height: 100%;
-  max-height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   overflow: hidden;
 }
 
 .panelTabs {
+  flex-shrink: 0;
   display: flex;
-  gap: 8px;
-  padding: 6px;
-  border-radius: 10px;
-  border: 1px solid rgba(219, 227, 236, 0.9);
-  background: rgba(255, 255, 255, 0.58);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow:
-    0 12px 30px rgba(15, 23, 42, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  gap: 6px;
+  padding: 5px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .tabButton {
   flex: 1;
-  height: 42px;
+  height: 38px;
   border: 1px solid transparent;
-  border-radius: 10px;
+  border-radius: 8px;
   background: transparent;
-  color: #475569;
+  color: rgba(255,255,255,0.45);
   cursor: pointer;
+  font-size: 0.875rem;
   font-weight: 500;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease,
-    transform 0.2s ease;
+  letter-spacing: 0.01em;
+  transition: all 0.18s ease;
 }
 
 .tabButton:hover {
-  background: rgba(255, 255, 255, 0.68);
-  border-color: rgba(216, 225, 236, 0.95);
+  color: rgba(255,255,255,0.75);
+  background: rgba(255,255,255,0.06);
 }
 
 .tabActive {
-  background: #0f172a;
+  background: rgba(255,255,255,0.1);
   color: #ffffff;
-  border-color: #0f172a;
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+  border-color: rgba(255,255,255,0.12);
 }
 
 .panelBody {
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
+/* ── Side rail (collapsed state) ── */
 .sideRail {
-  border: 1px solid rgba(219, 227, 236, 0.9);
-  background: rgba(255, 255, 255, 0.58);
-  color: #0f172a;
-  border-radius: 10px;
-  min-height: 100%;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  color: rgba(255,255,255,0.5);
+  border-radius: 12px;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -127,46 +140,35 @@
   gap: 10px;
   cursor: pointer;
   padding: 16px 8px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow:
-    0 12px 30px rgba(15, 23, 42, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.45);
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    border-color 0.2s ease,
-    background 0.2s ease;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.2s ease;
 }
 
 .sideRail:hover {
-  transform: translateY(-2px);
-  border-color: rgba(165, 180, 252, 0.9);
-  box-shadow:
-    0 16px 34px rgba(15, 23, 42, 0.07),
-    0 0 0 1px rgba(99, 102, 241, 0.05);
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(99,102,241,0.35);
+  color: rgba(255,255,255,0.8);
 }
 
 .sideRail span {
   writing-mode: vertical-rl;
   transform: rotate(180deg);
-  font-size: 0.9rem;
-  color: #475569;
+  font-size: 0.82rem;
 }
 
+/* ── Responsive ── */
 @media (max-width: 1024px) {
   .layout,
   .panelClosed {
     grid-template-columns: 1fr;
     height: auto;
-    max-height: none;
-    min-height: auto;
+    overflow-y: auto;
   }
 
   .sideRail {
-    min-height: 64px;
+    height: 56px;
     flex-direction: row;
-    border-radius: 10px;
   }
 
   .sideRail span {
@@ -176,20 +178,10 @@
 
   .mergedPanel {
     height: auto;
-    max-height: none;
   }
 }
 
 @media (max-width: 640px) {
-  .page {
-    padding: 10px;
-  }
-
-  .layout {
-    gap: 10px;
-  }
-
-  .panelTabs {
-    flex-direction: column;
-  }
+  .page { padding: 8px; }
+  .layout { gap: 8px; }
 }

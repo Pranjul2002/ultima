@@ -92,13 +92,11 @@ function GlowCard({ children, className }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.25 }}
       transition={{ duration: 0.45, ease: "easeOut" }}
-      style={
-        {
-          "--glow-x": glow.x,
-          "--glow-y": glow.y,
-          "--glow-opacity": glow.visible ? 1 : 0,
-        }
-      }
+      style={{
+        "--glow-x": glow.x,
+        "--glow-y": glow.y,
+        "--glow-opacity": glow.visible ? 1 : 0,
+      }}
     >
       {children}
     </motion.article>
@@ -108,7 +106,7 @@ function GlowCard({ children, className }) {
 export default function UpskillingPage() {
   const router = useRouter();
   const fileInputRef = useRef(null);
-  const { addFile } = useFiles();
+  const { addFiles } = useFiles();
   const [showNotebookEntry, setShowNotebookEntry] = useState(false);
 
   const handleOpenFilePicker = () => {
@@ -116,10 +114,10 @@ export default function UpskillingPage() {
   };
 
   const handleFileChange = (event) => {
-    const file = event.target.files?.[0];
+    const selectedFiles = Array.from(event.target.files || []);
 
-    if (file) {
-      addFile(file);
+    if (selectedFiles.length > 0) {
+      addFiles(selectedFiles);
       router.push("/upskilling/workspace");
     }
   };
@@ -130,12 +128,7 @@ export default function UpskillingPage() {
         <div className={styles.backgroundGlow} />
         <LandingCard onUploadClick={handleOpenFilePicker} />
 
-        <input
-          ref={fileInputRef}
-          type="file"
-          hidden
-          onChange={handleFileChange}
-        />
+        <input ref={fileInputRef} type="file" hidden multiple onChange={handleFileChange} />
       </main>
     );
   }
@@ -155,7 +148,8 @@ export default function UpskillingPage() {
         <div className={styles.heroBadge}>AI Research Workspace</div>
 
         <h1 className={styles.heroTitle}>
-          Self <span className={styles.heroGradientText}>Analysis</span> & Understand <span className={styles.heroGradientText}>more</span>
+          Self <span className={styles.heroGradientText}>Analysis</span> & Understand{" "}
+          <span className={styles.heroGradientText}>more</span>
         </h1>
 
         <p className={styles.heroSubtitle}>
@@ -190,9 +184,7 @@ export default function UpskillingPage() {
           "Chat, generate outputs, and build notes",
         ].map((text, index) => (
           <GlowCard key={text} className={styles.statCard}>
-            <span className={styles.statNumber}>
-              {String(index + 1).padStart(2, "0")}
-            </span>
+            <span className={styles.statNumber}>{String(index + 1).padStart(2, "0")}</span>
             <p className={styles.statText}>{text}</p>
           </GlowCard>
         ))}
@@ -209,8 +201,8 @@ export default function UpskillingPage() {
           <p className={styles.sectionEyebrow}>Why use it</p>
           <h2 className={styles.sectionTitle}>AI-powered self preparation workspace</h2>
           <p className={styles.sectionDescription}>
-            A simpler layout, a clearer workflow, and one place to move from
-            source material to actual understanding.
+            A simpler layout, a clearer workflow, and one place to move from source material to
+            actual understanding.
           </p>
         </motion.div>
 
@@ -232,9 +224,7 @@ export default function UpskillingPage() {
                 <h3 className={styles.featureTitle}>{item.title}</h3>
                 <p className={styles.featureDescription}>{item.description}</p>
 
-                <div className={styles.featureIndex}>
-                  {String(index + 1).padStart(2, "0")}
-                </div>
+                <div className={styles.featureIndex}>{String(index + 1).padStart(2, "0")}</div>
               </GlowCard>
             );
           })}
@@ -245,12 +235,9 @@ export default function UpskillingPage() {
         <GlowCard className={styles.ctaCard}>
           <div>
             <p className={styles.ctaEyebrow}>Ready to start?</p>
-            <h3 className={styles.ctaTitle}>
-              Open the upload flow and enter your workspace
-            </h3>
+            <h3 className={styles.ctaTitle}>Open the upload flow and enter your workspace</h3>
             <p className={styles.ctaText}>
-              Start with a document, then continue into the workspace you
-              already built.
+              Start with a document, then continue into the workspace you already built.
             </p>
           </div>
 
@@ -263,12 +250,7 @@ export default function UpskillingPage() {
         </GlowCard>
       </section>
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        hidden
-        onChange={handleFileChange}
-      />
+      <input ref={fileInputRef} type="file" hidden multiple onChange={handleFileChange} />
     </main>
   );
 }

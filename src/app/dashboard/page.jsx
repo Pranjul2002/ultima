@@ -1,20 +1,13 @@
 /**
  * Dashboard Page
  * ─────────────────────────────────────────────────────────────
- * Modular dashboard for an EdTech / upskilling platform.
- *
  * Sections:
  *   • Overview  — stats, course progress, recent activity
  *   • Profile   — editable user info, skills, certificates
  *   • My Tests  — filterable test history with review flow
+ *   • My Books  — free + purchased books for the logged-in user  ← NEW
  *   • Settings  — notifications, privacy, security, prefs
- *
- * Usage (drop into app/dashboard/page.jsx):
- *   No props required. Reads user from authService.
  ─────────────────────────────────────────────────────────────── */
-
-
-
 
 "use client";
 
@@ -22,8 +15,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import Overview from "./components/Overview/Overview";
-import Profile from "./components/Profile/Profile";
-import MyTest from "./components/MyTest/MyTest";
+import Profile  from "./components/Profile/Profile";
+import MyTest   from "./components/MyTest/MyTest";
+import MyBooks  from "./components/MyBooks/MyBooks";   // ← NEW
 import Settings from "./components/Settings/Settings";
 
 import { useDashboard, NAV_ITEMS } from "./hooks/useDashboard";
@@ -49,6 +43,13 @@ const icons = {
     <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
       <rect x="3" y="2" width="12" height="14" rx="2" />
       <path d="M6 6h6M6 9h6M6 12h4" />
+    </svg>
+  ),
+  // ── My Books icon ──────────────────────────────────────────────────────────
+  mybooks: (
+    <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
+      <path d="M3 3h5a2 2 0 0 1 2 2v10a2 2 0 0 0-2-2H3V3z" />
+      <path d="M15 3h-5a2 2 0 0 0-2 2v10a2 2 0 0 1 2-2h5V3z" />
     </svg>
   ),
   settings: (
@@ -77,69 +78,44 @@ const icons = {
 
 const sectionMeta = {
   overview: {
-    title: "Dashboard",
+    title:    "Dashboard",
     subtitle: "Track your learning progress and activity.",
   },
   profile: {
-    title: "Profile",
+    title:    "Profile",
     subtitle: "Manage your personal information and achievements.",
   },
   mytest: {
-    title: "My Tests",
+    title:    "My Tests",
     subtitle: "View assessments, scores, and pending tests.",
   },
+  mybooks: {
+    title:    "My Books",
+    subtitle: "All your free and purchased books in one place.",
+  },
   settings: {
-    title: "Settings",
+    title:    "Settings",
     subtitle: "Update preferences, privacy, and account controls.",
   },
 };
 
 const initialDashboardState = {
   user: null,
-  overview: {
-    stats: [],
-    progress: [],
-    activity: [],
-  },
+  overview: { stats: [], progress: [], activity: [] },
   profile: {
-    name: "",
-    email: "",
-    bio: "",
-    location: "",
-    website: "",
-    role: "",
-    avatarUrl: "",
-    skills: [],
-    certificates: [],
-    metrics: {
-      courses: 0,
-      tests: 0,
-      badges: 0,
-    },
+    name: "", email: "", bio: "", location: "", website: "", role: "",
+    avatarUrl: "", skills: [], certificates: [],
+    metrics: { courses: 0, tests: 0, badges: 0 },
   },
   tests: [],
   settings: {
     notifications: {
-      emailReminders: false,
-      testAlerts: false,
-      progressReports: false,
-      newCourses: false,
-      badges: false,
+      emailReminders: false, testAlerts: false, progressReports: false,
+      newCourses: false, badges: false,
     },
-    privacy: {
-      publicProfile: false,
-      showProgress: false,
-    },
-    security: {
-      twoFactor: false,
-      loginAlerts: false,
-    },
-    preferences: {
-      language: "en",
-      timezone: "Asia/Kolkata",
-      dailyGoal: 30,
-      recoveryEmail: "",
-    },
+    privacy:      { publicProfile: false, showProgress: false },
+    security:     { twoFactor: false, loginAlerts: false },
+    preferences:  { language: "en", timezone: "Asia/Kolkata", dailyGoal: 30, recoveryEmail: "" },
   },
 };
 
@@ -148,9 +124,9 @@ export default function DashboardPage() {
   const { activeTab, setActiveTab, collapsed, setCollapsed } = useDashboard();
 
   const [dashboardData, setDashboardData] = useState(initialDashboardState);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isAuthorized, setIsAuthorized] = useState(true);
-  const [pageError, setPageError] = useState("");
+  const [isLoading,     setIsLoading]     = useState(true);
+  const [isAuthorized,  setIsAuthorized]  = useState(true);
+  const [pageError,     setPageError]     = useState("");
 
   const loadDashboard = async () => {
     setIsLoading(true);
@@ -158,10 +134,7 @@ export default function DashboardPage() {
 
     try {
       const data = await getDashboardData();
-      setDashboardData({
-        ...initialDashboardState,
-        ...data,
-      });
+      setDashboardData({ ...initialDashboardState, ...data });
       setIsAuthorized(true);
     } catch (error) {
       if (error?.status === 401 || error?.status === 403) {
@@ -169,24 +142,20 @@ export default function DashboardPage() {
         router.replace("/signIn-Register");
         return;
       }
-
       setPageError(error.message || "Failed to load dashboard.");
     } finally {
       setIsLoading(false);
     }
   };
 
-  useEffect(() => {
-    loadDashboard();
-  }, []);
+  useEffect(() => { loadDashboard(); }, []);
 
-  const user = dashboardData.user;
+  const user           = dashboardData.user;
   const currentSection = sectionMeta[activeTab];
 
   const initials = useMemo(() => {
     const name = user?.name || dashboardData.profile?.name || "";
     if (!name) return "U";
-
     return name
       .split(" ")
       .filter(Boolean)
@@ -198,26 +167,16 @@ export default function DashboardPage() {
 
   const handleProfileSave = async (nextProfile) => {
     const saved = await updateProfile(nextProfile);
-
     setDashboardData((prev) => ({
       ...prev,
-      user: {
-        ...prev.user,
-        name: saved.name,
-        email: saved.email,
-        role: saved.role,
-      },
+      user:    { ...prev.user, name: saved.name, email: saved.email, role: saved.role },
       profile: saved,
     }));
   };
 
   const handleSettingsSave = async (nextSettings) => {
     const saved = await updateSettings(nextSettings);
-
-    setDashboardData((prev) => ({
-      ...prev,
-      settings: saved,
-    }));
+    setDashboardData((prev) => ({ ...prev, settings: saved }));
   };
 
   const renderSection = () => {
@@ -232,7 +191,6 @@ export default function DashboardPage() {
             isLoading={isLoading}
           />
         );
-
       case "profile":
         return (
           <Profile
@@ -241,9 +199,11 @@ export default function DashboardPage() {
             onSave={handleProfileSave}
           />
         );
-
       case "mytest":
         return <MyTest tests={dashboardData.tests} isLoading={isLoading} />;
+
+      case "mybooks":
+        return <MyBooks />;   // ← NEW: self-contained, fetches its own data
 
       case "settings":
         return (
@@ -253,19 +213,13 @@ export default function DashboardPage() {
             onSave={handleSettingsSave}
           />
         );
-
       default:
         return null;
     }
   };
 
-  if (!isAuthorized) {
-    return null;
-  }
-
-  if (isLoading && !dashboardData.user) {
-    return null;
-  }
+  if (!isAuthorized) return null;
+  if (isLoading && !dashboardData.user) return null;
 
   return (
     <div className={styles.dashboardRoot}>
@@ -321,20 +275,18 @@ export default function DashboardPage() {
 
         <section className={styles.content}>
           {pageError ? (
-            <div style={{ padding: "20px", background: "#fff", borderRadius: "12px", border: "1px solid rgba(0,0,0,0.08)" }}>
+            <div style={{
+              padding: "20px", background: "#fff", borderRadius: "12px",
+              border: "1px solid rgba(0,0,0,0.08)",
+            }}>
               <p style={{ margin: 0, color: "#b91c1c", fontWeight: 600 }}>{pageError}</p>
               <button
                 type="button"
                 onClick={loadDashboard}
                 style={{
-                  marginTop: "12px",
-                  height: "40px",
-                  padding: "0 16px",
-                  border: "none",
-                  borderRadius: "10px",
-                  background: "#0f1117",
-                  color: "#fff",
-                  cursor: "pointer",
+                  marginTop: "12px", height: "40px", padding: "0 16px",
+                  border: "none", borderRadius: "10px",
+                  background: "#0f1117", color: "#fff", cursor: "pointer",
                 }}
               >
                 Retry
