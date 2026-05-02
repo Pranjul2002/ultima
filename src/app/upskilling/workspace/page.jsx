@@ -6,8 +6,8 @@ import { motion } from "framer-motion";
 import { PanelLeftOpen } from "lucide-react";
 import WorkspaceHeader from "./components/WorkspaceHeader";
 import SourcesPanel from "./components/SourcesPanel";
-import ChatPanel from "./components/ChatPanel";
 import StudioPanel from "./components/StudioPanel";
+import MainPanel from "./components/MainPanel";
 import styles from "./workspace.module.css";
 import { useFiles } from "../context/FileContext";
 
@@ -50,6 +50,7 @@ export default function UpskillingWorkspacePage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.25, ease: "easeOut" }}
       >
+        {/* ── Left panel: Sources / Studio (unchanged) ── */}
         {activePanel ? (
           <motion.aside
             className={styles.mergedPanel}
@@ -95,13 +96,14 @@ export default function UpskillingWorkspacePage() {
           </button>
         )}
 
+        {/* ── Right column: AI Chat ↔ Assessment tabs ── */}
         <motion.div
           style={{ minHeight: 0, height: "100%", display: "flex", flexDirection: "column" }}
           initial={{ opacity: 0, x: 6 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
         >
-          <ChatPanel onUploadClick={openFilePicker} />
+          <MainPanel onUploadClick={openFilePicker} />
         </motion.div>
       </motion.section>
 
