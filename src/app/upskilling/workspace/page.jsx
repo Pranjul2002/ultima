@@ -10,18 +10,34 @@ import StudioPanel from "./components/StudioPanel";
 import MainPanel from "./components/MainPanel";
 import styles from "./workspace.module.css";
 import { useFiles } from "../context/FileContext";
+import { useAuth } from "@/context/AuthContext";
 
 export default function UpskillingWorkspacePage() {
   const router = useRouter();
   const fileInputRef = useRef(null);
   const [activePanel, setActivePanel] = useState("sources");
   const { sources, addFiles } = useFiles();
+  const { isAuthenticated, authLoading } = useAuth();
+
+  // Redirect unauthenticated users to login
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      router.replace("/auth/signin?redirect=/upskilling/workspace");
+    }
+  }, [authLoading, isAuthenticated, router]);
 
   useEffect(() => {
     if (sources.length === 0) router.replace("/upskilling");
   }, [router, sources.length]);
 
-  const openFilePicker = () => fileInputRef.current?.click();
+  // Auth-guarded upload: if somehow called without auth, redirect instead of opening picker
+  const openFilePicker = () => {
+    if (!isAuthenticated) {
+      router.push("/auth/signin?redirect=/upskilling/workspace");
+      return;
+    }
+    fileInputRef.current?.click();
+  };
 
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.target.files || []);
@@ -33,7 +49,8 @@ export default function UpskillingWorkspacePage() {
   const layoutClassName = [styles.layout, !activePanel ? styles.panelClosed : ""]
     .filter(Boolean).join(" ");
 
-  if (sources.length === 0) return null;
+  // Show nothing while auth is resolving to avoid flash
+  if (authLoading || !isAuthenticated || sources.length === 0) return null;
 
   return (
     <main className={styles.page}>
@@ -96,7 +113,7 @@ export default function UpskillingWorkspacePage() {
           </button>
         )}
 
-        {/* ── Right column: AI Chat ↔ Assessment tabs ── */}
+        {/* ── Right column: AI Chat <-> Assessment tabs ── */}
         <motion.div
           style={{ minHeight: 0, height: "100%", display: "flex", flexDirection: "column" }}
           initial={{ opacity: 0, x: 6 }}

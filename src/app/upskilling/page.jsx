@@ -7,6 +7,7 @@ import { UserRound, Zap, Asterisk, ArrowRight } from "lucide-react";
 import LandingCard from "./components/LandingCard";
 import styles from "./upskilling.module.css";
 import { useFiles } from "./context/FileContext";
+import { useAuth } from "@/context/AuthContext";
 
 const featureItems = [
   {
@@ -29,13 +30,7 @@ const featureItems = [
   },
 ];
 
-function MagneticButton({
-  children,
-  className,
-  onClick,
-  type = "button",
-  icon,
-}) {
+function MagneticButton({ children, className, onClick, type = "button", icon }) {
   const [style, setStyle] = useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e) => {
@@ -45,9 +40,7 @@ function MagneticButton({
     setStyle({ x, y });
   };
 
-  const handleMouseLeave = () => {
-    setStyle({ x: 0, y: 0 });
-  };
+  const handleMouseLeave = () => setStyle({ x: 0, y: 0 });
 
   return (
     <motion.button
@@ -72,16 +65,10 @@ function GlowCard({ children, className }) {
 
   const handleMove = (e) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    setGlow({
-      x: `${e.clientX - rect.left}px`,
-      y: `${e.clientY - rect.top}px`,
-      visible: true,
-    });
+    setGlow({ x: `${e.clientX - rect.left}px`, y: `${e.clientY - rect.top}px`, visible: true });
   };
 
-  const handleLeave = () => {
-    setGlow((prev) => ({ ...prev, visible: false }));
-  };
+  const handleLeave = () => setGlow((prev) => ({ ...prev, visible: false }));
 
   return (
     <motion.article
@@ -107,15 +94,23 @@ export default function UpskillingPage() {
   const router = useRouter();
   const fileInputRef = useRef(null);
   const { addFiles } = useFiles();
+  const { isAuthenticated, authLoading } = useAuth();  // ← auth state
   const [showNotebookEntry, setShowNotebookEntry] = useState(false);
 
-  const handleOpenFilePicker = () => {
-    fileInputRef.current?.click();
+  // If user is logged in → open file picker; otherwise → redirect to login
+  const handleTryWorkspace = () => {
+    if (authLoading) return;
+    if (!isAuthenticated) {
+      router.push("/auth/signin?redirect=/upskilling");
+      return;
+    }
+    setShowNotebookEntry(true);
   };
+
+  const handleOpenFilePicker = () => fileInputRef.current?.click();
 
   const handleFileChange = (event) => {
     const selectedFiles = Array.from(event.target.files || []);
-
     if (selectedFiles.length > 0) {
       addFiles(selectedFiles);
       router.push("/upskilling/workspace");
@@ -127,7 +122,6 @@ export default function UpskillingPage() {
       <main className={styles.page}>
         <div className={styles.backgroundGlow} />
         <LandingCard onUploadClick={handleOpenFilePicker} />
-
         <input ref={fileInputRef} type="file" hidden multiple onChange={handleFileChange} />
       </main>
     );
@@ -157,11 +151,8 @@ export default function UpskillingPage() {
         </p>
 
         <div className={styles.heroActions}>
-          <MagneticButton
-            className={styles.tryButton}
-            onClick={() => setShowNotebookEntry(true)}
-          >
-            Try Workspace
+          <MagneticButton className={styles.tryButton} onClick={handleTryWorkspace}>
+            {authLoading ? "Loading…" : "Try Workspace"}
           </MagneticButton>
 
           <MagneticButton
@@ -209,7 +200,6 @@ export default function UpskillingPage() {
         <div className={styles.featureGrid}>
           {featureItems.map((item, index) => {
             const Icon = item.icon;
-
             return (
               <GlowCard key={item.title} className={styles.featureCard}>
                 <motion.div
@@ -223,7 +213,6 @@ export default function UpskillingPage() {
 
                 <h3 className={styles.featureTitle}>{item.title}</h3>
                 <p className={styles.featureDescription}>{item.description}</p>
-
                 <div className={styles.featureIndex}>{String(index + 1).padStart(2, "0")}</div>
               </GlowCard>
             );
@@ -240,11 +229,7 @@ export default function UpskillingPage() {
               Start with a document, then continue into the workspace you already built.
             </p>
           </div>
-
-          <MagneticButton
-            className={styles.ctaButton}
-            onClick={() => setShowNotebookEntry(true)}
-          >
+          <MagneticButton className={styles.ctaButton} onClick={handleTryWorkspace}>
             Try Workspace
           </MagneticButton>
         </GlowCard>
