@@ -101,7 +101,7 @@ export default function UpskillingPage() {
   const handleTryWorkspace = () => {
     if (authLoading) return;
     if (!isAuthenticated) {
-      router.push("/auth/signin?redirect=/upskilling");
+      router.push("/auth?redirect=/upskilling");
       return;
     }
     setShowNotebookEntry(true);

@@ -22,7 +22,7 @@ export default function UpskillingWorkspacePage() {
   // Redirect unauthenticated users to login
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
-      router.replace("/auth/signin?redirect=/upskilling/workspace");
+      router.replace("/auth?redirect=/upskilling/workspace");
     }
   }, [authLoading, isAuthenticated, router]);
 
@@ -33,7 +33,7 @@ export default function UpskillingWorkspacePage() {
   // Auth-guarded upload: if somehow called without auth, redirect instead of opening picker
   const openFilePicker = () => {
     if (!isAuthenticated) {
-      router.push("/auth/signin?redirect=/upskilling/workspace");
+      router.push("/auth?redirect=/upskilling/workspace");
       return;
     }
     fileInputRef.current?.click();
